@@ -1,4 +1,4 @@
-## Interface: ???
+## Interface: 100000
 ## Title: |c00ffffffMark as Junk|r
 ## Version: 0.1.0
 ## Notes: hola
