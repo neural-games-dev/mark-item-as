@@ -5,6 +5,7 @@
 ## Author: Neural Games
 ## eMail: anewlevelmp@gmail.com
 ## URL: https://www.curseforge.com/wow/addons/markasjunk
+## GitHub: https://github.com/gflujan/mark-as-junk
 ## DefaultState: enabled
 ## Created: 07-Nov-2022
 ## Last Updated: 08-Nov-2022
