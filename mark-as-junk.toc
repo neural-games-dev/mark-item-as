@@ -1,0 +1,11 @@
+## Interface: ???
+## Title: |c00ffffffMark as Junk|r
+## Version: 0.1.0
+## Notes: hola
+## Author: Neural Games
+## eMail: anewlevelmp@gmail.com
+## URL: https://www.curseforge.com/wow/addons/markasjunk
+## SavedVariables: MAJdb
+## DefaultState: enabled
+-- created: 07-Nov-2022
+-- last updated: 07-Nov-2022
