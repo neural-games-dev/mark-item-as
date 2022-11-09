@@ -7,5 +7,5 @@
 ## URL: https://www.curseforge.com/wow/addons/markasjunk
 ## SavedVariables: MAJdb
 ## DefaultState: enabled
--- created: 07-Nov-2022
--- last updated: 07-Nov-2022
+## Created: 07-Nov-2022
+## Last Updated: 08-Nov-2022
