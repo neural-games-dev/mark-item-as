@@ -1,5 +1,5 @@
-## Interface: 100000
-## Title: |c0000ffffMark As Junk|r
+## Interface: 100002
+## Title: |cff00ffffMark As Junk|r
 ## Version: 0.1.0
 ## Notes: Utility addon that lets you designate any item as junk that will be sold when visiting a merchant (v0.1.0).
 ## Author: Neural Games
@@ -8,6 +8,6 @@
 ## GitHub: https://github.com/gflujan/mark-as-junk
 ## DefaultState: enabled
 ## Created: 07-Nov-2022
-## Last Updated: 08-Nov-2022
+## Last Updated: 20-Nov-2022
 
 MarkAsJunk.lua
