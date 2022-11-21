@@ -1,13 +1,15 @@
 local majAddOnName = '|cff00ffffMark As Junk|r';
-local majAddOnNameQuotes = '|cff00ffff"Mark As Junk"|r';
+local majAddOnNameQuoted = '|cff00ffff"Mark As Junk"|r';
+local showCommandText = true; -- TODO **[G]** :: Put this into a globally saved variable
+local showGreeting = true; -- TODO **[G]** :: Put this into a globally saved variable
 
 --[[
    TODO :: Move these slash commands into their own file and then source them into here
 ]]
-SLASH_RELOADUI1 = '/rl'; -- For quicker reloading
-SlashCmdList.RELOADUI = ReloadUI;
+SLASH_MAJRELOADUI1 = '/rl'; -- For quicker reloading
+SlashCmdList.MAJRELOADUI = ReloadUI;
 
-SLASH_FRAMESTK1 = '/fs' -- For quicker access to the WoW frame stack
+SLASH_FRAMESTK1 = '/mfs' -- For quicker access to the WoW frame stack
 SlashCmdList.FRAMESTK = function()
    -- TODO **[G]** :: Add logic to only enable this for me
    LoadAddOn('Blizzard_DebugTools');
@@ -21,20 +23,22 @@ for i = 1, NUM_CHAT_WINDOWS, 1 do
 end
 
 -- Display the MarkAsJunk commands and notes
-SLASH_MARKASJUNKINFO1 = '/maj';
-SlashCmdList.MARKASJUNKINFO = function(command)
+SLASH_MAJINFO1 = '/maj';
+SlashCmdList.MAJINFO = function(command)
    if (command == '') then
       --print('🌟💰🌟 |cff00ffff-- MARK AS JUNK COMMANDS --|r 🌟💰🌟');
       print('|cff00ffff----- MARK AS JUNK COMMANDS -----|r');
       print('|cffbada55/maj config|r -- Shows the options window to customize this addon.');
       print('|cffbada55/maj options|r -- This is an alias for "config".');
+      print('|cffbada55/maj notext|r -- Disables the text output when triggering a "/maj" command.');
+      print('|cffbada55/maj showtext|r -- Enables the text output when triggering a "/maj" command.');
       return;
    end
 
    if (command == 'config') then
       -- TODO **[G]** :: Add a UI setting to enable/disable these messages
-      if (true) then
-         print('You are now seeing the ' .. majAddOnNameQuotes .. ' config/options window.');
+      if (showCommandText) then
+         print('You are now seeing the ' .. majAddOnNameQuoted .. ' config/options window.');
       end
 
       return;
@@ -42,10 +46,22 @@ SlashCmdList.MARKASJUNKINFO = function(command)
 
    if (command == 'options') then
       -- TODO **[G]** :: Add a UI setting to enable/disable these messages
-      if (true) then
-         print('You are now seeing the ' .. majAddOnNameQuotes .. ' config/options window.');
+      if (showCommandText) then
+         print('You are now seeing the ' .. majAddOnNameQuoted .. ' config/options window.');
       end
 
+      return;
+   end
+
+   if (command == 'notext') then
+      showCommandText = false;
+      print(majAddOnName .. ': Command output text has been disabled.');
+      return;
+   end
+
+   if (command == 'showtext') then
+      showCommandText = true;
+      print(majAddOnName .. ': Command output text has been enabled.');
       return;
    end
 
@@ -53,8 +69,8 @@ SlashCmdList.MARKASJUNKINFO = function(command)
    return;
 end
 
--- update this condition to be based off of a UI setting so that it disables this greeting
-if true then
+-- TODO **[G]** :: Update this condition to be based off of a UI setting so that it disables this greeting
+if (showGreeting) then
    local name = UnitName("player");
-   print('Hi, ' .. name .. '! Thanks for using ' .. majAddOnNameQuotes .. '! Type "/maj" to get more info.');
+   print('Hi, ' .. name .. '! Thanks for using ' .. majAddOnNameQuoted .. '! Type "/maj" to get more info.');
 end
