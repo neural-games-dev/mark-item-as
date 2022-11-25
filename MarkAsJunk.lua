@@ -6,6 +6,9 @@ local showGreeting = true; -- TODO **[G]** :: Put this into a globally saved var
 --[[
    TODO :: Move these slash commands into their own file and then source them into here
 ]]
+--## ==========================================================================
+--## CUSTOM SLASH COMMANDS
+--## ==========================================================================
 SLASH_MAJRELOADUI1 = '/rl'; -- For quicker reloading
 SlashCmdList.MAJRELOADUI = ReloadUI;
 
@@ -32,45 +35,56 @@ SlashCmdList.MAJINFO = function(command)
       print('|cffbada55/maj options|r -- This is an alias for "config".');
       print('|cffbada55/maj notext|r -- Disables the text output when triggering a "/maj" command.');
       print('|cffbada55/maj showtext|r -- Enables the text output when triggering a "/maj" command.');
-      return;
+      return ;
    end
 
    if (command == 'config') then
-      -- TODO **[G]** :: Add a UI setting to enable/disable these messages
+      -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
       if (showCommandText) then
          print('You are now seeing the ' .. majAddOnNameQuoted .. ' config/options window.');
       end
 
-      return;
+      return ;
    end
 
    if (command == 'options') then
-      -- TODO **[G]** :: Add a UI setting to enable/disable these messages
+      -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
       if (showCommandText) then
          print('You are now seeing the ' .. majAddOnNameQuoted .. ' config/options window.');
       end
 
-      return;
+      return ;
    end
 
    if (command == 'notext') then
       showCommandText = false;
       print(majAddOnName .. ': Command output text has been disabled.');
-      return;
+      return ;
    end
 
    if (command == 'showtext') then
       showCommandText = true;
       print(majAddOnName .. ': Command output text has been enabled.');
-      return;
+      return ;
    end
 
    print(majAddOnName .. ': "' .. command .. '" is an unknown command.');
-   return;
+   return ;
 end
 
--- TODO **[G]** :: Update this condition to be based off of a UI setting so that it disables this greeting
+--## ==========================================================================
+--## START UP & GREETING SCRIPTS
+--## ==========================================================================
+-- TODO **[G]** :: Update this condition to be based off of a UI setting/saved variable so that it disables this greeting
 if (showGreeting) then
    local name = UnitName("player");
    print('Hi, ' .. name .. '! Thanks for using ' .. majAddOnNameQuoted .. '! Type "/maj" to get more info.');
 end
+
+--## ==========================================================================
+--## MAIN CONFIG / OPTIONS WINDOW
+--## ==========================================================================
+local MAJConfig = CreateFrame('Frame', 'MAJ_Config', UIParent, 'BasicFrameTemplateWithInset');
+MAJConfig:SetSize(600, 480);
+MAJConfig:SetPoint('CENTER', UIParent, 'CENTER');
+MAJConfig:SetFrameStrata('HIGH');
