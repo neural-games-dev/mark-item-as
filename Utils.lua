@@ -1,4 +1,16 @@
 MAJ_Utils = {};
+MAJ_Utils.showGreeting = true;
+MAJ_Utils.showSlashCommandOutput = true;
+
+function MAJ_Utils:CreateDefaultOptions(frame)
+   local slashCommandOutputCheckbox = CreateFrame("CheckButton", "MAJ_CheckBox_SlashCommandOutput", frame, "ChatConfigCheckButtonTemplate");
+   slashCommandOutputCheckbox:SetPoint('TOPLEFT', frame.TitleBg, 'BOTTOMLEFT', 16, -26);
+   local slashCommandOutputCheckboxLabel = _G[slashCommandOutputCheckbox:GetName() .. "Text"];
+   slashCommandOutputCheckboxLabel:SetText('Show slash command output?');
+   slashCommandOutputCheckboxLabel:SetPoint('TOPLEFT', slashCommandOutputCheckbox, 'RIGHT', 5, 7);
+   slashCommandOutputCheckbox.tooltip = 'Bueller goes here.';
+   slashCommandOutputCheckbox:SetChecked(MAJ_Utils.showSlashCommandOutput);
+end
 
 function MAJ_Utils:CreateFrame()
    local frame = CreateFrame('Frame', 'MAJ_ConfigOptions', UIParent, 'BasicFrameTemplateWithInset');
@@ -9,7 +21,7 @@ function MAJ_Utils:CreateFrame()
 
    -- Creating the config frame title
    frame.title = frame:CreateFontString(nil, 'OVERLAY');
-   frame.title:SetFontObject('GameFontHighlight');
+   frame.title:SetFontObject('GameFontNormalLarge');
    frame.title:SetPoint('CENTER', frame.TitleBg, 'CENTER', 0, 0);
    frame.title:SetText('Mark as Junk - Config Options');
 
@@ -19,15 +31,15 @@ end
 function MAJ_Utils:HandleConfigOptionsDisplay(frame)
    if (frame:IsShown()) then
       -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
-      if (showSlashCommandOutput) then
-         print('Now hiding the ' .. majAddOnNameQuoted .. ' config options window.');
+      if (MAJ_Utils.showSlashCommandOutput) then
+         print('Now hiding the ' .. MAJ_Constants.addOnNameQuoted .. ' config options window.');
       end
 
       frame:Hide();
    else
       -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
-      if (showSlashCommandOutput) then
-         print('You are now seeing the ' .. majAddOnNameQuoted .. ' config options window.');
+      if (MAJ_Utils.showSlashCommandOutput) then
+         print('You are now seeing the ' .. MAJ_Constants.addOnNameQuoted .. ' config options window.');
       end
 
       frame:Show();

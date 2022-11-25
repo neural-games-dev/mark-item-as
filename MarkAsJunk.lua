@@ -1,18 +1,13 @@
 --local Baggins = Baggins; -- this will be so I can target Baggins to do stuff later
 --local Bagnon = Bagnon; -- this will be so I can target Bagnon to do stuff later (need to verify this name)
 
-local majAddOnName = '|cff00ffffMark As Junk|r';
-local majAddOnNameQuoted = '|cff00ffff"Mark As Junk"|r';
-local showSlashCommandOutput = true; -- TODO **[G]** :: Put this into a globally saved variable
-local showGreeting = true; -- TODO **[G]** :: Put this into a globally saved variable
-
 --## ==========================================================================
 --## START UP & GREETING SCRIPTS
 --## ==========================================================================
 -- TODO **[G]** :: Update this condition to be based off of a UI setting/saved variable so that it disables this greeting
-if (showGreeting) then
+if (MAJ_Utils.showGreeting) then
    local name = UnitName("player");
-   print('Hi, ' .. name .. '! Thanks for using ' .. majAddOnNameQuoted .. '! Type |cffbada55"/maj"|r to get more info.');
+   print('Hi, ' .. name .. '! Thanks for using ' .. MAJ_Constants.addOnNameQuoted .. '! Type ' .. MAJ_Constants.shortCode .. ' to get more info.');
 end
 
 --## ==========================================================================
@@ -30,6 +25,9 @@ MAJ_Utils:MakeFrameMovable(MAJ_Config);
 
 -- Making the frame resizable
 MAJ_Utils:MakeFrameResizable(MAJ_Config);
+
+-- Create/generate and insert the options and their defaults
+MAJ_Utils:CreateDefaultOptions(MAJ_Config);
 
 --[[
    TODO :: Move these slash commands into their own file and then source them into here
@@ -61,33 +59,37 @@ SlashCmdList.MAJ_INFO = function(command)
       print('|cff00ffff----- MARK AS JUNK COMMANDS -----|r');
       print('|cffbada55/maj config (c)|r -- Shows the config window to customize this addon.');
       print('|cffbada55/maj options (o)|r -- This is an alias for "config".');
-      print('|cffbada55/maj hidetext (ht)|r -- Disables the text output when triggering a |cffbada55"/maj"|r command.');
-      print('|cffbada55/maj showtext (st)|r -- Enables the text output when triggering a |cffbada55"/maj"|r command.');
+      print('|cffbada55/maj hidetext (ht)|r -- Disables the text output when triggering a ' .. MAJ_Constants.shortCode .. ' command.');
+      print('|cffbada55/maj showtext (st)|r -- Enables the text output when triggering a ' .. MAJ_Constants.shortCode .. ' command.');
       return ;
    end
 
    if (command == 'config' or command == 'c') then
+      print('BLLR? -- CONFIG, Show slash command output: ' .. MAJ_Utils.showSlashCommandOutput);
       MAJ_Utils:HandleConfigOptionsDisplay(MAJ_Config);
       return ;
    end
 
    if (command == 'options' or command == 'o') then
+      print('BLLR? -- OPTIONS, Show slash command output: ' .. MAJ_Utils.showSlashCommandOutput);
       MAJ_Utils:HandleConfigOptionsDisplay(MAJ_Config);
       return ;
    end
 
    if (command == 'hidetext' or command == 'ht') then
-      showSlashCommandOutput = false;
-      print(majAddOnName .. ': The slash command output text has been DISABLED.');
+      -- TODO **[G]** :: This needs to affect the checkbox in the options window
+      MAJ_Utils.showSlashCommandOutput = false;
+      print(MAJ_Constants.addOnName .. ': The slash command output text has been DISABLED.');
       return ;
    end
 
    if (command == 'showtext' or command == 'st') then
-      showSlashCommandOutput = true;
-      print(majAddOnName .. ': The slash command output text has been ENABLED.');
+      -- TODO **[G]** :: This needs to affect the checkbox in the options window
+      MAJ_Utils.showSlashCommandOutput = true;
+      print(MAJ_Constants.addOnName .. ': The slash command output text has been ENABLED.');
       return ;
    end
 
-   print(majAddOnName .. ': "' .. command .. '" is an unknown command.');
+   print(MAJ_Constants.addOnName .. ': "' .. command .. '" is an unknown command.');
    return ;
 end
