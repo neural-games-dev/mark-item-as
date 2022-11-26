@@ -1,9 +1,11 @@
 MAJ_Utils = {
-   autoSortMarking = false,
-   autoSortSelling = false,
+   autoSortMarking = false, -- TODO **[G]** :: Convert to `SavedVariable
+   autoSortSelling = false, -- TODO **[G]** :: Convert to `SavedVariable
    isBagginsLoaded = IsAddOnLoaded('Baggins'),
-   showGreeting = true,
-   showSlashCommandOutput = true,
+   showGreeting = true, -- TODO **[G]** :: Convert to `SavedVariable
+   showSlashCommandOutput = true, -- TODO **[G]** :: Convert to `SavedVariable
+   userSelectedActivatorKey = 'RIGHT-CLICK', -- TODO **[G]** :: Convert to `SavedVariable
+   userSelectedModKey = 'SHIFT', -- TODO **[G]** :: Convert to `SavedVariable
 };
 
 function MAJ_Utils:CreateFrame()
@@ -11,7 +13,7 @@ function MAJ_Utils:CreateFrame()
 
    -- Setting the size and the position
    frame:SetFrameStrata('FULLSCREEN_DIALOG');
-   frame:SetSize(600, 480);
+   frame:SetSize(800, 600);
    frame:SetPoint('CENTER', UIParent, 'CENTER');
    frame:Hide();
 
