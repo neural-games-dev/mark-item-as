@@ -79,14 +79,18 @@ SlashCmdList.MAJ_INFO = function(command)
    if (command == 'hidetext' or command == 'ht') then
       -- TODO **[G]** :: This needs to affect the checkbox in the options window
       MAJ_Utils.showSlashCommandOutput = false;
-      print(MAJ_Constants.addOnName .. ': The slash command output text has been DISABLED.');
+      print(MAJ_Constants.addOnName .. ': The slash command output text has been disabled.');
+      local slashCommandOutputCheckbox = _G[MAJ_CheckBox_SlashCommandOutput:GetName()];
+      slashCommandOutputCheckbox:SetChecked(false);
       return ;
    end
 
    if (command == 'showtext' or command == 'st') then
       -- TODO **[G]** :: This needs to affect the checkbox in the options window
       MAJ_Utils.showSlashCommandOutput = true;
-      print(MAJ_Constants.addOnName .. ': The slash command output text has been ENABLED.');
+      print(MAJ_Constants.addOnName .. ': The slash command output text has been enabled.');
+      local slashCommandOutputCheckbox = _G[MAJ_CheckBox_SlashCommandOutput:GetName()];
+      slashCommandOutputCheckbox:SetChecked(true);
       return ;
    end
 

@@ -1,29 +1,10 @@
 MAJ_Utils = {
-   autoSort = false,
+   autoSortMarking = false,
+   autoSortSelling = false,
+   isBagginsLoaded = IsAddOnLoaded('Baggins'),
    showGreeting = true,
    showSlashCommandOutput = true,
 };
-
-function MAJ_Utils:CreateDefaultOptions(frame)
-   -- Auto-sort after selling items
-   local autoSortCheckbox = CreateFrame("CheckButton", "MAJ_CheckBox_AutoSort", frame, "ChatConfigCheckButtonTemplate");
-   autoSortCheckbox:SetPoint('TOPLEFT', frame.TitleBg, 'BOTTOMLEFT', 24, -24);
-   local autoSortCheckboxLabel = _G[autoSortCheckbox:GetName() .. "Text"];
-   autoSortCheckboxLabel:SetText('Auto-sort bags after selling?');
-   autoSortCheckboxLabel:SetPoint('TOPLEFT', autoSortCheckbox, 'RIGHT', 5, 7);
-   autoSortCheckbox.tooltip = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.';
-   autoSortCheckbox:SetChecked(MAJ_Utils.autoSort);
-
-   -- Toggle slash command output in the chat box
-   local slashCommandOutputCheckbox = CreateFrame("CheckButton", "MAJ_CheckBox_SlashCommandOutput", frame, "ChatConfigCheckButtonTemplate");
-   slashCommandOutputCheckbox:SetPoint('TOPLEFT', frame.TitleBg, 'BOTTOMLEFT', 24, -48);
-   local slashCommandOutputCheckboxLabel = _G[slashCommandOutputCheckbox:GetName() .. "Text"];
-   slashCommandOutputCheckboxLabel:SetText('Show slash command output?');
-   slashCommandOutputCheckboxLabel:SetPoint('TOPLEFT', slashCommandOutputCheckbox, 'RIGHT', 5, 7);
-   slashCommandOutputCheckbox.tooltip = 'This will hide or show the chat output after entering in a ' .. MAJ_Constants.slashCommandQuoted .. ' command.';
-   slashCommandOutputCheckbox:SetChecked(MAJ_Utils.showSlashCommandOutput);
-   --print('BLLR? -- UTILS: Show slash command output: ' .. tostring(MAJ_Utils.showSlashCommandOutput));
-end
 
 function MAJ_Utils:CreateFrame()
    local frame = CreateFrame('Frame', 'MAJ_ConfigOptions', UIParent, 'BasicFrameTemplateWithInset');
@@ -56,14 +37,14 @@ function MAJ_Utils:HandleConfigOptionsDisplay(frame)
    if (frame:IsShown()) then
       -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
       if (MAJ_Utils.showSlashCommandOutput) then
-         print(MAJ_Constants.addOnName .. ': HIDING the config options window.');
+         print(MAJ_Constants.addOnName .. ': Hiding the config options window.');
       end
 
       frame:Hide();
    else
       -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
       if (MAJ_Utils.showSlashCommandOutput) then
-         print(MAJ_Constants.addOnName .. ': SHOWING the config options window.');
+         print(MAJ_Constants.addOnName .. ': Showing the config options window.');
       end
 
       frame:Show();
@@ -108,6 +89,11 @@ end
 function MAJ_Utils:SortBags()
    -- TODO **[G]** :: How does this need to change when using other bag addons?
    -- TODO **[G]** :: Does this even need to change? Or is/can it be consistently global no matter the bag addon?
+   if (MAJ_Utils.isBagginsLoaded) then
+      print(MAJ_Constants.bagginsLoadedWarning);
+      return ;
+   end
+
    local sortButton = _G[BagItemAutoSortButton:GetName()];
    sortButton:Click();
 end

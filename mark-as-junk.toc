@@ -12,4 +12,5 @@
 
 Constants.lua
 Utils.lua
+Options.lua
 MarkAsJunk.lua
