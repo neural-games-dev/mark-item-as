@@ -7,7 +7,7 @@
 -- TODO **[G]** :: Update this condition to be based off of a UI setting/saved variable so that it disables this greeting
 if (MAJ_Utils.showGreeting) then
    local name = UnitName("player");
-   print('Hi, ' .. name .. '! Thanks for using ' .. MAJ_Constants.addOnNameQuoted .. '! Type ' .. MAJ_Constants.shortCode .. ' to get more info.');
+   print('Hi, ' .. name .. '! Thanks for using ' .. MAJ_Constants.addOnNameQuoted .. '! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
 end
 
 --## ==========================================================================
@@ -35,10 +35,10 @@ MAJ_Utils:CreateDefaultOptions(MAJ_Config);
 --## ==========================================================================
 --## CUSTOM SLASH COMMANDS
 --## ==========================================================================
-SLASH_MAJ_RELOAD_UI1 = '/mrl'; -- For quicker reloading
+SLASH_MAJ_RELOAD_UI1 = '/nrl'; -- For quicker reloading
 SlashCmdList.MAJ_RELOAD_UI = ReloadUI;
 
-SLASH_MAJ_FRAME_STK1 = '/mfs' -- For quicker access to the WoW frame stack
+SLASH_MAJ_FRAME_STK1 = '/nfs' -- For quicker access to the WoW frame stack
 SlashCmdList.MAJ_FRAME_STK = function()
    -- TODO **[G]** :: Add logic to only enable this for me
    LoadAddOn('Blizzard_DebugTools');
@@ -59,19 +59,19 @@ SlashCmdList.MAJ_INFO = function(command)
       print('|cff00ffff----- MARK AS JUNK COMMANDS -----|r');
       print('|cffbada55/maj config (c)|r -- Shows the config window to customize this addon.');
       print('|cffbada55/maj options (o)|r -- This is an alias for "config".');
-      print('|cffbada55/maj hidetext (ht)|r -- Disables the text output when triggering a ' .. MAJ_Constants.shortCode .. ' command.');
-      print('|cffbada55/maj showtext (st)|r -- Enables the text output when triggering a ' .. MAJ_Constants.shortCode .. ' command.');
+      print('|cffbada55/maj hidetext (ht)|r -- Disables the text output when triggering a ' .. MAJ_Constants.slashCommandQuoted .. ' command.');
+      print('|cffbada55/maj showtext (st)|r -- Enables the text output when triggering a ' .. MAJ_Constants.slashCommandQuoted .. ' command.');
       return ;
    end
 
    if (command == 'config' or command == 'c') then
-      print('BLLR? -- CONFIG, Show slash command output: ' .. MAJ_Utils.showSlashCommandOutput);
+      --print('BLLR? -- CONFIG, Show slash command output: ' .. tostring(MAJ_Utils.showSlashCommandOutput));
       MAJ_Utils:HandleConfigOptionsDisplay(MAJ_Config);
       return ;
    end
 
    if (command == 'options' or command == 'o') then
-      print('BLLR? -- OPTIONS, Show slash command output: ' .. MAJ_Utils.showSlashCommandOutput);
+      --print('BLLR? -- OPTIONS, Show slash command output: ' .. tostring(MAJ_Utils.showSlashCommandOutput));
       MAJ_Utils:HandleConfigOptionsDisplay(MAJ_Config);
       return ;
    end
