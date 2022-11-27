@@ -162,10 +162,26 @@ function MAJ_Utils:CreateDefaultOptions(frame)
    miscellaneousHeaderText:SetText('Miscellaneous Options:');
 
    --## ==========================================================================
+   --## Toggle the startup chat greeting
+   --## ==========================================================================
+   local startupGreetingCheckbox = CreateFrame('CheckButton', 'MAJ_CheckBox_StartupGreeting', frame, 'ChatConfigCheckButtonTemplate');
+   startupGreetingCheckbox:SetPoint('TOPLEFT', frame.TitleBg, 'BOTTOMLEFT', 324, -60);
+
+   local startupGreetingCheckboxLabel = _G[startupGreetingCheckbox:GetName() .. 'Text'];
+   startupGreetingCheckboxLabel:SetText('Show startup greeting in chat?');
+   startupGreetingCheckboxLabel:SetPoint('TOPLEFT', startupGreetingCheckbox, 'RIGHT', 5, 7);
+   startupGreetingCheckbox.tooltip = 'This will hide or show the initial greeting in chat when the game starts or reloads.';
+   startupGreetingCheckbox:SetChecked(MAJ_Utils.showGreeting);
+
+   startupGreetingCheckbox:SetScript('OnClick', function(checkbox)
+      MAJ_Utils.showGreeting = checkbox:GetChecked();
+   end);
+
+   --## ==========================================================================
    --## Toggle slash command output in the chat box
    --## ==========================================================================
    local slashCommandOutputCheckbox = CreateFrame('CheckButton', 'MAJ_CheckBox_SlashCommandOutput', frame, 'ChatConfigCheckButtonTemplate');
-   slashCommandOutputCheckbox:SetPoint('TOPLEFT', frame.TitleBg, 'BOTTOMLEFT', 324, -60);
+   slashCommandOutputCheckbox:SetPoint('TOPLEFT', frame.TitleBg, 'BOTTOMLEFT', 324, -84);
 
    local slashCommandOutputCheckboxLabel = _G[slashCommandOutputCheckbox:GetName() .. 'Text'];
    slashCommandOutputCheckboxLabel:SetText('Show slash command output?');
