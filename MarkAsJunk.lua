@@ -1,13 +1,24 @@
+local MarkAsJunk = LibStub("AceAddon-3.0"):NewAddon("MarkAsJunk", "AceConsole-3.0", "AceEvent-3.0");
+MarkAsJunk.version = GetAddOnMetadata("MarkAsJunk", "Version");
+
 --local Baggins = Baggins; -- this will be so I can target Baggins to do stuff later
 --local Bagnon = Bagnon; -- this will be so I can target Bagnon to do stuff later (need to verify this name)
 
 --## ==========================================================================
 --## START UP & GREETING SCRIPTS
 --## ==========================================================================
--- TODO **[G]** :: Update this condition to be based off of a UI setting/saved variable so that it disables this greeting
-if (MAJ_Utils.showGreeting) then
-   local name = UnitName("player");
-   print('Hi, ' .. name .. '! Thanks for using ' .. MAJ_Constants.addOnNameQuoted .. '! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
+function MarkAsJunk:OnInitialize()
+   self.logger = self:GetModule("Logger");
+
+   self:RegisterChatCommand("maj", "SlashCommandInfoConfig");
+   self:RegisterChatCommand("nrl", "SlashCommandReload");
+   self:RegisterChatCommand("nfs", "SlashCommandFrameStack");
+
+   -- TODO **[G]** :: Update this condition to be based off of a UI setting/saved variable so that it disables this greeting
+   if (MAJ_Utils.showGreeting) then
+      local name = UnitName("player");
+      self.logger:Print('Hi, ' .. name .. '! Thanks for using ' .. MAJ_Constants.addOnNameQuoted .. '! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
+   end
 end
 
 --## ==========================================================================
@@ -35,32 +46,22 @@ MAJ_Utils:CreateDefaultOptions(MAJ_Config);
 --## ==========================================================================
 --## CUSTOM SLASH COMMANDS
 --## ==========================================================================
-SLASH_MAJ_RELOAD_UI1 = '/nrl'; -- For quicker reloading
-SlashCmdList.MAJ_RELOAD_UI = ReloadUI;
-
-SLASH_MAJ_FRAME_STK1 = '/nfs' -- For quicker access to the WoW frame stack
-SlashCmdList.MAJ_FRAME_STK = function()
-   -- TODO **[G]** :: Add logic to only enable this for me
+function MarkAsJunk:SlashCommandFrameStack()
    LoadAddOn('Blizzard_DebugTools');
    FrameStackTooltip_Toggle();
 end
 
--- To be able to use the left and right arrows in the edit box
--- without rotating your character
-for i = 1, NUM_CHAT_WINDOWS, 1 do
-   _G['ChatFrame' .. i .. 'EditBox']:SetAltArrowKeyMode(false);
-end
+function MarkAsJunk:SlashCommandInfoConfig(command)
+   command = command:trim();
 
--- Display the MarkAsJunk commands and notes
-SLASH_MAJ_INFO1 = '/maj';
-SlashCmdList.MAJ_INFO = function(command)
+   -- Display the MarkAsJunk commands and notes
    if (command == '') then
-      --print('🌟💰🌟 |cff00ffff-- MARK AS JUNK COMMANDS --|r 🌟💰🌟');
-      print('|cff00ffff----- MARK AS JUNK COMMANDS -----|r');
-      print('|cffbada55/maj config (c)|r -- Shows the config window to customize this addon.');
-      print('|cffbada55/maj options (o)|r -- This is an alias for "config".');
-      print('|cffbada55/maj hidetext (ht)|r -- Disables the text output when triggering a ' .. MAJ_Constants.slashCommandQuoted .. ' command.');
-      print('|cffbada55/maj showtext (st)|r -- Enables the text output when triggering a ' .. MAJ_Constants.slashCommandQuoted .. ' command.');
+      --print('🌟💰🌟 |cFF00ffff-- MARK AS JUNK COMMANDS --|r 🌟💰🌟');
+      print('|cFF00ffff----- MARK AS JUNK COMMANDS -----|r');
+      print('|cFFbada55/maj config (c)|r -- Shows the config window to customize this addon.');
+      print('|cFFbada55/maj options (o)|r -- This is an alias for "config".');
+      print('|cFFbada55/maj hidetext (ht)|r -- Disables the text output when triggering a ' .. MAJ_Constants.slashCommandQuoted .. ' command.');
+      print('|cFFbada55/maj showtext (st)|r -- Enables the text output when triggering a ' .. MAJ_Constants.slashCommandQuoted .. ' command.');
       return ;
    end
 
@@ -79,7 +80,7 @@ SlashCmdList.MAJ_INFO = function(command)
    if (command == 'hidetext' or command == 'ht') then
       -- TODO **[G]** :: This needs to affect the checkbox in the options window
       MAJ_Utils.showSlashCommandOutput = false;
-      print(MAJ_Constants.addOnName .. ': The slash command output text has been disabled.');
+      print(MAJ_Constants.addOnName .. ': The slash command output text has been DISABLED.');
       local slashCommandOutputCheckbox = _G[MAJ_CheckBox_SlashCommandOutput:GetName()];
       slashCommandOutputCheckbox:SetChecked(false);
       return ;
@@ -88,7 +89,7 @@ SlashCmdList.MAJ_INFO = function(command)
    if (command == 'showtext' or command == 'st') then
       -- TODO **[G]** :: This needs to affect the checkbox in the options window
       MAJ_Utils.showSlashCommandOutput = true;
-      print(MAJ_Constants.addOnName .. ': The slash command output text has been enabled.');
+      print(MAJ_Constants.addOnName .. ': The slash command output text has been ENABLED.');
       local slashCommandOutputCheckbox = _G[MAJ_CheckBox_SlashCommandOutput:GetName()];
       slashCommandOutputCheckbox:SetChecked(true);
       return ;
@@ -96,4 +97,14 @@ SlashCmdList.MAJ_INFO = function(command)
 
    print(MAJ_Constants.addOnName .. ': "' .. command .. '" is an unknown command.');
    return ;
+end
+
+function MarkAsJunk:SlashCommandReload()
+   ReloadUI();
+end
+
+-- To be able to use the left and right arrows in the edit box
+-- without rotating your character
+for i = 1, NUM_CHAT_WINDOWS, 1 do
+   _G['ChatFrame' .. i .. 'EditBox']:SetAltArrowKeyMode(false);
 end
