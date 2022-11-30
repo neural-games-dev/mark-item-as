@@ -1,3 +1,4 @@
+-- TODO **[G]** :: Change this name to "defaults" of some sort, after I re/move the connected methods below
 MAJ_Utils = {
    autoSortMarking = false, -- TODO **[G]** :: Convert to `SavedVariable
    autoSortSelling = false, -- TODO **[G]** :: Convert to `SavedVariable
@@ -35,21 +36,23 @@ function MAJ_Utils:CreateFrame()
    return frame;
 end
 
-function MAJ_Utils:HandleConfigOptionsDisplay(frame)
-   if (frame:IsShown()) then
+function MAJ_Utils:HandleConfigOptionsDisplay(configFrame)
+   if (configFrame:IsShown()) then
       -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
       if (MAJ_Utils.showSlashCommandOutput) then
+         -- TODO **[G]** :: Update this to use `self.logger:Print` when I can
          print(MAJ_Constants.addOnName .. ': Hiding the config options window.');
       end
 
-      frame:Hide();
+      configFrame:Hide();
    else
       -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
       if (MAJ_Utils.showSlashCommandOutput) then
+         -- TODO **[G]** :: Update this to use `self.logger:Print` when I can
          print(MAJ_Constants.addOnName .. ': Showing the config options window.');
       end
 
-      frame:Show();
+      configFrame:Show();
    end
 end
 
