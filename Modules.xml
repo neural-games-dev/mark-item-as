@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
 
 <!--   <Script file="Modules/Repo.lua"/>-->
-<!--   <Script file="Modules/Config.lua"/>-->
+   <Script file="Modules/Config.lua"/>
    <Script file="Modules/Logger.lua"/>
 <!--   <Script file="Modules/Slot.lua"/>-->
 <!--   <Script file="Modules/Utils.lua"/>-->

@@ -1,3 +1,4 @@
+local AceConfigDialog = LibStub("AceConfigDialog-3.0");
 local MarkAsJunk = LibStub("AceAddon-3.0"):NewAddon("MarkAsJunk", "AceConsole-3.0", "AceEvent-3.0");
 MarkAsJunk.version = GetAddOnMetadata("MarkAsJunk", "Version");
 
@@ -18,8 +19,14 @@ function MarkAsJunk:OnInitialize()
       _G['ChatFrame' .. i .. 'EditBox']:SetAltArrowKeyMode(false);
    end
 
+   -- calling all modules! all modules to the front!
+   self.config = self:GetModule("MAJConfig");
    self.logger = self:GetModule("Logger");
 
+   -- do you init or not bro?!
+   self.config:Init(self)
+
+   -- we're slashing prices so much, it's like we're crazy!
    self:RegisterChatCommand("maj", "SlashCommandInfoConfig");
    self:RegisterChatCommand("nrl", "SlashCommandReload");
    self:RegisterChatCommand("nfs", "SlashCommandFrameStack");
@@ -82,7 +89,8 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
 
    if (command == 'config' or command == 'c') then
       --self.logger:Print('BLLR? -- CONFIG, Show slash command output: ' .. tostring(MAJ_Utils.showSlashCommandOutput));
-      MAJ_Utils:HandleConfigOptionsDisplay(MAJ_Config);
+      --MAJ_Utils:HandleConfigOptionsDisplay(MAJ_Config);
+      AceConfigDialog:Open('MarkAsJunk');
       return ;
    end
 
