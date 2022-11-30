@@ -10,7 +10,7 @@ MarkAsJunk.version = GetAddOnMetadata("MarkAsJunk", "Version");
 local MAJ_Config;
 
 function MarkAsJunk:OnInitialize()
-   self.db = LibStub("AceDB-3.0"):New("MarkAsJunkDB", { profile = MAJ_Utils });
+   self.db = LibStub("AceDB-3.0"):New("MarkAsJunkDB", { profile = MAJ_Utils }, true);
 
    -- To be able to use the left and right arrows in the edit box
    -- without rotating your character
