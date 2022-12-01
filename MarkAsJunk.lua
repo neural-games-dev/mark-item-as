@@ -20,7 +20,7 @@ function MarkAsJunk:OnInitialize()
    end
 
    -- calling all modules! all modules to the front!
-   self.config = self:GetModule("MAJConfig");
+   self.config = self:GetModule("Config");
    self.logger = self:GetModule("Logger");
 
    -- do you init or not bro?!

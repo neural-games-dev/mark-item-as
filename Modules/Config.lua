@@ -1,48 +1,49 @@
 local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
-local MAJConfig = MarkAsJunk:NewModule('MAJConfig');
+local Config = MarkAsJunk:NewModule('Config');
 
-function MAJConfig:GetBlizzOptionsFrame()
+function Config:GetBlizzOptionsFrame()
+   local p = MarkAsJunk.db.profile;
+
    local activatorKeysMap = {
-      leftClick = 'LEFT-CLICK',
-      rightClick = 'RIGHT-CLICK',
+      ['LEFT-CLICK'] = 'LEFT-CLICK',
+      ['RIGHT-CLICK'] = 'RIGHT-CLICK',
    };
 
    local modKeysMap = {
-      alt = 'ALT',
-      ctrl = 'CTRL',
-      shift = 'SHIFT',
-      altCtrl = 'ALT-CTRL',
-      altShift = 'ALT-SHIFT',
-      ctrlShift = 'CTRL-SHIFT',
+      ['ALT'] = 'ALT',
+      ['CTRL'] = 'CTRL',
+      ['SHIFT'] = 'SHIFT',
+      ['ALT-CTRL'] = 'ALT-CTRL',
+      ['ALT-SHIFT'] = 'ALT-SHIFT',
+      ['CTRL-SHIFT'] = 'CTRL-SHIFT',
    };
 
    return {
-      type = 'group',
-      name = 'Mark As Junk',
       desc = 'Configure the marking & selling options for your junk items.',
+      handler = self,
+      name = 'Mark As Junk',
+      type = 'group',
       args = {
          markingOptions = {
-            name = 'Marking',
-            type = 'group',
             desc = '',
-            order = 1,
+            name = 'Marking',
+            order = 10,
+            type = 'group',
             args = {
-               keybinds = {
-                  name = 'Keybinds',
-                  order = 1,
+               keybindHeader = {
+                  name = 'Keybind',
+                  order = 11,
                   type = 'header',
                },
-               modKey = {
+               modifierKey = {
                   desc = 'This is the additional key to press, along with your activator, to mark your items.',
                   get = function()
-                     -- TODO **[G]** :: Update this to use the DB stored value instead
-                     return MAJ_Utils.userSelectedModKey;
+                     return p.userSelectedModKey;
                   end,
-                  name = 'Select your marking mod key...',
-                  order = 2,
-                  set = function(modKeyTable, value)
-                     print('modKey set was activated with: ' .. value);
-                     MAJ_Utils.userSelectedModKey = modKeysMap[value];
+                  name = 'Select your modifier key...',
+                  order = 12,
+                  set = function(info, value)
+                     p.userSelectedModKey = modKeysMap[value];
                   end,
                   type = 'select',
                   values = modKeysMap,
@@ -50,14 +51,12 @@ function MAJConfig:GetBlizzOptionsFrame()
                activatorKey = {
                   desc = 'This is the main mouse key to press, along with your modifier, to mark your items.',
                   get = function()
-                     -- TODO **[G]** :: Update this to use the DB stored value instead
-                     return MAJ_Utils.userSelectedActivatorKey;
+                     return p.userSelectedActivatorKey;
                   end,
-                  name = 'Select your marking activator...',
-                  order = 3,
-                  set = function(activatorTable, value)
-                     print('activatorKey set was activated with: ' .. value .. ' || ' .. activatorKeysMap[value]);
-                     MAJ_Utils.userSelectedActivatorKey = activatorKeysMap[value];
+                  name = 'Select your activator key...',
+                  order = 13,
+                  set = function(info, value)
+                     p.userSelectedActivatorKey = activatorKeysMap[value];
                   end,
                   type = 'select',
                   values = activatorKeysMap,
@@ -65,24 +64,24 @@ function MAJConfig:GetBlizzOptionsFrame()
             },
          },
          sellingOptions = {
-            name = 'Selling',
-            type = 'group',
             desc = '',
-            order = 2,
+            name = 'Selling',
+            order = 20,
+            type = 'group',
             args = {},
          },
          sortingOptions = {
-            name = 'Sorting',
-            type = 'group',
             desc = '',
-            order = 3,
+            name = 'Sorting',
+            order = 30,
+            type = 'group',
             args = {},
          },
          miscOptions = {
-            name = 'Miscellaneous',
-            type = 'group',
             desc = '',
-            order = 4,
+            name = 'Miscellaneous',
+            order = 40,
+            type = 'group',
             args = {},
          },
       },
@@ -90,7 +89,7 @@ function MAJConfig:GetBlizzOptionsFrame()
 end
 
 -- `addon` is a passed in reference of MarkAsJunk's `self`
-function MAJConfig:Init(addon)
+function Config:Init(addon)
    LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkAsJunk', self:GetBlizzOptionsFrame());
    self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('MarkAsJunk', 'Mark As Junk');
 end
