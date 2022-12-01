@@ -4,20 +4,6 @@ local Config = MarkAsJunk:NewModule('Config');
 function Config:GetBlizzOptionsFrame()
    local p = MarkAsJunk.db.profile;
 
-   local activatorKeysMap = {
-      ['LEFT-CLICK'] = 'LEFT-CLICK',
-      ['RIGHT-CLICK'] = 'RIGHT-CLICK',
-   };
-
-   local modKeysMap = {
-      ['ALT'] = 'ALT',
-      ['CTRL'] = 'CTRL',
-      ['SHIFT'] = 'SHIFT',
-      ['ALT-CTRL'] = 'ALT-CTRL',
-      ['ALT-SHIFT'] = 'ALT-SHIFT',
-      ['CTRL-SHIFT'] = 'CTRL-SHIFT',
-   };
-
    return {
       desc = 'Configure the marking & selling options for your junk items.',
       handler = self,
@@ -34,6 +20,7 @@ function Config:GetBlizzOptionsFrame()
                   name = 'Keybind',
                   order = 11,
                   type = 'header',
+                  width = 'full',
                },
                modifierKey = {
                   desc = 'This is the additional key to press, along with your activator, to mark your items.',
@@ -43,10 +30,10 @@ function Config:GetBlizzOptionsFrame()
                   name = 'Select your modifier key...',
                   order = 12,
                   set = function(info, value)
-                     p.userSelectedModKey = modKeysMap[value];
+                     p.userSelectedModKey = MAJ_Constants.modKeysMap[value];
                   end,
                   type = 'select',
-                  values = modKeysMap,
+                  values = MAJ_Constants.modKeysMap,
                },
                activatorKey = {
                   desc = 'This is the main mouse key to press, along with your modifier, to mark your items.',
@@ -56,10 +43,49 @@ function Config:GetBlizzOptionsFrame()
                   name = 'Select your activator key...',
                   order = 13,
                   set = function(info, value)
-                     p.userSelectedActivatorKey = activatorKeysMap[value];
+                     p.userSelectedActivatorKey = MAJ_Constants.activatorKeysMap[value];
                   end,
                   type = 'select',
-                  values = activatorKeysMap,
+                  values = MAJ_Constants.activatorKeysMap,
+               },
+               itemMaskIconHeader = {
+                  name = 'Item Mask & Icon',
+                  order = 14,
+                  type = 'header',
+                  width = 'full',
+               },
+               overlayColorPicker = {
+                  desc = 'This overlay will be added on top of the items you mark to better visualize your junk.',
+                  hasAlpha = true,
+                  get = function()
+                     local r, g, b, a = p.overlayColor.r,
+                     p.overlayColor.g,
+                     p.overlayColor.b,
+                     p.overlayColor.a;
+
+                     return r, g, b, a;
+                  end,
+                  name = 'Overlay Color',
+                  order = 15,
+                  set = function(info, r, g, b, a)
+                     p.overlayColor = { r = r, g = g, b = b, a = a };
+                  end,
+                  type = 'color',
+               },
+               -- TODO **[G]** :: Maybe add a border color picker here? -- order: 16
+               -- TODO **[G]** :: Maybe add a border thickness slider here? -- order: 17
+               markerIconLocation = {
+                  desc = 'Select the location that you want the MAJ icon to appear.',
+                  get = function()
+                     return p.markerIconLocationSelected;
+                  end,
+                  name = 'Select the location for the icon...',
+                  order = 18,
+                  set = function(info, value)
+                     p.markerIconLocationSelected = MAJ_Constants.iconLocationsMap[value];
+                  end,
+                  type = 'select',
+                  values = MAJ_Constants.iconLocationsMap,
                },
             },
          },

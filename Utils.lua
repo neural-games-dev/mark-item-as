@@ -3,6 +3,8 @@ MAJ_Utils = {
    autoSortMarking = false, -- TODO **[G]** :: Convert to `SavedVariable
    autoSortSelling = false, -- TODO **[G]** :: Convert to `SavedVariable
    isBagginsLoaded = IsAddOnLoaded('Baggins'),
+   markerIconLocationSelected = 'TOPRIGHT',
+   overlayColor = { r = 1, g = 1, b = 1, a = 1 },
    showGreeting = true, -- TODO **[G]** :: Convert to `SavedVariable
    showSlashCommandOutput = true, -- TODO **[G]** :: Convert to `SavedVariable
    userSelectedActivatorKey = 'RIGHT-CLICK', -- TODO **[G]** :: Convert to `SavedVariable
