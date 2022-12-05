@@ -75,7 +75,7 @@ function Config:GetBlizzOptionsFrame()
                -- TODO **[G]** :: Maybe add a border color picker here? -- order: 16
                -- TODO **[G]** :: Maybe add a border thickness slider here? -- order: 17
                markerIconLocation = {
-                  desc = 'Select the location that you want the MAJ icon to appear.',
+                  desc = 'Select the position on the item where you want the MAJ icon to appear.',
                   get = function()
                      return p.markerIconLocationSelected;
                   end,
@@ -108,7 +108,34 @@ function Config:GetBlizzOptionsFrame()
             name = 'Miscellaneous',
             order = 40,
             type = 'group',
-            args = {},
+            args = {
+               startupGreeting = {
+                  desc = 'This will hide or show the initial greeting in chat when the game starts or reloads.',
+                  get = function()
+                     return p.showGreeting;
+                  end,
+                  name = 'Show startup greeting in chat?',
+                  order = 41,
+                  set = function(info, value)
+                     p.showGreeting = value;
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+               slashCommandOutput = {
+                  desc = 'This will hide or show the chat output after entering in a ' .. MAJ_Constants.slashCommandQuoted .. ' command.',
+                  get = function()
+                     return p.showSlashCommandOutput;
+                  end,
+                  name = 'Show slash command output?',
+                  order = 43,
+                  set = function(info, value)
+                     p.showSlashCommandOutput = value;
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+            },
          },
       },
    };
