@@ -9,6 +9,8 @@ MAJ_Constants = {
    bagginsLoadedWarning = '|cFF00ffffMark As Junk|r (|cFFfa8200WARNING|r): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.',
    iconListMap = {
       Coin = 'Coin',
+      Stack = 'Stack',
+      Trash = 'Trash',
    },
    iconLocationsMap = {
       TOPLEFT = "TOPLEFT",
@@ -23,6 +25,8 @@ MAJ_Constants = {
    },
    iconPathMap = {
       Coin = 'Interface/Icons/INV_Misc_Coin_01',
+      Stack = '',
+      Trash = '',
    },
    modKeysMap = {
       ['ALT'] = 'ALT',

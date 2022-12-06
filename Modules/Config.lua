@@ -49,7 +49,7 @@ function Config:GetBlizzOptionsFrame()
                   values = MAJ_Constants.activatorKeysMap,
                },
                itemMaskIconHeader = {
-                  name = 'Item Mask & Icon',
+                  name = 'Overlay & Border',
                   order = 14,
                   type = 'header',
                   width = 'full',
@@ -90,14 +90,35 @@ function Config:GetBlizzOptionsFrame()
                   end,
                   type = 'color',
                },
-               -- TODO **[G]** :: Maybe add a border thickness slider here? -- order: 17
+               borderThicknessSlider = {
+                  desc = 'Select the size of the border that will wrap around your marked item.',
+                  get = function()
+                     return p.borderThickness;
+                  end,
+                  isPercent = false,
+                  max = 2,
+                  min = 0,
+                  name = 'Border Thickness',
+                  order = 17,
+                  set = function(info, value)
+                     p.borderThickness = value;
+                  end,
+                  step = 0.05,
+                  type = 'range',
+               },
+               iconHeader = {
+                  name = 'Icon',
+                  order = 18,
+                  type = 'header',
+                  width = 'full',
+               },
                markerIcon = {
                   desc = 'Select the MAJ icon that you want to appear on the item.',
                   get = function()
                      return p.markerIconSelected;
                   end,
                   name = 'Select the icon...',
-                  order = 18,
+                  order = 19,
                   set = function(info, value)
                      p.markerIconSelected = value;
                   end,
@@ -110,7 +131,7 @@ function Config:GetBlizzOptionsFrame()
                      return p.markerIconLocationSelected;
                   end,
                   name = 'Select the icon location...',
-                  order = 19,
+                  order = 20,
                   set = function(info, value)
                      p.markerIconLocationSelected = MAJ_Constants.iconLocationsMap[value];
                   end,

@@ -3,6 +3,7 @@ MAJ_Utils = {
    autoSortMarking = false, -- TODO **[G]** :: Convert to `SavedVariable
    autoSortSelling = false, -- TODO **[G]** :: Convert to `SavedVariable
    borderColor = { r = 1, g = 1, b = 1, a = 1 },
+   borderThickness = 1.25,
    isBagginsLoaded = IsAddOnLoaded('Baggins'),
    markerIconLocationSelected = 'BOTTOMLEFT',
    markerIconSelected = 'Coin',
