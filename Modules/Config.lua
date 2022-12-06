@@ -72,15 +72,45 @@ function Config:GetBlizzOptionsFrame()
                   end,
                   type = 'color',
                },
-               -- TODO **[G]** :: Maybe add a border color picker here? -- order: 16
+               borderColorPicker = {
+                  desc = 'This border will be added around the items you mark to better visualize your junk.',
+                  hasAlpha = true,
+                  get = function()
+                     local r, g, b, a = p.borderColor.r,
+                     p.borderColor.g,
+                     p.borderColor.b,
+                     p.borderColor.a;
+
+                     return r, g, b, a;
+                  end,
+                  name = 'Border Color',
+                  order = 16,
+                  set = function(info, r, g, b, a)
+                     p.borderColor = { r = r, g = g, b = b, a = a };
+                  end,
+                  type = 'color',
+               },
                -- TODO **[G]** :: Maybe add a border thickness slider here? -- order: 17
+               markerIcon = {
+                  desc = 'Select the MAJ icon that you want to appear on the item.',
+                  get = function()
+                     return p.markerIconSelected;
+                  end,
+                  name = 'Select the icon...',
+                  order = 18,
+                  set = function(info, value)
+                     p.markerIconSelected = value;
+                  end,
+                  type = 'select',
+                  values = MAJ_Constants.iconListMap,
+               },
                markerIconLocation = {
                   desc = 'Select the position on the item where you want the MAJ icon to appear.',
                   get = function()
                      return p.markerIconLocationSelected;
                   end,
-                  name = 'Select the location for the icon...',
-                  order = 18,
+                  name = 'Select the icon location...',
+                  order = 19,
                   set = function(info, value)
                      p.markerIconLocationSelected = MAJ_Constants.iconLocationsMap[value];
                   end,
@@ -101,7 +131,34 @@ function Config:GetBlizzOptionsFrame()
             name = 'Sorting',
             order = 30,
             type = 'group',
-            args = {},
+            args = {
+               sortAfterMarking = {
+                  desc = 'After an item gets marked, this will sort your bags (i.e. "click" the broom icon) automatically.',
+                  get = function()
+                     return p.autoSortMarking;
+                  end,
+                  name = 'Auto sort bags after Marking?',
+                  order = 41,
+                  set = function(info, value)
+                     p.autoSortMarking = value;
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+               sortAfterSelling = {
+                  desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.',
+                  get = function()
+                     return p.autoSortSelling;
+                  end,
+                  name = 'Auto sort bags after Selling?',
+                  order = 43,
+                  set = function(info, value)
+                     p.autoSortSelling = value;
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+            },
          },
          miscOptions = {
             desc = '',

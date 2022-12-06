@@ -7,8 +7,10 @@ MAJ_Constants = {
    addOnName = '|cFF00ffffMark As Junk|r',
    addOnNameQuoted = '|cFF00ffff"Mark As Junk"|r',
    bagginsLoadedWarning = '|cFF00ffffMark As Junk|r (|cFFfa8200WARNING|r): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.',
+   iconListMap = {
+      Coin = 'Coin',
+   },
    iconLocationsMap = {
-      -- TODO **[G]** :: 🚀--BLLR?: Do I want to keep all of these?
       TOPLEFT = "TOPLEFT",
       TOP = "TOP",
       TOPRIGHT = "TOPRIGHT",
@@ -18,6 +20,9 @@ MAJ_Constants = {
       BOTTOMLEFT = "BOTTOMLEFT",
       BOTTOM = "BOTTOM",
       BOTTOMRIGHT = "BOTTOMRIGHT",
+   },
+   iconPathMap = {
+      Coin = 'Interface/Icons/INV_Misc_Coin_01',
    },
    modKeysMap = {
       ['ALT'] = 'ALT',

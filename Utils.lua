@@ -2,8 +2,10 @@
 MAJ_Utils = {
    autoSortMarking = false, -- TODO **[G]** :: Convert to `SavedVariable
    autoSortSelling = false, -- TODO **[G]** :: Convert to `SavedVariable
+   borderColor = { r = 1, g = 1, b = 1, a = 1 },
    isBagginsLoaded = IsAddOnLoaded('Baggins'),
    markerIconLocationSelected = 'BOTTOMLEFT',
+   markerIconSelected = 'Coin',
    overlayColor = { r = 1, g = 1, b = 1, a = 1 },
    showGreeting = true, -- TODO **[G]** :: Convert to `SavedVariable
    showSlashCommandOutput = true, -- TODO **[G]** :: Convert to `SavedVariable
