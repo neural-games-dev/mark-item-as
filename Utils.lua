@@ -1,19 +1,12 @@
--- TODO **[G]** :: Change this name to "defaults" of some sort, after I re/move the connected methods below
-MAJ_Utils = {
-   autoSortMarking = false, -- TODO **[G]** :: Convert to `SavedVariable
-   autoSortSelling = false, -- TODO **[G]** :: Convert to `SavedVariable
-   borderColor = { r = 1, g = 1, b = 1, a = 1 },
-   borderThickness = 1.25,
-   isBagginsLoaded = IsAddOnLoaded('Baggins'),
-   markerIconLocationSelected = 'BOTTOMLEFT',
-   markerIconSelected = 'Coin',
-   overlayColor = { r = 1, g = 1, b = 1, a = 1 },
-   showGreeting = true, -- TODO **[G]** :: Convert to `SavedVariable
-   showSlashCommandOutput = true, -- TODO **[G]** :: Convert to `SavedVariable
-   userSelectedActivatorKey = 'RIGHT-CLICK', -- TODO **[G]** :: Convert to `SavedVariable
-   userSelectedModKey = 'SHIFT', -- TODO **[G]** :: Convert to `SavedVariable
-};
+--## ==========================================================================
+--## ALL REQUIRED IMPORTS
+--## ==========================================================================
+-- Libs / Packages
+local acd = LibStub("AceConfigDialog-3.0");
 
+--## ==========================================================================
+--## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
+--## ==========================================================================
 function MAJ_Utils:CreateFrame()
    local frame = CreateFrame('Frame', 'MAJ_ConfigOptions', UIParent, 'BasicFrameTemplateWithInset');
 
@@ -41,23 +34,11 @@ function MAJ_Utils:CreateFrame()
    return frame;
 end
 
-function MAJ_Utils:HandleConfigOptionsDisplay(configFrame)
-   if (configFrame:IsShown()) then
-      -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
-      if (MAJ_Utils.showSlashCommandOutput) then
-         -- TODO **[G]** :: Update this to use `self.logger:Print` when I can
-         print(MAJ_Constants.addOnName .. ': Hiding the config options window.');
-      end
-
-      configFrame:Hide();
+function MAJ_Utils:HandleConfigOptionsDisplay()
+   if (acd.OpenFrames['MarkAsJunk']) then
+      acd:Close('MarkAsJunk');
    else
-      -- TODO **[G]** :: Add a UI setting/saved variable to enable/disable these messages
-      if (MAJ_Utils.showSlashCommandOutput) then
-         -- TODO **[G]** :: Update this to use `self.logger:Print` when I can
-         print(MAJ_Constants.addOnName .. ': Showing the config options window.');
-      end
-
-      configFrame:Show();
+      acd:Open('MarkAsJunk');
    end
 end
 

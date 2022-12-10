@@ -1,7 +1,11 @@
-local AceConfigDialog = LibStub("AceConfigDialog-3.0");
+--## ==========================================================================
+--## ALL REQUIRED IMPORTS
+--## ==========================================================================
+-- Libs / Packages
 local MarkAsJunk = LibStub("AceAddon-3.0"):NewAddon("MarkAsJunk", "AceConsole-3.0", "AceEvent-3.0");
 MarkAsJunk.version = GetAddOnMetadata("MarkAsJunk", "Version");
 
+-- TODO **[G]** :: Add local vars for AdiBags, ArkInventory, and OneBag3
 --local Baggins = Baggins; -- this will be so I can target Baggins to do stuff later
 --local Bagnon = Bagnon; -- this will be so I can target Bagnon to do stuff later (need to verify this name)
 
@@ -31,10 +35,8 @@ function MarkAsJunk:OnInitialize()
    self:RegisterChatCommand("nrl", "SlashCommandReload");
    self:RegisterChatCommand("nfs", "SlashCommandFrameStack");
 
-   -- TODO **[G]** :: Update this condition to be based off of a UI setting/saved variable so that it disables this greeting
-   if (MAJ_Utils.showGreeting) then
-      local name = UnitName("player");
-      self.logger:Print('Hi, ' .. name .. '! Thanks for using this addon! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
+   if (self.db.profile.showGreeting) then
+      self.logger:Print('Hi, ' .. UnitName("player") .. '! Thanks for using this addon! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
    end
 end
 
@@ -88,15 +90,12 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
    end
 
    if (command == 'config' or command == 'c') then
-      --self.logger:Print('BLLR? -- CONFIG, Show slash command output: ' .. tostring(MAJ_Utils.showSlashCommandOutput));
-      --MAJ_Utils:HandleConfigOptionsDisplay(MAJ_Config);
-      AceConfigDialog:Open('MarkAsJunk');
+      MAJ_Utils:HandleConfigOptionsDisplay();
       return ;
    end
 
    if (command == 'options' or command == 'o') then
-      --self.logger:Print('BLLR? -- OPTIONS, Show slash command output: ' .. tostring(MAJ_Utils.showSlashCommandOutput));
-      MAJ_Utils:HandleConfigOptionsDisplay(MAJ_Config);
+      MAJ_Utils:HandleConfigOptionsDisplay();
       return ;
    end
 
