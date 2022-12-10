@@ -1,0 +1,23 @@
+name: Check semantic PR
+# LINK: https://github.com/marketplace/actions/semantic-pull-request
+
+on:
+   pull_request:
+      branches:
+         - main
+         - release
+         # - MET-[0-9]+ # TODO :: Do I want to use these branch name targets?
+         # - hotfix # NOTE :: Do I want to use this?
+      types:
+         - opened
+         - edited
+         - synchronize
+
+jobs:
+   semantic_pr:
+      name: Check for Semantic PR
+      runs-on: ubuntu-latest
+      steps:
+         - uses: amannn/action-semantic-pull-request@v4.5.0
+           env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
