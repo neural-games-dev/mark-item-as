@@ -4,12 +4,11 @@
 --## ==========================================================================
 MAJ_Constants = {
    activatorKeysMap = {
-      ['LEFT-CLICK'] = 'LEFT-CLICK',
-      ['RIGHT-CLICK'] = 'RIGHT-CLICK',
+      ['LeftButton'] = 'LeftButton',
+      ['RightButton'] = 'RightButton',
    },
    addOnName = '|cFF33ff99Mark As Junk|r',
    addOnNameQuoted = '|cFF33ff99"Mark As Junk"|r',
-   bagginsLoadedWarning = '|cFF33ff99Mark As Junk|r (|cFFfa8200WARNING|r): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.',
    iconListMap = {
       Coin = 'Coin',
       Stack = 'Stack',
@@ -32,13 +31,17 @@ MAJ_Constants = {
       Trash = '',
    },
    modKeysMap = {
-      ['ALT'] = 'ALT',
-      ['CTRL'] = 'CTRL',
-      ['SHIFT'] = 'SHIFT',
-      ['ALT-CTRL'] = 'ALT-CTRL',
-      ['ALT-SHIFT'] = 'ALT-SHIFT',
-      ['CTRL-SHIFT'] = 'CTRL-SHIFT',
+      ['Alt'] = 'Alt',
+      ['Ctrl'] = 'Ctrl',
+      ['Shift'] = 'Shift',
+      ['Alt-Ctrl'] = 'Alt-Ctrl',
+      ['Alt-Shift'] = 'Alt-Shift',
+      ['Ctrl-Shift'] = 'Ctrl-Shift',
    },
    slashCommand = '|cFFbada55/maj|r',
    slashCommandQuoted = '|cFFbada55"/maj"|r',
+   warnings = {
+      bagginsLoaded = '|cFF33ff99Mark As Junk|r (|cFFfa8200WARNING|r): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.',
+      peddlerLoaded = '(|cFFfa8200WARNING|r): "Peddler" addon is also loaded. There may be conflicts in behavior.',
+   },
 };

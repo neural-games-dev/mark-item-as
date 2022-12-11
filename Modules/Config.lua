@@ -208,6 +208,7 @@ function Config:GetBlizzOptionsFrame()
                   type = 'toggle',
                   width = 'full',
                },
+               -- TODO :: Add a `showWarnings` option?
                startupGreeting = {
                   desc = 'This will hide/show the initial greeting in chat when the game starts or reloads.',
                   get = function()

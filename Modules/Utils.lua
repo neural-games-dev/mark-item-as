@@ -1,9 +1,13 @@
---## ==========================================================================
+--## ===============================================================================================
 --## ALL REQUIRED IMPORTS
---## ==========================================================================
+--## ===============================================================================================
 -- Libs / Packages
 local dialog = LibStub("AceConfigDialog-3.0");
 local maj = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+
+--## ===============================================================================================
+--## INTERNAL VARS & SET UP
+--## ===============================================================================================
 local Utils = maj:NewModule('Utils');
 
 --## ===============================================================================================
@@ -27,11 +31,14 @@ function Utils:handleConfigOptionsDisplay()
    end
 end
 
-function Utils:SortBags()
-   local isBagginsLoaded = self:getDbValue('isBagginsLoaded');
+function Utils:isMajKeyCombo(button)
+   local db = maj.db.profile;
+   return button == db.userSelectedActivatorKey and IsAltKeyDown();
+end
 
-   if (isBagginsLoaded) then
-      print(MAJ_Constants.bagginsLoadedWarning);
+function Utils:sortBags()
+   if (IsAddOnLoaded('Baggins')) then
+      maj.logger:Print(MAJ_Constants.warnings.bagginsLoaded);
       return ;
    end
 

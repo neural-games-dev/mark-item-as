@@ -1,6 +1,6 @@
---## ==========================================================================
+--## ===============================================================================================
 --## ALL REQUIRED IMPORTS
---## ==========================================================================
+--## ===============================================================================================
 -- Libs / Packages
 local MarkAsJunk = LibStub('AceAddon-3.0'):NewAddon('MarkAsJunk', 'AceConsole-3.0', 'AceEvent-3.0');
 
@@ -8,9 +8,9 @@ local MarkAsJunk = LibStub('AceAddon-3.0'):NewAddon('MarkAsJunk', 'AceConsole-3.
 --local Baggins = Baggins; -- this will be so I can target Baggins to do stuff later
 --local Bagnon = Bagnon; -- this will be so I can target Bagnon to do stuff later (need to verify this name)
 
---## ==========================================================================
+--## ===============================================================================================
 --## START UP & GREETING SCRIPTS
---## ==========================================================================
+--## ===============================================================================================
 MarkAsJunk.version = GetAddOnMetadata('MarkAsJunk', 'Version');
 
 function MarkAsJunk:OnInitialize()
@@ -38,13 +38,20 @@ function MarkAsJunk:OnInitialize()
    if (self.db.profile.showGreeting) then
       self.logger:Print('Hi, ' .. UnitName('player') .. '! Thanks for using "MarkAsJunk"! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
    end
+
+   if (self.db.profile.showWarnings) then
+      if (IsAddOnLoaded('Peddler')) then
+         self.logger:Print(MAJ_Constants.warnings.peddlerLoaded);
+      end
+   end
 end
 
---## ==========================================================================
+--## ===============================================================================================
 --## MAIN CONFIG / OPTIONS WINDOW
---## ==========================================================================
+--## ===============================================================================================
 function MarkAsJunk:OnEnable()
-   -- TODO :: What do I (need to) do here?
+   local u = MarkAsJunk:GetModule('Utils');
+   -- Iterating through all bags and item slots to attach click listeners
    local idn = 0
 
    if C_Container then
@@ -60,18 +67,19 @@ function MarkAsJunk:OnEnable()
    local slotFrame = _G[bagName .. "Item" .. slotIndex]
    print('The slot frame ID is: ' .. slotFrame:GetID() .. ', with size: ' .. slotFrame:GetSize())
 
-   -- TODO :: Look into `SetScript` vs `HookScript`
-   slotFrame:SetScript('OnClick', function(_frame, button, _down)
-      print('do we click?' .. ', _frame: ' .. _frame:GetName() .. ', button: ' .. button .. ', _down: ' .. tostring(_down))
+   slotFrame:HookScript('OnClick', function(_frame, button, _down)
+      if (u:isMajKeyCombo(button)) then
+         print('do we click?' .. ', _frame: ' .. _frame:GetName() .. ', button: ' .. button .. ', _down: ' .. tostring(_down))
+      end
    end)
 end
 
 --[[
    TODO :: Move these slash commands into their own file and then INIT them from here
 ]]
---## ==========================================================================
+--## ===============================================================================================
 --## CUSTOM SLASH COMMANDS
---## ==========================================================================
+--## ===============================================================================================
 function MarkAsJunk:SlashCommandFrameStack()
    LoadAddOn('Blizzard_DebugTools');
    FrameStackTooltip_Toggle();
