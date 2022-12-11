@@ -36,7 +36,7 @@ function MarkAsJunk:OnInitialize()
    self:RegisterChatCommand('nfs', 'SlashCommandFrameStack');
 
    if (self.db.profile.showGreeting) then
-      self.logger:Print('Hi, ' .. UnitName('player') .. '! Thanks for using this addon! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
+      self.logger:Print('Hi, ' .. UnitName('player') .. '! Thanks for using "MarkAsJunk"! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
    end
 end
 
