@@ -12,8 +12,6 @@ MarkAsJunk.version = GetAddOnMetadata("MarkAsJunk", "Version");
 --## ==========================================================================
 --## START UP & GREETING SCRIPTS
 --## ==========================================================================
-local MAJ_Config;
-
 function MarkAsJunk:OnInitialize()
    self.db = LibStub("AceDB-3.0"):New("MarkAsJunkDB", { profile = MAJ_Utils }, true);
 
@@ -45,20 +43,6 @@ end
 --## ==========================================================================
 function MarkAsJunk:OnEnable()
    -- TODO :: What do I (need to) do here?
-   -- Instantiating the config frame with default/starting values
-   MAJ_Config = MAJ_Utils:CreateFrame();
-
-   -- Registering the frame so that hitting `ESC` closes it
-   tinsert(UISpecialFrames, MAJ_Config:GetName());
-
-   -- Registering the frame as movable so that users can adjust it
-   MAJ_Utils:MakeFrameMovable(MAJ_Config);
-
-   -- Making the frame resizable
-   MAJ_Utils:MakeFrameResizable(MAJ_Config);
-
-   -- Create/generate and insert the options and their defaults
-   MAJ_Utils:CreateDefaultOptions(MAJ_Config);
 end
 
 --[[

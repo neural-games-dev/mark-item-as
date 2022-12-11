@@ -9,15 +9,15 @@
 ## GitHub: https://github.com/gflujan/mark-as-junk
 ## DefaultState: enabled
 ## Created: 07-Nov-2022
-## Last Updated: 04-Dec-2022
+## Last Updated: 10-Dec-2022
 
 # 3rd party libs
 Libs.xml
 
 # MAJ helpers
 Constants.lua
-Utils.lua
 Options.lua
+Utils.lua
 
 # Main core file
 MarkAsJunk.lua

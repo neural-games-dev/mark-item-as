@@ -1,6 +1,13 @@
+--## ==========================================================================
+--## ALL REQUIRED IMPORTS
+--## ==========================================================================
+-- Libs / Packages
 local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
 local Config = MarkAsJunk:NewModule('Config');
 
+--## ==========================================================================
+--## DEFINING THE MAIN OPTIONS FRAME
+--## ==========================================================================
 function Config:GetBlizzOptionsFrame()
    local p = MarkAsJunk.db.profile;
 
