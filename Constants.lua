@@ -7,9 +7,9 @@ MAJ_Constants = {
       ['LEFT-CLICK'] = 'LEFT-CLICK',
       ['RIGHT-CLICK'] = 'RIGHT-CLICK',
    },
-   addOnName = '|cFF00ffffMark As Junk|r',
-   addOnNameQuoted = '|cFF00ffff"Mark As Junk"|r',
-   bagginsLoadedWarning = '|cFF00ffffMark As Junk|r (|cFFfa8200WARNING|r): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.',
+   addOnName = '|cFF33ff99Mark As Junk|r',
+   addOnNameQuoted = '|cFF33ff99"Mark As Junk"|r',
+   bagginsLoadedWarning = '|cFF33ff99Mark As Junk|r (|cFFfa8200WARNING|r): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.',
    iconListMap = {
       Coin = 'Coin',
       Stack = 'Stack',

@@ -54,6 +54,10 @@ end
 --## --------------------------------------------------------------------------
 --## TEXT COLORIZING FUNCTIONS
 --## --------------------------------------------------------------------------
+function Utils:aceText(textToColorize)
+   return '|cFF33ff99' .. textToColorize .. '|r';
+end
+
 function Utils:badassText(textToColorize)
    return '|cFFbada55' .. textToColorize .. '|r';
 end
@@ -64,4 +68,8 @@ end
 
 function Utils:redText(textToColorize)
    return '|cFFff0000' .. textToColorize .. '|r';
+end
+
+function Utils:cyanText(textToColorize)
+   return '|cFF00ffff' .. textToColorize .. '|r';
 end
