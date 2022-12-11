@@ -83,6 +83,10 @@ function Config:GetBlizzOptionsFrame()
                   desc = 'This border will be added around the items you mark to better visualize your junk.',
                   hasAlpha = true,
                   get = function()
+                     for k, v in pairs(p.borderColor) do
+                        print('BLLR? GETTER - BORDER COLOR VALUES -> ' .. k .. ' = ' .. v);
+                     end
+
                      local r, g, b, a = p.borderColor.r,
                      p.borderColor.g,
                      p.borderColor.b,

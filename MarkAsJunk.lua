@@ -3,7 +3,6 @@
 --## ==========================================================================
 -- Libs / Packages
 local MarkAsJunk = LibStub("AceAddon-3.0"):NewAddon("MarkAsJunk", "AceConsole-3.0", "AceEvent-3.0");
-MarkAsJunk.version = GetAddOnMetadata("MarkAsJunk", "Version");
 
 -- TODO **[G]** :: Add local vars for AdiBags, ArkInventory, and OneBag3
 --local Baggins = Baggins; -- this will be so I can target Baggins to do stuff later
@@ -12,6 +11,8 @@ MarkAsJunk.version = GetAddOnMetadata("MarkAsJunk", "Version");
 --## ==========================================================================
 --## START UP & GREETING SCRIPTS
 --## ==========================================================================
+MarkAsJunk.version = GetAddOnMetadata("MarkAsJunk", "Version");
+
 function MarkAsJunk:OnInitialize()
    self.db = LibStub("AceDB-3.0"):New("MarkAsJunkDB", { profile = MAJ_Utils }, true);
 
@@ -28,7 +29,7 @@ function MarkAsJunk:OnInitialize()
    -- do you init or not bro?!
    self.config:Init(self)
 
-   -- we're slashing prices so much, it's like we're crazy!
+   -- we're slashing prices so much it's like we're crazy!
    self:RegisterChatCommand("maj", "SlashCommandInfoConfig");
    self:RegisterChatCommand("nrl", "SlashCommandReload");
    self:RegisterChatCommand("nfs", "SlashCommandFrameStack");
@@ -46,7 +47,7 @@ function MarkAsJunk:OnEnable()
 end
 
 --[[
-   TODO :: Move these slash commands into their own file and then source them into here
+   TODO :: Move these slash commands into their own file and then INIT them from here
 ]]
 --## ==========================================================================
 --## CUSTOM SLASH COMMANDS
