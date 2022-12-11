@@ -4,6 +4,7 @@
 -- Libs / Packages
 local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
 local Config = MarkAsJunk:NewModule('Config');
+local Utils = MarkAsJunk:GetModule('Utils');
 
 --## ==========================================================================
 --## DEFINING THE MAIN OPTIONS FRAME
@@ -32,12 +33,12 @@ function Config:GetBlizzOptionsFrame()
                modifierKey = {
                   desc = 'This is the additional key to press, along with your activator, to mark your items.',
                   get = function()
-                     return p.userSelectedModKey;
+                     return Utils:getDbValue('userSelectedModKey');
                   end,
                   name = 'Select your modifier key...',
                   order = 12,
                   set = function(info, value)
-                     p.userSelectedModKey = MAJ_Constants.modKeysMap[value];
+                     Utils:setDbValue('userSelectedModKey', MAJ_Constants.modKeysMap[value])
                   end,
                   type = 'select',
                   values = MAJ_Constants.modKeysMap,
@@ -83,10 +84,6 @@ function Config:GetBlizzOptionsFrame()
                   desc = 'This border will be added around the items you mark to better visualize your junk.',
                   hasAlpha = true,
                   get = function()
-                     for k, v in pairs(p.borderColor) do
-                        print('BLLR? GETTER - BORDER COLOR VALUES -> ' .. k .. ' = ' .. v);
-                     end
-
                      local r, g, b, a = p.borderColor.r,
                      p.borderColor.g,
                      p.borderColor.b,
@@ -126,12 +123,12 @@ function Config:GetBlizzOptionsFrame()
                markerIcon = {
                   desc = 'Select the MAJ icon that you want to appear on the item.',
                   get = function()
-                     return p.markerIconSelected;
+                     return Utils:getDbValue('markerIconSelected');
                   end,
-                  name = 'Select the icon...',
+                  name = 'Select your icon...',
                   order = 19,
                   set = function(info, value)
-                     p.markerIconSelected = value;
+                     Utils:setDbValue('markerIconSelected', value);
                   end,
                   type = 'select',
                   values = MAJ_Constants.iconListMap,
@@ -141,7 +138,7 @@ function Config:GetBlizzOptionsFrame()
                   get = function()
                      return p.markerIconLocationSelected;
                   end,
-                  name = 'Select the icon location...',
+                  name = 'Select your icon location...',
                   order = 20,
                   set = function(info, value)
                      p.markerIconLocationSelected = MAJ_Constants.iconLocationsMap[value];
@@ -167,12 +164,12 @@ function Config:GetBlizzOptionsFrame()
                sortAfterMarking = {
                   desc = 'After an item gets marked, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
-                     return p.autoSortMarking;
+                     return Utils:getDbValue('autoSortMarking');
                   end,
                   name = 'Auto sort bags after Marking?',
                   order = 41,
                   set = function(info, value)
-                     p.autoSortMarking = value;
+                     Utils:setDbValue('autoSortMarking', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -180,12 +177,12 @@ function Config:GetBlizzOptionsFrame()
                sortAfterSelling = {
                   desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
-                     return p.autoSortSelling;
+                     return Utils:getDbValue('autoSortSelling');
                   end,
                   name = 'Auto sort bags after Selling?',
                   order = 43,
                   set = function(info, value)
-                     p.autoSortSelling = value;
+                     Utils:setDbValue('autoSortSelling', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -201,12 +198,12 @@ function Config:GetBlizzOptionsFrame()
                startupGreeting = {
                   desc = 'This will hide or show the initial greeting in chat when the game starts or reloads.',
                   get = function()
-                     return p.showGreeting;
+                     return Utils:getDbValue('showGreeting');
                   end,
                   name = 'Show startup greeting in chat?',
                   order = 41,
                   set = function(info, value)
-                     p.showGreeting = value;
+                     Utils:setDbValue('showGreeting', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -214,12 +211,12 @@ function Config:GetBlizzOptionsFrame()
                slashCommandOutput = {
                   desc = 'This will hide or show the chat output after entering in a ' .. MAJ_Constants.slashCommandQuoted .. ' command.',
                   get = function()
-                     return p.showSlashCommandOutput;
+                     return Utils:getDbValue('showSlashCommandOutput');
                   end,
                   name = 'Show slash command output?',
                   order = 43,
                   set = function(info, value)
-                     p.showSlashCommandOutput = value;
+                     Utils:setDbValue('showSlashCommandOutput', value);
                   end,
                   type = 'toggle',
                   width = 'full',

@@ -17,7 +17,6 @@ Libs.xml
 # MAJ helpers
 Constants.lua
 Options.lua
-Utils.lua
 
 # Main core file
 MarkAsJunk.lua

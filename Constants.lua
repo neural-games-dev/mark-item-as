@@ -1,7 +1,7 @@
+-- TODO **[G]** :: Convert this into a module
 --## ==========================================================================
---## GLOBAL CONSTANTS TABLE TO BE USED THROUGHOUT THE ADDON
+--## DEFINING THE GLOBAL CONSTANTS TABLE TO BE USED THROUGHOUT THE ADDON
 --## ==========================================================================
--- TODO **[G]** :: Convert this into a module?
 MAJ_Constants = {
    activatorKeysMap = {
       ['LEFT-CLICK'] = 'LEFT-CLICK',

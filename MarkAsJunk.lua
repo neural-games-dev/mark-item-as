@@ -14,7 +14,7 @@ local MarkAsJunk = LibStub("AceAddon-3.0"):NewAddon("MarkAsJunk", "AceConsole-3.
 MarkAsJunk.version = GetAddOnMetadata("MarkAsJunk", "Version");
 
 function MarkAsJunk:OnInitialize()
-   self.db = LibStub("AceDB-3.0"):New("MarkAsJunkDB", { profile = MAJ_Utils }, true);
+   self.db = LibStub("AceDB-3.0"):New("MarkAsJunkDB", { profile = MAJ_Defaults }, true);
 
    -- To be able to use the left and right arrows in the edit box
    -- without rotating your character
@@ -58,47 +58,41 @@ function MarkAsJunk:SlashCommandFrameStack()
 end
 
 function MarkAsJunk:SlashCommandInfoConfig(command)
+   local Utils = MarkAsJunk:GetModule('Utils');
    command = command:trim();
 
    -- Display the MarkAsJunk commands and notes
    if (command == '') then
       --print('🌟💰🌟 |cFF00ffff-- MARK AS JUNK COMMANDS --|r 🌟💰🌟');
-      self.logger:Print([[
-|cFF00ffff----- COMMANDS -----|r
-|cFFbada55/maj config (c)|r -- Shows the config window to customize this addon.
-|cFFbada55/maj options (o)|r -- This is an alias for "config".
-|cFFbada55/maj hidetext (ht)|r -- DISABLES text output when using a |cFFbada55"/maj"|r command.
-|cFFbada55/maj showtext (st)|r -- ENABLES text output when using a |cFFbada55"/maj"|r command.
-      ]]);
+      self.logger:Print('|cFF00ffff----- COMMANDS -----|r\n' ..
+         Utils:badassText('/maj config (c)') .. ' -- Shows the config window to customize this addon.\n' ..
+         Utils:badassText('/maj options (o)') .. ' -- This is an alias for "config".\n' ..
+         Utils:badassText('/maj hidetext (ht)') .. ' -- ' .. Utils:redText('DISABLES') .. ' text output when using a |cFFbada55"/maj"|r command.\n' ..
+         Utils:badassText('/maj showtext (st)') .. ' -- ' .. Utils:greenText('ENABLES') .. ' text output when using a |cFFbada55"/maj"|r command.'
+      );
 
       return ;
    end
 
-   if (command == 'config' or command == 'c') then
-      MAJ_Utils:HandleConfigOptionsDisplay();
-      return ;
-   end
+   local isConfigOptionsCommand = command == 'config' or
+      command == 'c' or
+      command == 'options' or
+      command == 'o';
 
-   if (command == 'options' or command == 'o') then
-      MAJ_Utils:HandleConfigOptionsDisplay();
+   if (isConfigOptionsCommand) then
+      Utils:handleConfigOptionsDisplay();
       return ;
    end
 
    if (command == 'hidetext' or command == 'ht') then
-      -- TODO **[G]** :: This needs to affect the checkbox in the options window
-      MAJ_Utils.showSlashCommandOutput = false;
-      self.logger:Print('The slash command output text has been DISABLED.');
-      local slashCommandOutputCheckbox = _G[MAJ_CheckBox_SlashCommandOutput:GetName()];
-      slashCommandOutputCheckbox:SetChecked(false);
+      self.logger:Print('The slash command output text has been ' .. Utils:redText('DISABLED'));
+      Utils:setDbValue('showSlashCommandOutput', false);
       return ;
    end
 
    if (command == 'showtext' or command == 'st') then
-      -- TODO **[G]** :: This needs to affect the checkbox in the options window
-      MAJ_Utils.showSlashCommandOutput = true;
-      self.logger:Print('The slash command output text has been ENABLED.');
-      local slashCommandOutputCheckbox = _G[MAJ_CheckBox_SlashCommandOutput:GetName()];
-      slashCommandOutputCheckbox:SetChecked(true);
+      self.logger:Print('The slash command output text has been ' .. Utils:greenText('ENABLED'));
+      Utils:setDbValue('showSlashCommandOutput', true);
       return ;
    end
 

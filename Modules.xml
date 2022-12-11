@@ -3,14 +3,19 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd"
 >
-
+   <!-- ========================================================================== -->
+   <!-- MY MODULES -->
+   <!-- ========================================================================== -->
    <!--   <Script file="Modules/Repo.lua"/>-->
+   <Script file="Modules/Utils.lua"/>
    <Script file="Modules/Config.lua"/>
    <Script file="Modules/Logger.lua"/>
    <!--   <Script file="Modules/Slot.lua"/>-->
-   <!--   <Script file="Modules/Utils.lua"/>-->
    <!--   <Script file="Modules/Tooltip.lua"/>-->
 
+   <!-- ========================================================================== -->
+   <!-- PLUG-INS FOR EXTERNAL ADDONS -->
+   <!-- ========================================================================== -->
    <!--   <Script file="Plugins/Plugin_AdiBags.lua"/>-->
    <!--   <Script file="Plugins/Plugin_ArkInventory.lua"/>-->
    <!--   <Script file="Plugins/Plugin_Bagnon_Combuctor.lua"/>-->
