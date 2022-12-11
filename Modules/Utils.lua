@@ -1,4 +1,3 @@
--- TODO **[G]** :: Convert this into a module
 --## ==========================================================================
 --## ALL REQUIRED IMPORTS
 --## ==========================================================================
@@ -54,22 +53,22 @@ end
 --## --------------------------------------------------------------------------
 --## TEXT COLORIZING FUNCTIONS
 --## --------------------------------------------------------------------------
-function Utils:aceText(textToColorize)
-   return '|cFF33ff99' .. textToColorize .. '|r';
+function Utils:ace(text)
+   return '|cFF33ff99' .. text .. '|r';
 end
 
-function Utils:badassText(textToColorize)
-   return '|cFFbada55' .. textToColorize .. '|r';
+function Utils:badass(text)
+   return '|cFFbada55' .. text .. '|r';
 end
 
-function Utils:greenText(textToColorize)
-   return '|cFF00ff00' .. textToColorize .. '|r';
+function Utils:cyan(text)
+   return '|cFF00ffff' .. text .. '|r';
 end
 
-function Utils:redText(textToColorize)
-   return '|cFFff0000' .. textToColorize .. '|r';
+function Utils:green(text)
+   return '|cFF00ff00' .. text .. '|r';
 end
 
-function Utils:cyanText(textToColorize)
-   return '|cFF00ffff' .. textToColorize .. '|r';
+function Utils:red(text)
+   return '|cFFff0000' .. text .. '|r';
 end

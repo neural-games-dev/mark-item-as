@@ -59,17 +59,17 @@ function MarkAsJunk:SlashCommandFrameStack()
 end
 
 function MarkAsJunk:SlashCommandInfoConfig(command)
-   local Utils = MarkAsJunk:GetModule('Utils');
+   local u = MarkAsJunk:GetModule('Utils');
    command = command:trim();
 
    -- Display the MarkAsJunk commands and notes
    if (command == '') then
       --print('🌟💰🌟 |cFF00ffff-- MARK AS JUNK COMMANDS --|r 🌟💰🌟');
-      self.logger:Print(Utils:cyanText('----- COMMANDS -----') .. '\n' ..
-         Utils:badassText('/maj config (c)') .. ' -- Shows the config window to customize this addon.\n' ..
-         Utils:badassText('/maj options (o)') .. ' -- This is an alias for "config".\n' ..
-         Utils:badassText('/maj hidetext (ht)') .. ' -- ' .. Utils:redText('DISABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
-         Utils:badassText('/maj showtext (st)') .. ' -- ' .. Utils:greenText('ENABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.'
+      self.logger:Print(u:cyan('----- COMMANDS -----') .. '\n' ..
+         u:badass('/maj config (c)') .. ' -- Shows the config window to customize this addon.\n' ..
+         u:badass('/maj options (o)') .. ' -- This is an alias for "config".\n' ..
+         u:badass('/maj hidetext (ht)') .. ' -- ' .. u:red('DISABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
+         u:badass('/maj showtext (st)') .. ' -- ' .. u:green('ENABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.'
       );
 
       return ;
@@ -81,19 +81,19 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
       command == 'o';
 
    if (isConfigOptionsCommand) then
-      Utils:handleConfigOptionsDisplay();
+      u:handleConfigOptionsDisplay();
       return ;
    end
 
    if (command == 'hidetext' or command == 'ht') then
-      self.logger:Print('The slash command output text has been ' .. Utils:redText('DISABLED'));
-      Utils:setDbValue('showSlashCommandOutput', false);
+      self.logger:Print('The slash command output text has been ' .. u:red('DISABLED'));
+      u:setDbValue('showSlashCommandOutput', false);
       return ;
    end
 
    if (command == 'showtext' or command == 'st') then
-      self.logger:Print('The slash command output text has been ' .. Utils:greenText('ENABLED'));
-      Utils:setDbValue('showSlashCommandOutput', true);
+      self.logger:Print('The slash command output text has been ' .. u:green('ENABLED'));
+      u:setDbValue('showSlashCommandOutput', true);
       return ;
    end
 
