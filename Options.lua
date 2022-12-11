@@ -11,6 +11,7 @@ MAJ_Defaults = {
    markerIconSelected = 'Coin',
    overlayColor = { r = 0, g = 0, b = 0, a = 0.75 },
    showGreeting = true,
+   showSaleSummary = true,
    showSlashCommandOutput = true,
    userSelectedActivatorKey = 'RIGHT-CLICK',
    userSelectedModKey = 'ALT',

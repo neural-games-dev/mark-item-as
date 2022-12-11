@@ -4,7 +4,7 @@
 -- Libs / Packages
 local MarkAsJunk = LibStub('AceAddon-3.0'):NewAddon('MarkAsJunk', 'AceConsole-3.0', 'AceEvent-3.0');
 
--- TODO **[G]** :: Add local vars for AdiBags, ArkInventory, and OneBag3
+-- TODO :: Add local vars for AdiBags, ArkInventory, and OneBag3
 --local Baggins = Baggins; -- this will be so I can target Baggins to do stuff later
 --local Bagnon = Bagnon; -- this will be so I can target Bagnon to do stuff later (need to verify this name)
 
@@ -45,6 +45,25 @@ end
 --## ==========================================================================
 function MarkAsJunk:OnEnable()
    -- TODO :: What do I (need to) do here?
+   local idn = 0
+
+   if C_Container then
+      print('we have a c container')
+      print(C_Container.GetContainerNumSlots(idn))
+   end
+
+   local bagName = _G["ContainerFrame" .. idn + 1]:GetName()
+   local slotIndex = 1
+
+   print('The bag name is: ' .. bagName)
+
+   local slotFrame = _G[bagName .. "Item" .. slotIndex]
+   print('The slot frame ID is: ' .. slotFrame:GetID() .. ', with size: ' .. slotFrame:GetSize())
+
+   -- TODO :: Look into `SetScript` vs `HookScript`
+   slotFrame:SetScript('OnClick', function(_frame, button, _down)
+      print('do we click?' .. ', _frame: ' .. _frame:GetName() .. ', button: ' .. button .. ', _down: ' .. tostring(_down))
+   end)
 end
 
 --[[

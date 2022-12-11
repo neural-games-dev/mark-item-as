@@ -1,4 +1,4 @@
--- TODO **[G]** :: Convert this into a module
+-- TODO :: Convert this into a module
 --## ==========================================================================
 --## DEFINING THE GLOBAL CONSTANTS TABLE TO BE USED THROUGHOUT THE ADDON
 --## ==========================================================================
@@ -16,15 +16,15 @@ MAJ_Constants = {
       Trash = 'Trash',
    },
    iconLocationsMap = {
-      TOPLEFT = "TOPLEFT",
-      TOP = "TOP",
-      TOPRIGHT = "TOPRIGHT",
-      LEFT = "LEFT",
-      CENTER = "CENTER",
-      RIGHT = "RIGHT",
-      BOTTOMLEFT = "BOTTOMLEFT",
-      BOTTOM = "BOTTOM",
-      BOTTOMRIGHT = "BOTTOMRIGHT",
+      TOPLEFT = 'TOPLEFT',
+      TOP = 'TOP',
+      TOPRIGHT = 'TOPRIGHT',
+      LEFT = 'LEFT',
+      CENTER = 'CENTER',
+      RIGHT = 'RIGHT',
+      BOTTOMLEFT = 'BOTTOMLEFT',
+      BOTTOM = 'BOTTOM',
+      BOTTOMRIGHT = 'BOTTOMRIGHT',
    },
    iconPathMap = {
       Coin = 'Interface/Icons/INV_Misc_Coin_01',

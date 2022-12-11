@@ -189,19 +189,32 @@ function Config:GetBlizzOptionsFrame()
                },
             },
          },
-         miscOptions = {
+         chatOptions = {
             desc = '',
-            name = 'Miscellaneous',
+            name = 'Chat',
             order = 40,
             type = 'group',
             args = {
+               saleSummary = {
+                  desc = 'This will hide/show the gold & items summary in chat after selling to a merchant.',
+                  get = function()
+                     return Utils:getDbValue('showSaleSummary');
+                  end,
+                  name = 'Show summary after selling?',
+                  order = 41,
+                  set = function(info, value)
+                     Utils:setDbValue('showSaleSummary', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
                startupGreeting = {
-                  desc = 'This will hide or show the initial greeting in chat when the game starts or reloads.',
+                  desc = 'This will hide/show the initial greeting in chat when the game starts or reloads.',
                   get = function()
                      return Utils:getDbValue('showGreeting');
                   end,
                   name = 'Show startup greeting in chat?',
-                  order = 41,
+                  order = 42,
                   set = function(info, value)
                      Utils:setDbValue('showGreeting', value);
                   end,
@@ -209,7 +222,7 @@ function Config:GetBlizzOptionsFrame()
                   width = 'full',
                },
                slashCommandOutput = {
-                  desc = 'This will hide or show the chat output after entering in a ' .. MAJ_Constants.slashCommandQuoted .. ' command.',
+                  desc = 'This will hide/show the chat output after entering in a ' .. MAJ_Constants.slashCommandQuoted .. ' command.',
                   get = function()
                      return Utils:getDbValue('showSlashCommandOutput');
                   end,
