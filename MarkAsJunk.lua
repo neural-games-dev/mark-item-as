@@ -26,6 +26,7 @@ function MarkAsJunk:OnInitialize()
    -- calling all modules! all modules to the front!
    self.config = self:GetModule('Config');
    self.logger = self:GetModule('Logger');
+   self.utils = self:GetModule('Utils');
 
    -- do you init or not bro?!
    self.config:Init(self)
@@ -50,7 +51,7 @@ end
 --## MAIN CONFIG / OPTIONS WINDOW
 --## ===============================================================================================
 function MarkAsJunk:OnEnable()
-   local u = MarkAsJunk:GetModule('Utils');
+   local u = self.utils;
    -- Iterating through all bags and item slots to attach click listeners
    local idn = 0
 
@@ -86,7 +87,7 @@ function MarkAsJunk:SlashCommandFrameStack()
 end
 
 function MarkAsJunk:SlashCommandInfoConfig(command)
-   local u = MarkAsJunk:GetModule('Utils');
+   local u = self.utils;
    command = command:trim();
 
    -- Display the MarkAsJunk commands and notes

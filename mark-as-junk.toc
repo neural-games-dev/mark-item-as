@@ -14,12 +14,12 @@
 # 3rd party libs
 Libs.xml
 
-# MAJ helpers
-Constants.lua
-Options.lua
-
 # Main core file
 MarkAsJunk.lua
 
 # MAJ modules
 Modules.xml
+
+# MAJ helpers
+Constants.lua
+Options.lua

@@ -79,3 +79,7 @@ end
 function Utils:red(text)
    return '|cFFff0000' .. text .. '|r';
 end
+
+function Utils:warn(text)
+   return '|cFFfa8200' .. text .. '|r';
+end

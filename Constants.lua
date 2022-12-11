@@ -1,4 +1,15 @@
 -- TODO :: Convert this into a module
+--## ===============================================================================================
+--## ALL REQUIRED IMPORTS
+--## ===============================================================================================
+-- Libs / Packages
+local maj = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+
+--## ===============================================================================================
+--## INTERNAL VARS & SET UP
+--## ===============================================================================================
+local u = maj:GetModule('Utils');
+
 --## ==========================================================================
 --## DEFINING THE GLOBAL CONSTANTS TABLE TO BE USED THROUGHOUT THE ADDON
 --## ==========================================================================
@@ -7,8 +18,8 @@ MAJ_Constants = {
       ['LeftButton'] = 'LeftButton',
       ['RightButton'] = 'RightButton',
    },
-   addOnName = '|cFF33ff99Mark As Junk|r',
-   addOnNameQuoted = '|cFF33ff99"Mark As Junk"|r',
+   addOnName = u:ace('Mark As Junk'),
+   addOnNameQuoted = u:ace('"Mark As Junk"'),
    iconListMap = {
       Coin = 'Coin',
       Stack = 'Stack',
@@ -26,8 +37,8 @@ MAJ_Constants = {
       BOTTOMRIGHT = 'BOTTOMRIGHT',
    },
    iconPathMap = {
-      Coin = 'Interface/Icons/INV_Misc_Coin_01',
-      Stack = '',
+      Coin = 'Interface/Icons/INV_Misc_Coin_01', -- or maybe use INV_Misc_Coin_17 or INV_Misc_Coin_05
+      Stack = 'Interface/Icons/INV_Misc_Coin_02',
       Trash = '',
    },
    modKeysMap = {
@@ -41,7 +52,7 @@ MAJ_Constants = {
    slashCommand = '|cFFbada55/maj|r',
    slashCommandQuoted = '|cFFbada55"/maj"|r',
    warnings = {
-      bagginsLoaded = '|cFF33ff99Mark As Junk|r (|cFFfa8200WARNING|r): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.',
-      peddlerLoaded = '(|cFFfa8200WARNING|r): "Peddler" addon is also loaded. There may be conflicts in behavior.',
+      bagginsLoaded = u:warn('(WARNING): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.'),
+      peddlerLoaded = u:warn('(WARNING): "Peddler" addon is also loaded. There may be conflicts in behavior.'),
    },
 };
