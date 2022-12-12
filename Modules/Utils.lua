@@ -13,6 +13,10 @@ local Utils = maj:NewModule('Utils');
 --## ===============================================================================================
 --##DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
+function Utils:getModifierFunction(modKey)
+   return MAJ_Constants.modFunctionsMap[modKey];
+end
+
 function Utils:handleConfigOptionsDisplay()
    local showSlashCommandOutput = self:getDbValue('showSlashCommandOutput');
 
@@ -33,7 +37,8 @@ end
 
 function Utils:isMajKeyCombo(button)
    local db = maj.db.profile;
-   return button == db.userSelectedActivatorKey and IsAltKeyDown();
+   local modFunction = self:getModifierFunction(db.userSelectedModKey);
+   return button == db.userSelectedActivatorKey and modFunction();
 end
 
 function Utils:sortBags()

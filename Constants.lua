@@ -41,13 +41,15 @@ MAJ_Constants = {
       Stack = 'Interface/Icons/INV_Misc_Coin_02',
       Trash = '',
    },
+   modFunctionsMap = {
+      ['Alt'] = IsAltKeyDown,
+      ['Ctrl'] = IsControlKeyDown,
+      ['Shift'] = IsShiftKeyDown,
+   },
    modKeysMap = {
       ['Alt'] = 'Alt',
       ['Ctrl'] = 'Ctrl',
       ['Shift'] = 'Shift',
-      ['Alt-Ctrl'] = 'Alt-Ctrl',
-      ['Alt-Shift'] = 'Alt-Shift',
-      ['Ctrl-Shift'] = 'Ctrl-Shift',
    },
    slashCommand = '|cFFbada55/maj|r',
    slashCommandQuoted = '|cFFbada55"/maj"|r',
