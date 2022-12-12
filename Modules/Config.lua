@@ -13,7 +13,7 @@ function Config:GetBlizzOptionsFrame()
    local p = MarkAsJunk.db.profile;
 
    return {
-      desc = 'Configure the marking & selling options for your junk items.',
+      desc = 'Configure the ' .. Utils:ace('MarkAsJunk') .. ' options for your junk items.',
       handler = self,
       name = 'Mark As Junk',
       type = 'group',
@@ -208,14 +208,26 @@ function Config:GetBlizzOptionsFrame()
                   type = 'toggle',
                   width = 'full',
                },
-               -- TODO :: Add a `showWarnings` option?
+               showWarnings = {
+                  desc = 'This will hide/show the warnings in chat when another potentially conflicting addon is detected.',
+                  get = function()
+                     return Utils:getDbValue('showWarnings');
+                  end,
+                  name = 'Show addon warnings?',
+                  order = 42,
+                  set = function(info, value)
+                     Utils:setDbValue('showWarnings', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
                startupGreeting = {
                   desc = 'This will hide/show the initial greeting in chat when the game starts or reloads.',
                   get = function()
                      return Utils:getDbValue('showGreeting');
                   end,
                   name = 'Show startup greeting in chat?',
-                  order = 42,
+                  order = 43,
                   set = function(info, value)
                      Utils:setDbValue('showGreeting', value);
                   end,
@@ -228,7 +240,7 @@ function Config:GetBlizzOptionsFrame()
                      return Utils:getDbValue('showSlashCommandOutput');
                   end,
                   name = 'Show slash command output?',
-                  order = 43,
+                  order = 44,
                   set = function(info, value)
                      Utils:setDbValue('showSlashCommandOutput', value);
                   end,

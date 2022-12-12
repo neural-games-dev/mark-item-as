@@ -52,15 +52,15 @@ end
 --## ===============================================================================================
 function MarkAsJunk:OnEnable()
    local u = self.utils;
-   -- Iterating through all bags and item slots to attach click listeners
-   local idn = 0
+   -- TODO :: Iterating through all bags and item slots to attach click listeners
+   local bagIndex = 0
 
    if C_Container then
       print('we have a c container')
-      print(C_Container.GetContainerNumSlots(idn))
+      print(C_Container.GetContainerNumSlots(bagIndex))
    end
 
-   local bagName = _G["ContainerFrame" .. idn + 1]:GetName()
+   local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName()
    local slotIndex = 1
 
    print('The bag name is: ' .. bagName)
@@ -68,9 +68,11 @@ function MarkAsJunk:OnEnable()
    local slotFrame = _G[bagName .. "Item" .. slotIndex]
    print('The slot frame ID is: ' .. slotFrame:GetID() .. ', with size: ' .. slotFrame:GetSize())
 
-   slotFrame:HookScript('OnClick', function(_frame, button, _down)
+   slotFrame:HookScript('OnClick', function(frame, button, _down)
       if (u:isMajKeyCombo(button)) then
-         print('do we click?' .. ', _frame: ' .. _frame:GetName() .. ', button: ' .. button .. ', _down: ' .. tostring(_down))
+         print('do we click?' .. ', frame: ' .. frame:GetID())
+         local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
+         self.logger:Print(item:IsItemEmpty()); -- this tells me if the bag/container slot has an item in there or not
       end
    end)
 end
