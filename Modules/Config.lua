@@ -25,12 +25,12 @@ function Config:GetBlizzOptionsFrame()
          markingOptions = {
             desc = '',
             name = 'Marking',
-            order = 10,
+            order = 100,
             type = 'group',
             args = {
                keybindHeader = {
                   name = 'Keybind',
-                  order = 11,
+                  order = 101,
                   type = 'header',
                   width = 'full',
                },
@@ -40,7 +40,7 @@ function Config:GetBlizzOptionsFrame()
                      return u:getDbValue('userSelectedModKey');
                   end,
                   name = 'Select your modifier key...',
-                  order = 12,
+                  order = 102,
                   set = function(info, value)
                      u:setDbValue('userSelectedModKey', MAJ_Constants.modKeysMap[value])
                   end,
@@ -53,7 +53,7 @@ function Config:GetBlizzOptionsFrame()
                      return p.userSelectedActivatorKey;
                   end,
                   name = 'Select your activator key...',
-                  order = 13,
+                  order = 103,
                   set = function(info, value)
                      p.userSelectedActivatorKey = MAJ_Constants.activatorKeysMap[value];
                   end,
@@ -62,12 +62,37 @@ function Config:GetBlizzOptionsFrame()
                },
                itemMaskIconHeader = {
                   name = 'Overlay & Border',
-                  order = 14,
+                  order = 104,
                   type = 'header',
                   width = 'full',
                },
+               enableOverlay = {
+                  desc = '',
+                  get = function()
+                     return u:getDbValue('enableOverlay');
+                  end,
+                  name = 'Enable overlay?',
+                  order = 105,
+                  set = function(info, value)
+                     u:setDbValue('enableOverlay', value);
+                  end,
+                  type = 'toggle',
+               },
+               enableBorder = {
+                  desc = '',
+                  get = function()
+                     return u:getDbValue('enableBorder');
+                  end,
+                  name = 'Enable border?',
+                  order = 106,
+                  set = function(info, value)
+                     u:setDbValue('enableBorder', value);
+                  end,
+                  type = 'toggle',
+               },
                overlayColorPicker = {
                   desc = 'This overlay will be added on top of the items you mark to better visualize your junk.',
+                  disabled = not u:getDbValue('enableOverlay'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
                      local r, g, b, a = p.overlayColor.r,
@@ -78,7 +103,7 @@ function Config:GetBlizzOptionsFrame()
                      return r, g, b, a;
                   end,
                   name = 'Overlay Color',
-                  order = 15,
+                  order = 107,
                   set = function(info, r, g, b, a)
                      p.overlayColor = { r = r, g = g, b = b, a = a };
                   end,
@@ -86,6 +111,7 @@ function Config:GetBlizzOptionsFrame()
                },
                borderColorPicker = {
                   desc = 'This border will be added around the items you mark to better visualize your junk.',
+                  disabled = not u:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
                      local r, g, b, a = p.borderColor.r,
@@ -96,7 +122,7 @@ function Config:GetBlizzOptionsFrame()
                      return r, g, b, a;
                   end,
                   name = 'Border Color',
-                  order = 16,
+                  order = 108,
                   set = function(info, r, g, b, a)
                      p.borderColor = { r = r, g = g, b = b, a = a };
                   end,
@@ -104,6 +130,7 @@ function Config:GetBlizzOptionsFrame()
                },
                borderThicknessSlider = {
                   desc = 'Select the size of the border that will wrap around your marked item.',
+                  disabled = not u:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   get = function()
                      return p.borderThickness;
                   end,
@@ -111,7 +138,7 @@ function Config:GetBlizzOptionsFrame()
                   max = 2,
                   min = 0,
                   name = 'Border Thickness',
-                  order = 17,
+                  order = 109,
                   set = function(info, value)
                      p.borderThickness = value;
                   end,
@@ -120,7 +147,7 @@ function Config:GetBlizzOptionsFrame()
                },
                iconHeader = {
                   name = 'Icon',
-                  order = 18,
+                  order = 110,
                   type = 'header',
                   width = 'full',
                },
@@ -130,7 +157,7 @@ function Config:GetBlizzOptionsFrame()
                      return u:getDbValue('markerIconSelected');
                   end,
                   name = 'Select your icon...',
-                  order = 19,
+                  order = 111,
                   set = function(info, value)
                      u:setDbValue('markerIconSelected', value);
                   end,
@@ -143,7 +170,7 @@ function Config:GetBlizzOptionsFrame()
                      return p.markerIconLocationSelected;
                   end,
                   name = 'Select your icon location...',
-                  order = 20,
+                  order = 112,
                   set = function(info, value)
                      p.markerIconLocationSelected = MAJ_Constants.iconLocationsMap[value];
                   end,
@@ -155,14 +182,14 @@ function Config:GetBlizzOptionsFrame()
          sellingOptions = {
             desc = '',
             name = 'Selling',
-            order = 20,
+            order = 200,
             type = 'group',
             args = {},
          },
          sortingOptions = {
             desc = '',
             name = 'Sorting',
-            order = 30,
+            order = 300,
             type = 'group',
             args = {
                sortAfterMarking = {
@@ -171,7 +198,7 @@ function Config:GetBlizzOptionsFrame()
                      return u:getDbValue('autoSortMarking');
                   end,
                   name = 'Auto sort bags after Marking?',
-                  order = 41,
+                  order = 301,
                   set = function(info, value)
                      u:setDbValue('autoSortMarking', value);
                   end,
@@ -184,7 +211,7 @@ function Config:GetBlizzOptionsFrame()
                      return u:getDbValue('autoSortSelling');
                   end,
                   name = 'Auto sort bags after Selling?',
-                  order = 43,
+                  order = 302,
                   set = function(info, value)
                      u:setDbValue('autoSortSelling', value);
                   end,
@@ -196,7 +223,7 @@ function Config:GetBlizzOptionsFrame()
          chatOptions = {
             desc = '',
             name = 'Chat',
-            order = 40,
+            order = 400,
             type = 'group',
             args = {
                saleSummary = {
@@ -205,7 +232,7 @@ function Config:GetBlizzOptionsFrame()
                      return u:getDbValue('showSaleSummary');
                   end,
                   name = 'Show summary after selling?',
-                  order = 41,
+                  order = 401,
                   set = function(info, value)
                      u:setDbValue('showSaleSummary', value);
                   end,
@@ -218,7 +245,7 @@ function Config:GetBlizzOptionsFrame()
                      return u:getDbValue('showWarnings');
                   end,
                   name = 'Show addon warnings?',
-                  order = 42,
+                  order = 402,
                   set = function(info, value)
                      u:setDbValue('showWarnings', value);
                   end,
@@ -231,7 +258,7 @@ function Config:GetBlizzOptionsFrame()
                      return u:getDbValue('showGreeting');
                   end,
                   name = 'Show startup greeting in chat?',
-                  order = 43,
+                  order = 403,
                   set = function(info, value)
                      u:setDbValue('showGreeting', value);
                   end,
@@ -244,7 +271,7 @@ function Config:GetBlizzOptionsFrame()
                      return u:getDbValue('showSlashCommandOutput');
                   end,
                   name = 'Show slash command output?',
-                  order = 44,
+                  order = 404,
                   set = function(info, value)
                      u:setDbValue('showSlashCommandOutput', value);
                   end,

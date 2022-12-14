@@ -6,6 +6,8 @@ MAJ_Defaults = {
    autoSortSelling = false,
    borderColor = { r = 0.4, g = 0.4, b = 0.4, a = 1 },
    borderThickness = 1.25,
+   enableBorder = true,
+   enableOverlay = true,
    markerIconLocationSelected = 'TOPLEFT',
    markerIconSelected = 'Coin',
    overlayColor = { r = 0, g = 0, b = 0, a = 0.75 },

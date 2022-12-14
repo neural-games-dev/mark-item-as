@@ -37,6 +37,7 @@ end
 
 function Utils:handleOnClick(bagIndex, bagName, slotFrame)
    return function(frame, button, _down)
+      -- "down" is a boolean that tells me that a key is pressed down?
       if (self:isMajKeyCombo(button)) then
          maj.logger:Print('CONTAINER NUM SLOTS: ' .. C_Container.GetContainerNumSlots(bagIndex))
          maj.logger:Print('The bag name is: ' .. bagName)
@@ -46,10 +47,29 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame)
 
          -- this tells me if the bag/container slot has an item in there or not
          if (item:IsItemEmpty()) then
-            maj.logger:Print('This container slot DOES NOT have an item.');
+            -- No item present to act upon, ignoring and returning
+            return ;
          else
-            maj.logger:Print('This container slot DOES have an item.');
+            if (not frame.overlay) then
+               local db = maj.db.profile;
+               local oc = db.overlayColor;
+               frame.overlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
+               frame.overlay:SetSize(frame:GetSize());
+               frame.overlay:SetPoint("CENTER");
+
+               frame.overlay:SetBackdrop({
+                  bgFile = "Interface/Tooltips/UI-Tooltip-Background"
+               });
+
+               frame.overlay:SetFrameLevel(20);
+               frame.overlay:SetBackdropColor(oc.r, oc.g, oc.b, oc.a);
+            else
+               frame.overlay = nil;
+            end
          end
+      else
+         -- MAJ key combo was not pressed, ignoring and returning
+         return ;
       end
    end
 end
@@ -66,7 +86,6 @@ function Utils:registerClickListeners()
    local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName()
    local slotIndex = 1
    local slotFrame = _G[bagName .. "Item" .. slotIndex]
-
    slotFrame:HookScript('OnClick', self:handleOnClick(bagIndex, bagName, slotFrame))
 end
 
