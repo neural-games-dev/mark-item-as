@@ -4,7 +4,7 @@
 -- Libs / Packages
 local MarkAsJunk = LibStub('AceAddon-3.0'):NewAddon('MarkAsJunk', 'AceConsole-3.0', 'AceEvent-3.0');
 
--- TODO :: Add local vars for AdiBags, ArkInventory, and OneBag3
+-- TODO :: Add local vars (?) for AdiBags, ArkInventory, and OneBag3 or will the Plugin modules take care of this?
 --local Baggins = Baggins; -- this will be so I can target Baggins to do stuff later
 --local Bagnon = Bagnon; -- this will be so I can target Bagnon to do stuff later (need to verify this name)
 
