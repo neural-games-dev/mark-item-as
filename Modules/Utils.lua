@@ -35,10 +35,39 @@ function Utils:handleConfigOptionsDisplay()
    end
 end
 
+function Utils:handleOnClick(bagIndex, bagName, slotFrame)
+   return function(frame, button, _down)
+      if (self:isMajKeyCombo(button)) then
+         maj.logger:Print('CONTAINER NUM SLOTS: ' .. C_Container.GetContainerNumSlots(bagIndex))
+         maj.logger:Print('The bag name is: ' .. bagName)
+         maj.logger:Print('EXTERNAL SLOT FRAME INFO: id=' .. slotFrame:GetID() .. ', size=' .. slotFrame:GetSize());
+         maj.logger:Print('INTERNAL FRAME INFO: id=' .. frame:GetID());
+         local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
+
+         -- this tells me if the bag/container slot has an item in there or not
+         if (item:IsItemEmpty()) then
+            maj.logger:Print('This container slot DOES NOT have an item.');
+         else
+            maj.logger:Print('This container slot DOES have an item.');
+         end
+      end
+   end
+end
+
 function Utils:isMajKeyCombo(button)
    local db = maj.db.profile;
    local modFunction = self:getModifierFunction(db.userSelectedModKey);
    return button == db.userSelectedActivatorKey and modFunction();
+end
+
+function Utils:registerClickListeners()
+   -- TODO :: Update this to iterate through all bags and item slots to attach click listeners
+   local bagIndex = 0
+   local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName()
+   local slotIndex = 1
+   local slotFrame = _G[bagName .. "Item" .. slotIndex]
+
+   slotFrame:HookScript('OnClick', self:handleOnClick(bagIndex, bagName, slotFrame))
 end
 
 function Utils:sortBags()

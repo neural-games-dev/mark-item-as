@@ -3,8 +3,12 @@
 --## ==========================================================================
 -- Libs / Packages
 local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+
+--## ===============================================================================================
+--## INTERNAL VARS & SET UP
+--## ===============================================================================================
 local Config = MarkAsJunk:NewModule('Config');
-local Utils = MarkAsJunk:GetModule('Utils');
+local u = MarkAsJunk:GetModule('Utils');
 
 --## ==========================================================================
 --## DEFINING THE MAIN OPTIONS FRAME
@@ -13,7 +17,7 @@ function Config:GetBlizzOptionsFrame()
    local p = MarkAsJunk.db.profile;
 
    return {
-      desc = 'Configure the ' .. Utils:ace('MarkAsJunk') .. ' options for your junk items.',
+      desc = 'Configure the ' .. u:ace('MarkAsJunk') .. ' options for your junk items.',
       handler = self,
       name = 'Mark As Junk',
       type = 'group',
@@ -33,12 +37,12 @@ function Config:GetBlizzOptionsFrame()
                modifierKey = {
                   desc = 'This is the additional key to press, along with your activator, to mark your items.',
                   get = function()
-                     return Utils:getDbValue('userSelectedModKey');
+                     return u:getDbValue('userSelectedModKey');
                   end,
                   name = 'Select your modifier key...',
                   order = 12,
                   set = function(info, value)
-                     Utils:setDbValue('userSelectedModKey', MAJ_Constants.modKeysMap[value])
+                     u:setDbValue('userSelectedModKey', MAJ_Constants.modKeysMap[value])
                   end,
                   type = 'select',
                   values = MAJ_Constants.modKeysMap,
@@ -123,12 +127,12 @@ function Config:GetBlizzOptionsFrame()
                markerIcon = {
                   desc = 'Select the MAJ icon that you want to appear on the item.',
                   get = function()
-                     return Utils:getDbValue('markerIconSelected');
+                     return u:getDbValue('markerIconSelected');
                   end,
                   name = 'Select your icon...',
                   order = 19,
                   set = function(info, value)
-                     Utils:setDbValue('markerIconSelected', value);
+                     u:setDbValue('markerIconSelected', value);
                   end,
                   type = 'select',
                   values = MAJ_Constants.iconListMap,
@@ -164,12 +168,12 @@ function Config:GetBlizzOptionsFrame()
                sortAfterMarking = {
                   desc = 'After an item gets marked, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
-                     return Utils:getDbValue('autoSortMarking');
+                     return u:getDbValue('autoSortMarking');
                   end,
                   name = 'Auto sort bags after Marking?',
                   order = 41,
                   set = function(info, value)
-                     Utils:setDbValue('autoSortMarking', value);
+                     u:setDbValue('autoSortMarking', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -177,12 +181,12 @@ function Config:GetBlizzOptionsFrame()
                sortAfterSelling = {
                   desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
-                     return Utils:getDbValue('autoSortSelling');
+                     return u:getDbValue('autoSortSelling');
                   end,
                   name = 'Auto sort bags after Selling?',
                   order = 43,
                   set = function(info, value)
-                     Utils:setDbValue('autoSortSelling', value);
+                     u:setDbValue('autoSortSelling', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -198,12 +202,12 @@ function Config:GetBlizzOptionsFrame()
                saleSummary = {
                   desc = 'This will hide/show the gold & items summary in chat after selling to a merchant.',
                   get = function()
-                     return Utils:getDbValue('showSaleSummary');
+                     return u:getDbValue('showSaleSummary');
                   end,
                   name = 'Show summary after selling?',
                   order = 41,
                   set = function(info, value)
-                     Utils:setDbValue('showSaleSummary', value);
+                     u:setDbValue('showSaleSummary', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -211,12 +215,12 @@ function Config:GetBlizzOptionsFrame()
                showWarnings = {
                   desc = 'This will hide/show the warnings in chat when another potentially conflicting addon is detected.',
                   get = function()
-                     return Utils:getDbValue('showWarnings');
+                     return u:getDbValue('showWarnings');
                   end,
                   name = 'Show addon warnings?',
                   order = 42,
                   set = function(info, value)
-                     Utils:setDbValue('showWarnings', value);
+                     u:setDbValue('showWarnings', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -224,12 +228,12 @@ function Config:GetBlizzOptionsFrame()
                startupGreeting = {
                   desc = 'This will hide/show the initial greeting in chat when the game starts or reloads.',
                   get = function()
-                     return Utils:getDbValue('showGreeting');
+                     return u:getDbValue('showGreeting');
                   end,
                   name = 'Show startup greeting in chat?',
                   order = 43,
                   set = function(info, value)
-                     Utils:setDbValue('showGreeting', value);
+                     u:setDbValue('showGreeting', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -237,12 +241,12 @@ function Config:GetBlizzOptionsFrame()
                slashCommandOutput = {
                   desc = 'This will hide/show the chat output after entering in a ' .. MAJ_Constants.slashCommandQuoted .. ' command.',
                   get = function()
-                     return Utils:getDbValue('showSlashCommandOutput');
+                     return u:getDbValue('showSlashCommandOutput');
                   end,
                   name = 'Show slash command output?',
                   order = 44,
                   set = function(info, value)
-                     Utils:setDbValue('showSlashCommandOutput', value);
+                     u:setDbValue('showSlashCommandOutput', value);
                   end,
                   type = 'toggle',
                   width = 'full',
