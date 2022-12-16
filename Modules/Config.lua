@@ -266,14 +266,14 @@ function Config:GetBlizzOptionsFrame()
                   width = 'full',
                },
                slashCommandOutput = {
-                  desc = 'This will hide/show the chat output after entering in a ' .. MAJ_Constants.slashCommandQuoted .. ' command.',
+                  desc = 'This will hide/show the chat output after triggering a ' .. u:badass('MAJ') .. ' command.',
                   get = function()
-                     return u:getDbValue('showSlashCommandOutput');
+                     return u:getDbValue('showCommandOutput');
                   end,
-                  name = 'Show slash command output?',
+                  name = 'Show MAJ command output?',
                   order = 404,
                   set = function(info, value)
-                     u:setDbValue('showSlashCommandOutput', value);
+                     u:setDbValue('showCommandOutput', value);
                   end,
                   type = 'toggle',
                   width = 'full',

@@ -95,13 +95,13 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
 
    if (command == 'hidetext' or command == 'ht') then
       self.logger:Print('The slash command output text has been ' .. u:red('DISABLED'));
-      u:setDbValue('showSlashCommandOutput', false);
+      u:setDbValue('showCommandOutput', false);
       return ;
    end
 
    if (command == 'showtext' or command == 'st') then
       self.logger:Print('The slash command output text has been ' .. u:green('ENABLED'));
-      u:setDbValue('showSlashCommandOutput', true);
+      u:setDbValue('showCommandOutput', true);
       return ;
    end
 
