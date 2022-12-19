@@ -18,14 +18,16 @@ function Utils:getModifierFunction(modKey)
 end
 
 function Utils:handleConfigOptionsDisplay()
+   local db = maj.db.profile;
+
    if (dialog.OpenFrames['MarkAsJunk']) then
-      if (maj.db.profile.showCommandOutput) then
+      if (db.showCommandOutput) then
          maj.logger:Print('Hiding the config options window.');
       end
 
       dialog:Close('MarkAsJunk');
    else
-      if (maj.db.profile.showCommandOutput) then
+      if (db.showCommandOutput) then
          maj.logger:Print('Showing the config options window.');
       end
 
@@ -34,15 +36,15 @@ function Utils:handleConfigOptionsDisplay()
 end
 
 function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
-   -- "down" is a boolean that tells me that a key is pressed down?
+   -- "down" is a boolean that tells me that the current `button` is pressed?
    return function(frame, button, down)
+      local db = maj.db.profile;
       local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
       local itemID = item:GetItemID();
       local itemName = item:GetItemName();
       local frameID = frame:GetID();
-      local oc = maj.db.profile.overlayColor;
 
-      if (maj.db.profile.debugEnabled) then
+      if (db.debugEnabled) then
          maj.logger:PrintClickInfo(
             bagIndex, bagName, button, down, frame,
             frameID, item, itemID, numSlots, slotFrame
@@ -50,70 +52,33 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
       end
 
       if (self:isMajKeyCombo(button)) then
-         -- use `frame.hasItem` instead?
          if (item:IsItemEmpty()) then
-            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
+            -- use `frame.hasItem` instead?
+            if (db.showCommandOutput and not db.debugEnabled) then
                maj.logger:Print('No item present. Ignoring.');
             end
 
             return ;
          elseif (IsAddOnLoaded('ItemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
-            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
+            -- TODO **[G]** :: Add another condition above this to check if item is sellable or not
+            if (db.showCommandOutput and not db.debugEnabled) then
                maj.logger:Print('Item is locked. Ignoring.');
             end
 
             return ;
          elseif (not frame.markedJunkOverlay) then
-            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
-               maj.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
-            end
-
-            frame.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
-            frame.markedJunkOverlay:SetSize(frame:GetSize());
-            frame.markedJunkOverlay:SetPoint("CENTER");
-
-            frame.markedJunkOverlay:SetBackdrop({
-               bgFile = "Interface/Tooltips/UI-Tooltip-Background"
-            });
-
-            frame.markedJunkOverlay:SetFrameLevel(20);
-            frame.markedJunkOverlay:SetBackdropColor(oc.r, oc.g, oc.b, oc.a);
-            maj.db.profile.markedItems[itemID] = true;
+            self:updateMarkedJunkOverlay('frameMissing', db.overlayColor, db, frame, itemName, itemID);
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
-            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
-               maj.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
-            end
-
-            frame.markedJunkOverlay:SetFrameLevel(20);
-            frame.markedJunkOverlay:SetBackdropColor(oc.r, oc.g, oc.b, oc.a);
-            frame.markedJunkOverlay:Show();
-            maj.db.profile.markedItems[itemID] = true;
+            self:updateMarkedJunkOverlay('frameHidden', db.overlayColor, db, frame, itemName, itemID);
             return ;
          else
-            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
-               maj.logger:Print('Removing the junk marking from "' .. tostring(itemName) .. '".');
-            end
-
-            if (maj.db.profile.debugEnabled) then
-               local overlayHexID = tostring(frame.markedJunkOverlay):gsub("table: ", "", 1);
-
-               maj.logger:Print('Clearing the overlay:\n' ..
-                  'bag: ' .. tostring(bagIndex) .. '\n' ..
-                  'frame: ' .. tostring(frameID) .. '\n' ..
-                  'overlayHexID: ' .. overlayHexID
-               );
-            end
-
-            frame.markedJunkOverlay:SetFrameLevel(0);
-            frame.markedJunkOverlay:SetBackdropColor(0, 0, 0, 0);
-            frame.markedJunkOverlay:Hide();
-            maj.db.profile.markedItems[itemID] = false;
+            self:updateMarkedJunkOverlay('frameShowing', db.overlayColor, db, frame, itemName, itemID);
             return ;
          end
       else
-         if (maj.db.profile.debugEnabled) then
-            maj.logger:Print('handleOnClick: MAJ key combo was not pressed. Ignoring.');
+         if (db.debugEnabled) then
+            maj.logger:Print('Add-on key combo was not pressed. Ignoring click event listener.');
          end
 
          return ;
@@ -151,10 +116,62 @@ function Utils:sortBags()
       return ;
    end
 
-   -- TODO :: This might be better as it's probably more stable if Blizz makes changes in the future, but test it out
-   -- C_Container.SortBags();
-   local sortButton = _G[BagItemAutoSortButton:GetName()];
-   sortButton:Click();
+   if (C_Container) then
+      C_Container.SortBags();
+   else
+      local sortButton = _G[BagItemAutoSortButton:GetName()];
+      sortButton:Click();
+   end
+end
+
+function Utils:updateMarkedJunkOverlay(status, color, db, frame, itemName, itemID)
+   if (status == 'frameMissing' or status == 'frameHidden') then
+      if (db.showCommandOutput and not db.debugEnabled) then
+         maj.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
+      end
+
+      if (status == 'frameMissing') then
+         frame.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
+         frame.markedJunkOverlay:SetSize(frame:GetSize());
+         frame.markedJunkOverlay:SetPoint("CENTER");
+
+         frame.markedJunkOverlay:SetBackdrop({
+            bgFile = "Interface/Tooltips/UI-Tooltip-Background"
+         });
+      end
+
+      frame.markedJunkOverlay:SetFrameLevel(20);
+      frame.markedJunkOverlay:SetBackdropColor(color.r, color.g, color.b, color.a);
+
+      if (status == 'frameHidden') then
+         frame.markedJunkOverlay:Show();
+      end
+
+      db.markedItems[itemID] = true;
+      return ;
+   end
+
+   if (status == 'frameShowing') then
+      if (db.showCommandOutput and not db.debugEnabled) then
+         maj.logger:Print('Removing the junk marking from "' .. tostring(itemName) .. '".');
+      end
+
+      if (db.debugEnabled) then
+         local overlayHexID = tostring(frame.markedJunkOverlay):gsub("table: ", "", 1);
+
+         maj.logger:Print('Clearing the overlay:\n' ..
+            'bag: ' .. tostring(bagIndex) .. '\n' ..
+            'frame: ' .. tostring(frameID) .. '\n' ..
+            'overlayHexID: ' .. overlayHexID
+         );
+      end
+
+      frame.markedJunkOverlay:SetFrameLevel(0);
+      frame.markedJunkOverlay:SetBackdropColor(0, 0, 0, 0);
+      frame.markedJunkOverlay:Hide();
+      db.markedItems[itemID] = false;
+      return ;
+   end
 end
 
 --## --------------------------------------------------------------------------
