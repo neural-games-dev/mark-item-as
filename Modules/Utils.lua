@@ -112,7 +112,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
          end
       else
          if (maj.db.profile.debugEnabled) then
-            maj.logger:Print('handleClick: MAJ key combo was not pressed. Ignoring.');
+            maj.logger:Print('handleOnClick: MAJ key combo was not pressed. Ignoring.');
          end
 
          return ;

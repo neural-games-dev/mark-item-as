@@ -25,6 +25,7 @@ function Logger:PrintClickInfo(bagIndex, bagName, button, down, frame, frameID, 
    self:Print('HANDLE ON CLICK INFO:\n' ..
       '————————————————————————\n' ..
       'BagName: ' .. tostring(bagName) .. '\n' ..
+      'BagIndex: ' .. tostring(bagIndex) .. '\n' ..
       'ContainerNumSlots: ' .. tostring(numSlots) .. '\n' ..
       '————————————————————————\n' ..
       'SlotFrameName: ' .. tostring(slotFrame:GetName()) .. '\n' ..
