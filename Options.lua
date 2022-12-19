@@ -6,7 +6,7 @@ MAJ_Defaults = {
    autoSortSelling = false,
    borderColor = { r = 0.4, g = 0.4, b = 0.4, a = 1 },
    borderThickness = 1.25,
-   debugLogging = false,
+   debugEnabled = false,
    enableBorder = true,
    enableOverlay = true,
    markedItems = {},

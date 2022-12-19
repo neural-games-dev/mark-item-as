@@ -266,7 +266,7 @@ function Config:GetBlizzOptionsFrame()
                   width = 'full',
                },
                slashCommandOutput = {
-                  desc = 'This will hide/show the chat output after triggering a ' .. u:badass('MAJ') .. ' command.',
+                  desc = 'This will hide/show the chat output after triggering a ' .. u:badass('MAJ') .. ' command or action.',
                   get = function()
                      return u:getDbValue('showCommandOutput');
                   end,
@@ -278,15 +278,15 @@ function Config:GetBlizzOptionsFrame()
                   type = 'toggle',
                   width = 'full',
                },
-               debugLogging = {
-                  desc = 'This will enable/disable debug logging for this add-on. It is really only useful for other add-on devs.',
+               enableDebugging = {
+                  desc = 'This will enable/disable debugging for this add-on. It is really only useful for other add-on devs.',
                   get = function()
-                     return u:getDbValue('debugLogging');
+                     return u:getDbValue('debugEnabled');
                   end,
-                  name = 'Show MAJ debug logging?',
+                  name = 'Enable MAJ debugging?',
                   order = 405,
                   set = function(info, value)
-                     u:setDbValue('debugLogging', value);
+                     u:setDbValue('debugEnabled', value);
                   end,
                   type = 'toggle',
                   width = 'full',

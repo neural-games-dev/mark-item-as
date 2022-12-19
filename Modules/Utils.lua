@@ -36,27 +36,33 @@ end
 function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
    return function(frame, button, _down)
       -- "down" is a boolean that tells me that a key is pressed down?
+      local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
+      local itemID = item:GetItemID();
+      local frameID = frame:GetID();
+
+      if (maj.db.profile.debugEnabled) then
+         maj.logger:Print('HANDLE ON CLICK INFO:\n' ..
+            '————————————————————————\n' ..
+            'BagName: ' .. tostring(bagName) .. '\n' ..
+            'ContainerNumSlots: ' .. tostring(numSlots) .. '\n' ..
+            '————————————————————————\n' ..
+            'SlotFrameName: ' .. tostring(slotFrame:GetName()) .. '\n' ..
+            'SlotFrameID: ' .. tostring(slotFrame:GetID()) .. '\n' ..
+            '————————————————————————\n' ..
+            'FrameName: ' .. tostring(frame:GetName()) .. '\n' ..
+            'FrameID: ' .. tostring(frameID) .. '\n' ..
+            '————————————————————————\n' ..
+            'ItemName: ' .. tostring(item:GetItemName()) .. '\n' ..
+            'ItemID: ' .. tostring(itemID) .. '\n' ..
+            'ItemLocation.SlotIndex: ' .. tostring(item:GetItemLocation().slotIndex) .. '\n' ..
+            '————————————————————————'
+         );
+      end
+
       if (self:isMajKeyCombo(button)) then
-         local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
-
-         if (maj.db.profile.debugLogging) then
-            maj.logger:Print('HANDLE ON CLICK INFO:\n' ..
-               'BagName: ' .. tostring(bagName) .. '\n' ..
-               'SlotFrameName: ' .. tostring(slotFrame:GetName()) .. '\n' ..
-               'SlotFrameID: ' .. tostring(slotFrame:GetID()) .. '\n' ..
-               'ContainerNumSlots: ' .. tostring(numSlots) .. '\n' ..
-               'FrameName: ' .. tostring(frame:GetName()) .. '\n' ..
-               'FrameID: ' .. tostring(frame:GetID()) .. '\n' ..
-               'ItemName: ' .. tostring(item:GetItemName()) .. '\n' ..
-               'ItemID: ' .. tostring(item:GetItemID()) .. '\n' ..
-               'ItemLocation.SlotIndex: ' .. tostring(item:GetItemLocation().slotIndex) .. '\n'
-            );
-         end
-
-         -- this tells me if the bag/container slot has an item in there or not
+         -- use `frame.hasItem` instead?
          if (item:IsItemEmpty()) then
-            -- keep using this or use this? -- frame.hasItem
-            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugLogging) then
+            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
                maj.logger:Print('No item present. Ignoring.');
             end
 
@@ -65,36 +71,40 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             --elseif (IsAddOnLoaded('ItemLock') and not not frame.lockItemsAppearanceOverlay) then
             --   maj.logger:Print('Item is locked, ignoring.');
             --   return ;
-         elseif (not item.markedJunkOverlay) then
-            --for k, v in pairs(item:GetItemLocation()) do
-            --   maj.logger:Print('FRAME KEY: '.. tostring(k) .. ', FRAME VALUE: ' .. tostring(v));
-            --end
-
-            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugLogging) then
-               -- TODO **[G]** :: Clean this log up to be more user friendly
-               maj.logger:Print('Adding an overlay to "' .. tostring(item:GetItemName()) .. '"');
+         elseif (not frame.markedJunkOverlay) then
+            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
+               maj.logger:Print('Adding an overlay to "' .. tostring(item:GetItemName()) .. '".');
             end
 
             local oc = maj.db.profile.overlayColor;
-            item.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
-            item.markedJunkOverlay:SetSize(frame:GetSize());
-            item.markedJunkOverlay:SetPoint("CENTER");
+            frame.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
+            frame.markedJunkOverlay:SetSize(frame:GetSize());
+            frame.markedJunkOverlay:SetPoint("CENTER");
 
-            item.markedJunkOverlay:SetBackdrop({
+            frame.markedJunkOverlay:SetBackdrop({
                bgFile = "Interface/Tooltips/UI-Tooltip-Background"
             });
 
-            item.markedJunkOverlay:SetFrameLevel(20);
-            item.markedJunkOverlay:SetBackdropColor(oc.r, oc.g, oc.b, oc.a);
+            frame.markedJunkOverlay:SetFrameLevel(20);
+            frame.markedJunkOverlay:SetBackdropColor(oc.r, oc.g, oc.b, oc.a);
+            maj.db.profile.markedItems[itemID] = true;
             return ;
          else
-            maj.logger:Print('Clearing the frame overlay?');
-            item.markedJunkOverlay = nil;
+            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
+               maj.logger:Print('Removing the overlay from "' .. tostring(item:GetItemName()) .. '".');
+            end
+
+            if (maj.db.profile.debugEnabled) then
+               maj.logger:Print('Clearing the overlay for bag: ' .. bagIndex .. ', frame: ' .. tostring(frameID));
+            end
+
+            frame.markedJunkOverlay:SetBackdropColor(0, 0, 0, 0);
+            frame.markedJunkOverlay = nil;
+            maj.db.profile.markedItems[itemID] = false;
             return ;
          end
       else
-         -- MAJ key combo was not pressed, ignoring and returning
-         if (maj.db.profile.debugLogging) then
+         if (maj.db.profile.debugEnabled) then
             maj.logger:Print('MAJ key combo was not pressed. Ignoring.');
          end
 
@@ -110,19 +120,17 @@ function Utils:isMajKeyCombo(button)
 end
 
 function Utils:registerClickListeners()
-   for i = 0, MAJ_Constants.numContainers, 1 do
-      local bagIndex = i;
+   for bagIndex = 0, MAJ_Constants.numContainers, 1 do
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
       local numSlots = C_Container.GetContainerNumSlots(bagIndex);
 
       if (numSlots > 0) then
-         for j = 1, numSlots, 1 do
-            local slotIndex = j;
+         for slotIndex = 1, numSlots, 1 do
             local slotFrame = _G[bagName .. "Item" .. slotIndex];
             slotFrame:HookScript('OnClick', self:handleOnClick(bagIndex, bagName, slotFrame, numSlots));
          end
       else
-         if (maj.db.profile.debugLogging) then
+         if (maj.db.profile.debugEnabled) then
             maj.logger:Print('Container at bag index "' .. tostring(bagIndex) .. '" appears to be empty.');
          end
       end

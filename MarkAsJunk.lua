@@ -35,6 +35,14 @@ function MarkAsJunk:OnInitialize()
    self:RegisterChatCommand('maj', 'SlashCommandInfoConfig');
    self:RegisterChatCommand('nrl', 'SlashCommandReload');
    self:RegisterChatCommand('nfs', 'SlashCommandFrameStack');
+end
+
+--## ===============================================================================================
+--## MAIN CONFIG / OPTIONS WINDOW
+--## ===============================================================================================
+function MarkAsJunk:OnEnable()
+   local u = self.utils;
+   u:registerClickListeners();
 
    if (self.db.profile.showGreeting) then
       self.logger:Print('Hi, ' .. UnitName('player') .. '! Thanks for using "MarkAsJunk"! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
@@ -47,14 +55,6 @@ function MarkAsJunk:OnInitialize()
    end
 end
 
---## ===============================================================================================
---## MAIN CONFIG / OPTIONS WINDOW
---## ===============================================================================================
-function MarkAsJunk:OnEnable()
-   local u = self.utils;
-   u:registerClickListeners();
-end
-
 --[[
    TODO :: Move these slash commands into their own file and then INIT them from here
 ]]
@@ -62,8 +62,12 @@ end
 --## CUSTOM SLASH COMMANDS
 --## ===============================================================================================
 function MarkAsJunk:SlashCommandFrameStack()
-   LoadAddOn('Blizzard_DebugTools');
-   FrameStackTooltip_Toggle();
+   if (self.db.profile.debugEnabled) then
+      LoadAddOn('Blizzard_DebugTools');
+      FrameStackTooltip_Toggle();
+   end
+
+   return ;
 end
 
 function MarkAsJunk:SlashCommandInfoConfig(command)
@@ -121,13 +125,13 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
    local isDebugCommand = command == 'debug' or command == 'd';
 
    if (isDebugCommand) then
-      local debugValue = not (self.db.profile.debugLogging == true);
+      local debugValue = not (self.db.profile.debugEnabled == true);
 
       if (self.db.profile.showCommandOutput) then
          self.logger:Print('Setting the debug value to: ' .. tostring(debugValue));
       end
 
-      u:setDbValue('debugLogging', debugValue);
+      u:setDbValue('debugEnabled', debugValue);
       return ;
    end
 
@@ -137,4 +141,5 @@ end
 
 function MarkAsJunk:SlashCommandReload()
    ReloadUI();
+   return ;
 end

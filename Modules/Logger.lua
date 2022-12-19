@@ -14,7 +14,7 @@ local u = MarkAsJunk:GetModule('Utils');
 --## DEFINING THE LOGGER METHODS
 --## ===============================================================================================
 function Logger:Print(...)
-   if (MarkAsJunk.db.profile.debugLogging) then
+   if (MarkAsJunk.db.profile.debugEnabled) then
       MarkAsJunk:Print(u:debug('[DEBUGGING] '), ...);
    else
       MarkAsJunk:Print(...);
