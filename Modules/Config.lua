@@ -278,6 +278,19 @@ function Config:GetBlizzOptionsFrame()
                   type = 'toggle',
                   width = 'full',
                },
+               debugLogging = {
+                  desc = 'This will enable/disable debug logging for this add-on. It is really only useful for other add-on devs.',
+                  get = function()
+                     return u:getDbValue('debugLogging');
+                  end,
+                  name = 'Show MAJ debug logging?',
+                  order = 405,
+                  set = function(info, value)
+                     u:setDbValue('debugLogging', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
             },
          },
       },

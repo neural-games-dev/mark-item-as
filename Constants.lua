@@ -50,6 +50,7 @@ MAJ_Constants = {
       ['Ctrl'] = 'Ctrl',
       ['Shift'] = 'Shift',
    },
+   numContainers = 4,
    slashCommand = '|cFFbada55/maj|r',
    slashCommandQuoted = '|cFFbada55"/maj"|r',
    warnings = {

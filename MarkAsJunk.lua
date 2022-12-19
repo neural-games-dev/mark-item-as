@@ -77,7 +77,8 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
          u:badass('/maj config (c)') .. ' -- Shows the config window to customize this addon.\n' ..
          u:badass('/maj options (o)') .. ' -- This is an alias for "config".\n' ..
          u:badass('/maj hidetext (ht)') .. ' -- ' .. u:red('DISABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
-         u:badass('/maj showtext (st)') .. ' -- ' .. u:green('ENABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.'
+         u:badass('/maj showtext (st)') .. ' -- ' .. u:green('ENABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
+         u:badass('/maj debug (d)') .. ' -- This enables debug logging. Really only useful for add-on devs.'
       );
 
       return ;
@@ -93,15 +94,40 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
       return ;
    end
 
-   if (command == 'hidetext' or command == 'ht') then
-      self.logger:Print('The slash command output text has been ' .. u:red('DISABLED'));
-      u:setDbValue('showCommandOutput', false);
+   local isShowHideOutputCommand = command == 'hidetext' or
+      command == 'ht' or
+      command == 'showtext' or
+      command == 'st';
+
+   if (isShowHideOutputCommand) then
+      local showOutputLogMessage;
+      local showOutputValue;
+
+      if (command == 'hidetext' or command == 'ht') then
+         showOutputLogMessage = u:red('DISABLED');
+         showOutputValue = false;
+      end
+
+      if (command == 'showtext' or command == 'st') then
+         showOutputLogMessage = u:green('ENABLED');
+         showOutputValue = true;
+      end
+
+      self.logger:Print('The slash command output text has been ' .. showOutputLogMessage .. '.');
+      u:setDbValue('showCommandOutput', showOutputValue);
       return ;
    end
 
-   if (command == 'showtext' or command == 'st') then
-      self.logger:Print('The slash command output text has been ' .. u:green('ENABLED'));
-      u:setDbValue('showCommandOutput', true);
+   local isDebugCommand = command == 'debug' or command == 'd';
+
+   if (isDebugCommand) then
+      local debugValue = not (self.db.profile.debugLogging == true);
+
+      if (self.db.profile.showCommandOutput) then
+         self.logger:Print('Setting the debug value to: ' .. tostring(debugValue));
+      end
+
+      u:setDbValue('debugLogging', debugValue);
       return ;
    end
 
