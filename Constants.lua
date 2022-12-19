@@ -7,18 +7,19 @@ local maj = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
-local u = maj:GetModule('Utils');
+local chalk = maj:GetModule('Chalk');
 
 --## ==========================================================================
 --## DEFINING THE GLOBAL CONSTANTS TABLE TO BE USED THROUGHOUT THE ADDON
 --## ==========================================================================
+-- TODO **[G]** :: Can/should I attach this as part of the main addon/self as a property?
 MAJ_Constants = {
    activatorKeysMap = {
       ['LeftButton'] = 'LeftButton',
       ['RightButton'] = 'RightButton',
    },
-   addOnName = u:ace('Mark As Junk'),
-   addOnNameQuoted = u:ace('"Mark As Junk"'),
+   addOnName = chalk:ace('Mark As Junk'),
+   addOnNameQuoted = chalk:ace('"Mark As Junk"'),
    iconListMap = {
       Coin = 'Coin',
       Stack = 'Stack',
@@ -54,7 +55,7 @@ MAJ_Constants = {
    slashCommand = '|cFFbada55/maj|r',
    slashCommandQuoted = '|cFFbada55"/maj"|r',
    warnings = {
-      bagginsLoaded = u:warn('(WARNING): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.'),
-      peddlerLoaded = u:warn('(WARNING): "Peddler" addon is also loaded. There may be conflicting behavior.'),
+      bagginsLoaded = chalk:warn('(WARNING): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.'),
+      peddlerLoaded = chalk:warn('(WARNING): "Peddler" addon is also loaded. There may be conflicting behavior.'),
    },
 };

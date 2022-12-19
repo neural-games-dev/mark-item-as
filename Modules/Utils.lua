@@ -11,7 +11,7 @@ local maj = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
 local Utils = maj:NewModule('Utils');
 
 --## ===============================================================================================
---##DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
+--## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
 function Utils:getModifierFunction(modKey)
    return MAJ_Constants.modFunctionsMap[modKey];
@@ -38,6 +38,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
    return function(frame, button, down)
       local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
       local itemID = item:GetItemID();
+      local itemName = item:GetItemName();
       local frameID = frame:GetID();
       local oc = maj.db.profile.overlayColor;
 
@@ -64,7 +65,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             return ;
          elseif (not frame.markedJunkOverlay) then
             if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
-               maj.logger:Print('Marking "' .. tostring(item:GetItemName()) .. '" as junk.');
+               maj.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
             end
 
             frame.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
@@ -81,7 +82,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
             if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
-               maj.logger:Print('Marking "' .. tostring(item:GetItemName()) .. '" as junk.');
+               maj.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
             end
 
             frame.markedJunkOverlay:SetFrameLevel(20);
@@ -91,7 +92,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             return ;
          else
             if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
-               maj.logger:Print('Un-marking "' .. tostring(item:GetItemName()) .. '" as junk.');
+               maj.logger:Print('Removing the junk marking from "' .. tostring(itemName) .. '".');
             end
 
             if (maj.db.profile.debugEnabled) then
@@ -165,35 +166,4 @@ end
 
 function Utils:setDbValue(key, value)
    maj.db.profile[key] = value;
-end
-
---## --------------------------------------------------------------------------
---## TEXT COLORIZING FUNCTIONS
---## --------------------------------------------------------------------------
-function Utils:ace(text)
-   return '|cFF33ff99' .. text .. '|r';
-end
-
-function Utils:badass(text)
-   return '|cFFbada55' .. text .. '|r';
-end
-
-function Utils:cyan(text)
-   return '|cFF00ffff' .. text .. '|r';
-end
-
-function Utils:debug(text)
-   return '|cFFfd4a4a' .. text .. '|r';
-end
-
-function Utils:green(text)
-   return '|cFF00ff00' .. text .. '|r';
-end
-
-function Utils:red(text)
-   return '|cFFfd4a4a' .. text .. '|r';
-end
-
-function Utils:warn(text)
-   return '|cFFfa8200' .. text .. '|r';
 end

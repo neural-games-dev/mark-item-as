@@ -14,16 +14,11 @@ local MarkAsJunk = LibStub('AceAddon-3.0'):NewAddon('MarkAsJunk', 'AceConsole-3.
 MarkAsJunk.version = GetAddOnMetadata('MarkAsJunk', 'Version');
 
 function MarkAsJunk:OnInitialize()
+   self.version = 'v0.1.0';
    self.db = LibStub('AceDB-3.0'):New('MarkAsJunkDB', { profile = MAJ_Defaults }, true);
 
-   -- NOTE :: Do I want to keep this? This came from Mayron's YT video
-   -- To be able to use the left and right arrows in the edit box
-   -- without rotating your character
-   for i = 1, NUM_CHAT_WINDOWS, 1 do
-      _G['ChatFrame' .. i .. 'EditBox']:SetAltArrowKeyMode(false);
-   end
-
    -- calling all modules! all modules to the front!
+   self.chalk = self:GetModule('Chalk');
    self.config = self:GetModule('Config');
    self.logger = self:GetModule('Logger');
    self.utils = self:GetModule('Utils');
@@ -42,6 +37,7 @@ end
 --## ===============================================================================================
 function MarkAsJunk:OnEnable()
    self.utils:registerClickListeners();
+   -- TODO **[G]** :: Add the invocation of the util that will loop through all the bag slots and update their marked status/overlays
 
    if (self.db.profile.showGreeting) then
       self.logger:Print('Hi, ' .. UnitName('player') ..
@@ -55,6 +51,8 @@ function MarkAsJunk:OnEnable()
          self.logger:Print(MAJ_Constants.warnings.peddlerLoaded);
       end
    end
+
+   return ;
 end
 
 --[[
@@ -73,18 +71,17 @@ function MarkAsJunk:SlashCommandFrameStack()
 end
 
 function MarkAsJunk:SlashCommandInfoConfig(command)
-   local u = self.utils;
    command = command:trim();
 
    -- Display the MarkAsJunk commands and notes
    if (command == '') then
       --print('🌟💰🌟 |cFF00ffff-- MARK AS JUNK COMMANDS --|r 🌟💰🌟');
-      self.logger:Print(u:cyan('----- COMMANDS -----') .. '\n' ..
-         u:badass('/maj config (c)') .. ' -- Shows the config window to customize this addon.\n' ..
-         u:badass('/maj options (o)') .. ' -- This is an alias for "config".\n' ..
-         u:badass('/maj hidetext (ht)') .. ' -- ' .. u:red('DISABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
-         u:badass('/maj showtext (st)') .. ' -- ' .. u:green('ENABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
-         u:badass('/maj debug (d)') .. ' -- This enables debug logging. Really only useful for add-on devs.'
+      self.logger:Print(self.chalk:cyan('----- COMMANDS -----') .. '\n' ..
+         self.chalk:badass('/maj config (c)') .. ' -- Shows the config window to customize this addon.\n' ..
+         self.chalk:badass('/maj options (o)') .. ' -- This is an alias for "config".\n' ..
+         self.chalk:badass('/maj hidetext (ht)') .. ' -- ' .. self.chalk:red('DISABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
+         self.chalk:badass('/maj showtext (st)') .. ' -- ' .. self.chalk:green('ENABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
+         self.chalk:badass('/maj debug (d)') .. ' -- This enables debug logging. Really only useful for add-on devs.'
       );
 
       return ;
@@ -96,7 +93,7 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
       command == 'o';
 
    if (isConfigOptionsCommand) then
-      u:handleConfigOptionsDisplay();
+      self.utils:handleConfigOptionsDisplay();
       return ;
    end
 
@@ -110,17 +107,17 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
       local showOutputValue;
 
       if (command == 'hidetext' or command == 'ht') then
-         showOutputLogMessage = u:red('DISABLED');
+         showOutputLogMessage = self.chalk:red('DISABLED');
          showOutputValue = false;
       end
 
       if (command == 'showtext' or command == 'st') then
-         showOutputLogMessage = u:green('ENABLED');
+         showOutputLogMessage = self.chalk:green('ENABLED');
          showOutputValue = true;
       end
 
       self.logger:Print('The slash command output text has been ' .. showOutputLogMessage .. '.');
-      u:setDbValue('showCommandOutput', showOutputValue);
+      self.utils:setDbValue('showCommandOutput', showOutputValue);
       return ;
    end
 
@@ -128,12 +125,13 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
 
    if (isDebugCommand) then
       local debugValue = not (self.db.profile.debugEnabled == true);
+      local debugValueDisplay = string.upper(tostring(debugValue));
 
       if (self.db.profile.showCommandOutput) then
-         self.logger:Print('Setting the debug value to: ' .. tostring(debugValue));
+         self.logger:Print('Setting the debug value to: ' .. self.chalk:debug(debugValueDisplay));
       end
 
-      u:setDbValue('debugEnabled', debugValue);
+      self.utils:setDbValue('debugEnabled', debugValue);
       return ;
    end
 

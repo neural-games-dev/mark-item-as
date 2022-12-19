@@ -8,14 +8,15 @@ local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
 local Logger = MarkAsJunk:NewModule('Logger');
-local u = MarkAsJunk:GetModule('Utils');
 
 --## ===============================================================================================
 --## DEFINING THE LOGGER METHODS
 --## ===============================================================================================
 function Logger:Print(...)
+   local chalk = MarkAsJunk.chalk;
+
    if (MarkAsJunk.db.profile.debugEnabled) then
-      MarkAsJunk:Print(u:debug('[DEBUGGING] '), ...);
+      MarkAsJunk:Print(chalk:debug('[DEBUGGING] '), ...);
    else
       MarkAsJunk:Print(...);
    end

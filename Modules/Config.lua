@@ -8,18 +8,23 @@ local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
 local Config = MarkAsJunk:NewModule('Config');
-local u = MarkAsJunk:GetModule('Utils');
 
 --## ==========================================================================
 --## DEFINING THE MAIN OPTIONS FRAME
 --## ==========================================================================
-function Config:GetBlizzOptionsFrame()
-   local p = MarkAsJunk.db.profile;
+-- `addon` is a passed in reference of MarkAsJunk's `self`
+function Config:Init(addon)
+   LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkAsJunk', self:GetBlizzOptionsFrame(addon));
+   self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('MarkAsJunk', 'Mark As Junk');
+end
+
+function Config:GetBlizzOptionsFrame(maj)
+   local db = maj.db.profile;
 
    return {
-      desc = 'Configure the ' .. u:ace('MarkAsJunk') .. ' options for your junk items.',
-      handler = self,
-      name = 'Mark As Junk',
+      desc = 'Configure the ' .. maj.chalk:ace('MarkAsJunk') .. ' options for your junk items.',
+      --handler = self, -- keeping this for reference
+      name = 'Mark As Junk (' .. tostring(maj.version) .. ')',
       type = 'group',
       args = {
          markingOptions = {
@@ -37,12 +42,12 @@ function Config:GetBlizzOptionsFrame()
                modifierKey = {
                   desc = 'This is the additional key to press, along with your activator, to mark your items.',
                   get = function()
-                     return u:getDbValue('userSelectedModKey');
+                     return maj.utils:getDbValue('userSelectedModKey');
                   end,
                   name = 'Select your modifier key...',
                   order = 102,
                   set = function(info, value)
-                     u:setDbValue('userSelectedModKey', MAJ_Constants.modKeysMap[value])
+                     maj.utils:setDbValue('userSelectedModKey', MAJ_Constants.modKeysMap[value])
                   end,
                   type = 'select',
                   values = MAJ_Constants.modKeysMap,
@@ -50,12 +55,12 @@ function Config:GetBlizzOptionsFrame()
                activatorKey = {
                   desc = 'This is the main mouse key to press, along with your modifier, to mark your items.',
                   get = function()
-                     return p.userSelectedActivatorKey;
+                     return db.userSelectedActivatorKey;
                   end,
                   name = 'Select your activator key...',
                   order = 103,
                   set = function(info, value)
-                     p.userSelectedActivatorKey = MAJ_Constants.activatorKeysMap[value];
+                     db.userSelectedActivatorKey = MAJ_Constants.activatorKeysMap[value];
                   end,
                   type = 'select',
                   values = MAJ_Constants.activatorKeysMap,
@@ -69,70 +74,70 @@ function Config:GetBlizzOptionsFrame()
                enableOverlay = {
                   desc = '',
                   get = function()
-                     return u:getDbValue('enableOverlay');
+                     return maj.utils:getDbValue('enableOverlay');
                   end,
                   name = 'Enable overlay?',
                   order = 105,
                   set = function(info, value)
-                     u:setDbValue('enableOverlay', value);
+                     maj.utils:setDbValue('enableOverlay', value);
                   end,
                   type = 'toggle',
                },
                enableBorder = {
                   desc = '',
                   get = function()
-                     return u:getDbValue('enableBorder');
+                     return maj.utils:getDbValue('enableBorder');
                   end,
                   name = 'Enable border?',
                   order = 106,
                   set = function(info, value)
-                     u:setDbValue('enableBorder', value);
+                     maj.utils:setDbValue('enableBorder', value);
                   end,
                   type = 'toggle',
                },
                overlayColorPicker = {
                   desc = 'This overlay will be added on top of the items you mark to better visualize your junk.',
-                  disabled = not u:getDbValue('enableOverlay'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
+                  disabled = not maj.utils:getDbValue('enableOverlay'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
-                     local r, g, b, a = p.overlayColor.r,
-                     p.overlayColor.g,
-                     p.overlayColor.b,
-                     p.overlayColor.a;
+                     local r, g, b, a = db.overlayColor.r,
+                     db.overlayColor.g,
+                     db.overlayColor.b,
+                     db.overlayColor.a;
 
                      return r, g, b, a;
                   end,
                   name = 'Overlay Color',
                   order = 107,
                   set = function(info, r, g, b, a)
-                     p.overlayColor = { r = r, g = g, b = b, a = a };
+                     db.overlayColor = { r = r, g = g, b = b, a = a };
                   end,
                   type = 'color',
                },
                borderColorPicker = {
                   desc = 'This border will be added around the items you mark to better visualize your junk.',
-                  disabled = not u:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
+                  disabled = not maj.utils:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
-                     local r, g, b, a = p.borderColor.r,
-                     p.borderColor.g,
-                     p.borderColor.b,
-                     p.borderColor.a;
+                     local r, g, b, a = db.borderColor.r,
+                     db.borderColor.g,
+                     db.borderColor.b,
+                     db.borderColor.a;
 
                      return r, g, b, a;
                   end,
                   name = 'Border Color',
                   order = 108,
                   set = function(info, r, g, b, a)
-                     p.borderColor = { r = r, g = g, b = b, a = a };
+                     db.borderColor = { r = r, g = g, b = b, a = a };
                   end,
                   type = 'color',
                },
                borderThicknessSlider = {
                   desc = 'Select the size of the border that will wrap around your marked item.',
-                  disabled = not u:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
+                  disabled = not maj.utils:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   get = function()
-                     return p.borderThickness;
+                     return db.borderThickness;
                   end,
                   isPercent = false,
                   max = 2,
@@ -140,7 +145,7 @@ function Config:GetBlizzOptionsFrame()
                   name = 'Border Thickness',
                   order = 109,
                   set = function(info, value)
-                     p.borderThickness = value;
+                     db.borderThickness = value;
                   end,
                   step = 0.05,
                   type = 'range',
@@ -154,12 +159,12 @@ function Config:GetBlizzOptionsFrame()
                markerIcon = {
                   desc = 'Select the MAJ icon that you want to appear on the item.',
                   get = function()
-                     return u:getDbValue('markerIconSelected');
+                     return maj.utils:getDbValue('markerIconSelected');
                   end,
                   name = 'Select your icon...',
                   order = 111,
                   set = function(info, value)
-                     u:setDbValue('markerIconSelected', value);
+                     maj.utils:setDbValue('markerIconSelected', value);
                   end,
                   type = 'select',
                   values = MAJ_Constants.iconListMap,
@@ -167,12 +172,12 @@ function Config:GetBlizzOptionsFrame()
                markerIconLocation = {
                   desc = 'Select the position on the item where you want the MAJ icon to appear.',
                   get = function()
-                     return p.markerIconLocationSelected;
+                     return db.markerIconLocationSelected;
                   end,
                   name = 'Select your icon location...',
                   order = 112,
                   set = function(info, value)
-                     p.markerIconLocationSelected = MAJ_Constants.iconLocationsMap[value];
+                     db.markerIconLocationSelected = MAJ_Constants.iconLocationsMap[value];
                   end,
                   type = 'select',
                   values = MAJ_Constants.iconLocationsMap,
@@ -195,12 +200,12 @@ function Config:GetBlizzOptionsFrame()
                sortAfterMarking = {
                   desc = 'After an item gets marked, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
-                     return u:getDbValue('autoSortMarking');
+                     return maj.utils:getDbValue('autoSortMarking');
                   end,
                   name = 'Auto sort bags after Marking?',
                   order = 301,
                   set = function(info, value)
-                     u:setDbValue('autoSortMarking', value);
+                     maj.utils:setDbValue('autoSortMarking', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -208,12 +213,12 @@ function Config:GetBlizzOptionsFrame()
                sortAfterSelling = {
                   desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
-                     return u:getDbValue('autoSortSelling');
+                     return maj.utils:getDbValue('autoSortSelling');
                   end,
                   name = 'Auto sort bags after Selling?',
                   order = 302,
                   set = function(info, value)
-                     u:setDbValue('autoSortSelling', value);
+                     maj.utils:setDbValue('autoSortSelling', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -229,12 +234,12 @@ function Config:GetBlizzOptionsFrame()
                saleSummary = {
                   desc = 'This will hide/show the gold & items summary in chat after selling to a merchant.',
                   get = function()
-                     return u:getDbValue('showSaleSummary');
+                     return maj.utils:getDbValue('showSaleSummary');
                   end,
                   name = 'Show summary after selling?',
                   order = 401,
                   set = function(info, value)
-                     u:setDbValue('showSaleSummary', value);
+                     maj.utils:setDbValue('showSaleSummary', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -242,12 +247,12 @@ function Config:GetBlizzOptionsFrame()
                showWarnings = {
                   desc = 'This will hide/show the warnings in chat when another potentially conflicting addon is detected.',
                   get = function()
-                     return u:getDbValue('showWarnings');
+                     return maj.utils:getDbValue('showWarnings');
                   end,
                   name = 'Show addon warnings?',
                   order = 402,
                   set = function(info, value)
-                     u:setDbValue('showWarnings', value);
+                     maj.utils:setDbValue('showWarnings', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -255,25 +260,25 @@ function Config:GetBlizzOptionsFrame()
                startupGreeting = {
                   desc = 'This will hide/show the initial greeting in chat when the game starts or reloads.',
                   get = function()
-                     return u:getDbValue('showGreeting');
+                     return maj.utils:getDbValue('showGreeting');
                   end,
                   name = 'Show startup greeting in chat?',
                   order = 403,
                   set = function(info, value)
-                     u:setDbValue('showGreeting', value);
+                     maj.utils:setDbValue('showGreeting', value);
                   end,
                   type = 'toggle',
                   width = 'full',
                },
                slashCommandOutput = {
-                  desc = 'This will hide/show the chat output after triggering a ' .. u:badass('MAJ') .. ' command or action.',
+                  desc = 'This will hide/show the chat output after triggering a ' .. maj.chalk:badass('MAJ') .. ' command or action.',
                   get = function()
-                     return u:getDbValue('showCommandOutput');
+                     return maj.utils:getDbValue('showCommandOutput');
                   end,
                   name = 'Show MAJ command output?',
                   order = 404,
                   set = function(info, value)
-                     u:setDbValue('showCommandOutput', value);
+                     maj.utils:setDbValue('showCommandOutput', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -281,12 +286,12 @@ function Config:GetBlizzOptionsFrame()
                enableDebugging = {
                   desc = 'This will enable/disable debugging for this add-on. It is really only useful for other add-on devs.',
                   get = function()
-                     return u:getDbValue('debugEnabled');
+                     return maj.utils:getDbValue('debugEnabled');
                   end,
                   name = 'Enable MAJ debugging?',
                   order = 405,
                   set = function(info, value)
-                     u:setDbValue('debugEnabled', value);
+                     maj.utils:setDbValue('debugEnabled', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -295,10 +300,4 @@ function Config:GetBlizzOptionsFrame()
          },
       },
    };
-end
-
--- `addon` is a passed in reference of MarkAsJunk's `self`
-function Config:Init(addon)
-   LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkAsJunk', self:GetBlizzOptionsFrame());
-   self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('MarkAsJunk', 'Mark As Junk');
 end
