@@ -34,28 +34,17 @@ function Utils:handleConfigOptionsDisplay()
 end
 
 function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
-   return function(frame, button, _down)
-      -- "down" is a boolean that tells me that a key is pressed down?
+   -- "down" is a boolean that tells me that a key is pressed down?
+   return function(frame, button, down)
       local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
       local itemID = item:GetItemID();
       local frameID = frame:GetID();
+      local oc = maj.db.profile.overlayColor;
 
       if (maj.db.profile.debugEnabled) then
-         maj.logger:Print('HANDLE ON CLICK INFO:\n' ..
-            '————————————————————————\n' ..
-            'BagName: ' .. tostring(bagName) .. '\n' ..
-            'ContainerNumSlots: ' .. tostring(numSlots) .. '\n' ..
-            '————————————————————————\n' ..
-            'SlotFrameName: ' .. tostring(slotFrame:GetName()) .. '\n' ..
-            'SlotFrameID: ' .. tostring(slotFrame:GetID()) .. '\n' ..
-            '————————————————————————\n' ..
-            'FrameName: ' .. tostring(frame:GetName()) .. '\n' ..
-            'FrameID: ' .. tostring(frameID) .. '\n' ..
-            '————————————————————————\n' ..
-            'ItemName: ' .. tostring(item:GetItemName()) .. '\n' ..
-            'ItemID: ' .. tostring(itemID) .. '\n' ..
-            'ItemLocation.SlotIndex: ' .. tostring(item:GetItemLocation().slotIndex) .. '\n' ..
-            '————————————————————————'
+         maj.logger:PrintClickInfo(
+            bagIndex, bagName, button, down, frame,
+            frameID, item, itemID, numSlots, slotFrame
          );
       end
 
@@ -67,16 +56,17 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             end
 
             return ;
-            -- TODO **[G]** :: Re-enable this ItemLock check once I have marking work properly
-            --elseif (IsAddOnLoaded('ItemLock') and not not frame.lockItemsAppearanceOverlay) then
-            --   maj.logger:Print('Item is locked, ignoring.');
-            --   return ;
-         elseif (not frame.markedJunkOverlay) then
+         elseif (IsAddOnLoaded('ItemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
             if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
-               maj.logger:Print('Adding an overlay to "' .. tostring(item:GetItemName()) .. '".');
+               maj.logger:Print('Item is locked. Ignoring.');
             end
 
-            local oc = maj.db.profile.overlayColor;
+            return ;
+         elseif (not frame.markedJunkOverlay) then
+            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
+               maj.logger:Print('Marking "' .. tostring(item:GetItemName()) .. '" as junk.');
+            end
+
             frame.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
             frame.markedJunkOverlay:SetSize(frame:GetSize());
             frame.markedJunkOverlay:SetPoint("CENTER");
@@ -89,23 +79,40 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             frame.markedJunkOverlay:SetBackdropColor(oc.r, oc.g, oc.b, oc.a);
             maj.db.profile.markedItems[itemID] = true;
             return ;
+         elseif (not frame.markedJunkOverlay:IsShown()) then
+            if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
+               maj.logger:Print('Marking "' .. tostring(item:GetItemName()) .. '" as junk.');
+            end
+
+            frame.markedJunkOverlay:SetFrameLevel(20);
+            frame.markedJunkOverlay:SetBackdropColor(oc.r, oc.g, oc.b, oc.a);
+            frame.markedJunkOverlay:Show();
+            maj.db.profile.markedItems[itemID] = true;
+            return ;
          else
             if (maj.db.profile.showCommandOutput and not maj.db.profile.debugEnabled) then
-               maj.logger:Print('Removing the overlay from "' .. tostring(item:GetItemName()) .. '".');
+               maj.logger:Print('Un-marking "' .. tostring(item:GetItemName()) .. '" as junk.');
             end
 
             if (maj.db.profile.debugEnabled) then
-               maj.logger:Print('Clearing the overlay for bag: ' .. bagIndex .. ', frame: ' .. tostring(frameID));
+               local overlayHexID = tostring(frame.markedJunkOverlay):gsub("table: ", "", 1);
+
+               maj.logger:Print('Clearing the overlay:\n' ..
+                  'bag: ' .. tostring(bagIndex) .. '\n' ..
+                  'frame: ' .. tostring(frameID) .. '\n' ..
+                  'overlayHexID: ' .. overlayHexID
+               );
             end
 
+            frame.markedJunkOverlay:SetFrameLevel(0);
             frame.markedJunkOverlay:SetBackdropColor(0, 0, 0, 0);
-            frame.markedJunkOverlay = nil;
+            frame.markedJunkOverlay:Hide();
             maj.db.profile.markedItems[itemID] = false;
             return ;
          end
       else
          if (maj.db.profile.debugEnabled) then
-            maj.logger:Print('MAJ key combo was not pressed. Ignoring.');
+            maj.logger:Print('handleClick: MAJ key combo was not pressed. Ignoring.');
          end
 
          return ;

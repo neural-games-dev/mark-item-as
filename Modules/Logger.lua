@@ -20,3 +20,22 @@ function Logger:Print(...)
       MarkAsJunk:Print(...);
    end
 end
+
+function Logger:PrintClickInfo(bagIndex, bagName, button, down, frame, frameID, item, itemID, numSlots, slotFrame)
+   self:Print('HANDLE ON CLICK INFO:\n' ..
+      '————————————————————————\n' ..
+      'BagName: ' .. tostring(bagName) .. '\n' ..
+      'ContainerNumSlots: ' .. tostring(numSlots) .. '\n' ..
+      '————————————————————————\n' ..
+      'SlotFrameName: ' .. tostring(slotFrame:GetName()) .. '\n' ..
+      'SlotFrameID: ' .. tostring(slotFrame:GetID()) .. '\n' ..
+      '————————————————————————\n' ..
+      'FrameName: ' .. tostring(frame:GetName()) .. '\n' ..
+      'FrameID: ' .. tostring(frameID) .. '\n' ..
+      '————————————————————————\n' ..
+      'ItemName: ' .. tostring(item:GetItemName()) .. '\n' ..
+      'ItemID: ' .. tostring(itemID) .. '\n' ..
+      'ItemLocation.SlotIndex: ' .. tostring(item:GetItemLocation().slotIndex) .. '\n' ..
+      '————————————————————————'
+   );
+end

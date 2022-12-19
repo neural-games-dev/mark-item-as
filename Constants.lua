@@ -55,6 +55,6 @@ MAJ_Constants = {
    slashCommandQuoted = '|cFFbada55"/maj"|r',
    warnings = {
       bagginsLoaded = u:warn('(WARNING): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.'),
-      peddlerLoaded = u:warn('(WARNING): "Peddler" addon is also loaded. There may be conflicts in behavior.'),
+      peddlerLoaded = u:warn('(WARNING): "Peddler" addon is also loaded. There may be conflicting behavior.'),
    },
 };

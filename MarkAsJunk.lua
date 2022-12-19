@@ -41,11 +41,13 @@ end
 --## MAIN CONFIG / OPTIONS WINDOW
 --## ===============================================================================================
 function MarkAsJunk:OnEnable()
-   local u = self.utils;
-   u:registerClickListeners();
+   self.utils:registerClickListeners();
 
    if (self.db.profile.showGreeting) then
-      self.logger:Print('Hi, ' .. UnitName('player') .. '! Thanks for using "MarkAsJunk"! Type ' .. MAJ_Constants.slashCommandQuoted .. ' to get more info.');
+      self.logger:Print('Hi, ' .. UnitName('player') ..
+         '! Thanks for using "MarkAsJunk"! Type ' ..
+         MAJ_Constants.slashCommandQuoted .. ' to get more info.'
+      );
    end
 
    if (self.db.profile.showWarnings) then
