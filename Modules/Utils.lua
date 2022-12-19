@@ -67,13 +67,25 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return ;
          elseif (not frame.markedJunkOverlay) then
-            self:updateMarkedJunkOverlay('frameMissing', db.overlayColor, db, frame, itemName, itemID);
+            self:updateMarkedJunkOverlay(
+               'overlayMissing', bagIndex, db.overlayColor, db,
+               frame, frameID, itemName, itemID
+            );
+
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
-            self:updateMarkedJunkOverlay('frameHidden', db.overlayColor, db, frame, itemName, itemID);
+            self:updateMarkedJunkOverlay(
+               'overlayHidden', bagIndex, db.overlayColor, db,
+               frame, frameID, itemName, itemID
+            );
+
             return ;
          else
-            self:updateMarkedJunkOverlay('frameShowing', db.overlayColor, db, frame, itemName, itemID);
+            self:updateMarkedJunkOverlay(
+               'overlayShowing', bagIndex, db.overlayColor, db,
+               frame, frameID, itemName, itemID
+            );
+
             return ;
          end
       else
@@ -124,13 +136,13 @@ function Utils:sortBags()
    end
 end
 
-function Utils:updateMarkedJunkOverlay(status, color, db, frame, itemName, itemID)
-   if (status == 'frameMissing' or status == 'frameHidden') then
+function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID)
+   if (status == 'overlayMissing' or status == 'overlayHidden') then
       if (db.showCommandOutput and not db.debugEnabled) then
          maj.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
       end
 
-      if (status == 'frameMissing') then
+      if (status == 'overlayMissing') then
          frame.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
          frame.markedJunkOverlay:SetSize(frame:GetSize());
          frame.markedJunkOverlay:SetPoint("CENTER");
@@ -143,7 +155,7 @@ function Utils:updateMarkedJunkOverlay(status, color, db, frame, itemName, itemI
       frame.markedJunkOverlay:SetFrameLevel(20);
       frame.markedJunkOverlay:SetBackdropColor(color.r, color.g, color.b, color.a);
 
-      if (status == 'frameHidden') then
+      if (status == 'overlayHidden') then
          frame.markedJunkOverlay:Show();
       end
 
@@ -151,7 +163,7 @@ function Utils:updateMarkedJunkOverlay(status, color, db, frame, itemName, itemI
       return ;
    end
 
-   if (status == 'frameShowing') then
+   if (status == 'overlayShowing') then
       if (db.showCommandOutput and not db.debugEnabled) then
          maj.logger:Print('Removing the junk marking from "' .. tostring(itemName) .. '".');
       end
