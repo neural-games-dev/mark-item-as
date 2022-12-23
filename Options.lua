@@ -11,7 +11,7 @@ MAJ_Defaults = {
    enableOverlay = true,
    markedItems = {},
    markerIconLocationSelected = 'TOPLEFT',
-   markerIconSelected = 'Coin',
+   markerIconSelected = 'Trash',
    overlayColor = { r = 0, g = 0, b = 0, a = 0.75 },
    showCommandOutput = true,
    showGreeting = true,

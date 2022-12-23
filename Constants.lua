@@ -37,9 +37,11 @@ MAJ_Constants = {
       BOTTOMRIGHT = 'BOTTOMRIGHT',
    },
    iconPathMap = {
-      Coin = 'Interface/Icons/INV_Misc_Coin_01', -- or maybe use INV_Misc_Coin_17 or INV_Misc_Coin_05
+      Coin = 'Interface/Buttons/UI-GroupLoot-Coin-Up',
+      -- COIN ALTS: Interface/Icons/INV_Misc_Coin_17
       Stack = 'Interface/Icons/INV_Misc_Coin_02',
-      Trash = '',
+      -- COIN ALTS: Interface/Icons/INV_Misc_Coin_01, INV_Misc_Coin_05
+      Trash = 'Interface/AddOns/mark-as-junk/trash-sm',
    },
    modFunctionsMap = {
       ['Alt'] = IsAltKeyDown,

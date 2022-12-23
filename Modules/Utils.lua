@@ -142,6 +142,9 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
          maj.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
       end
 
+      local iconPath = MAJ_Constants.iconPathMap[db.markerIconSelected];
+      local position = MAJ_Constants.iconLocationsMap[db.markerIconLocationSelected];
+
       if (status == 'overlayMissing') then
          frame.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
          frame.markedJunkOverlay:SetSize(frame:GetSize());
@@ -150,13 +153,41 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
          frame.markedJunkOverlay:SetBackdrop({
             bgFile = "Interface/Tooltips/UI-Tooltip-Background"
          });
+
+         if (not frame.markedJunkOverlay.texture) then
+            if (db.debugEnabled) then
+               maj.logger:Print('Adding a frame overlay texture to "' .. itemName .. '"...\n' ..
+                  'position: ' .. position .. '\n' ..
+                  'iconPath: ' .. iconPath
+               );
+            end
+
+            frame.markedJunkOverlay.texture = frame.markedJunkOverlay:CreateTexture(nil, 'OVERLAY');
+            frame.markedJunkOverlay.texture:ClearAllPoints();
+            frame.markedJunkOverlay.texture:SetTexture(iconPath);
+            frame.markedJunkOverlay.texture:SetPoint(position);
+            frame.markedJunkOverlay.texture:SetSize(20, 20);
+         end
       end
 
-      frame.markedJunkOverlay:SetFrameLevel(20);
+      frame.markedJunkOverlay:SetFrameLevel(17);
       frame.markedJunkOverlay:SetBackdropColor(color.r, color.g, color.b, color.a);
 
       if (status == 'overlayHidden') then
+         if (db.debugEnabled) then
+            maj.logger:Print('Updating the frame overlay texture for "' .. itemName .. '"...\n' ..
+               'position: ' .. position .. '\n' ..
+               'iconPath: ' .. iconPath
+            );
+         end
+
+         -- `ClearAllPoints` will clear the previous location before setting a/the new one
+         -- Not using `ClearAllPoints` will make the icon image stretch all over the place
+         frame.markedJunkOverlay.texture:ClearAllPoints();
+         frame.markedJunkOverlay.texture:SetTexture(iconPath);
+         frame.markedJunkOverlay.texture:SetPoint(position);
          frame.markedJunkOverlay:Show();
+         frame.markedJunkOverlay.texture:Show();
       end
 
       db.markedItems[itemID] = true;
@@ -181,6 +212,7 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
       frame.markedJunkOverlay:SetFrameLevel(0);
       frame.markedJunkOverlay:SetBackdropColor(0, 0, 0, 0);
       frame.markedJunkOverlay:Hide();
+      frame.markedJunkOverlay.texture:Hide();
       db.markedItems[itemID] = false;
       return ;
    end
