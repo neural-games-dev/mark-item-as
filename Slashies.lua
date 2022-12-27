@@ -2,17 +2,17 @@
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
 -- Libs / Packages
-local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
---local Slashies = MarkAsJunk:NewModule('Utils');
+--local Slashies = MarkItemAs:NewModule('Utils');
 
 --## ===============================================================================================
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
-function MarkAsJunk:SlashCommandFrameStack()
+function MarkItemAs:SlashCommandFrameStack()
    if (self.db.profile.debugEnabled) then
       LoadAddOn('Blizzard_DebugTools');
       FrameStackTooltip_Toggle();
@@ -21,10 +21,10 @@ function MarkAsJunk:SlashCommandFrameStack()
    return ;
 end
 
-function MarkAsJunk:SlashCommandInfoConfig(command)
+function MarkItemAs:SlashCommandInfoConfig(command)
    command = command:trim();
 
-   -- Display the MarkAsJunk commands and notes
+   -- Display the MarkItemAs commands and notes
    if (command == '') then
       --print('🌟💰🌟 |cFF00ffff-- MARK AS JUNK COMMANDS --|r 🌟💰🌟');
       self.logger:Print(self.chalk:cyan('----- COMMANDS -----') .. '\n' ..
@@ -32,7 +32,7 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
          self.chalk:badass('/mia options (o)') .. ' -- This is an alias for "config".\n' ..
          self.chalk:badass('/mia hidetext (ht)') .. ' -- ' .. self.chalk:red('DISABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
          self.chalk:badass('/mia showtext (st)') .. ' -- ' .. self.chalk:green('ENABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
-         self.chalk:badass('/mia debug (d)') .. ' -- This enables debug logging. Really only useful for add-on devs.'
+         self.chalk:badass('/mia debug (d)') .. ' -- This enables debug logging. Really only useful for add-on devs. ' .. self.chalk:warn('WARNING!!!:') .. ' This can get REALLY SPAMMY. Enable with caution.'
       );
 
       return ;
@@ -90,7 +90,7 @@ function MarkAsJunk:SlashCommandInfoConfig(command)
    return ;
 end
 
-function MarkAsJunk:SlashCommandReload()
+function MarkItemAs:SlashCommandReload()
    ReloadUI();
    return ;
 end

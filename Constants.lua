@@ -2,7 +2,7 @@
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
 -- Libs / Packages
-local mia = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+local mia = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
@@ -41,7 +41,7 @@ MAJ_Constants = {
       -- COIN ALTS: Interface/Icons/INV_Misc_Coin_17, Ability_dragonriding_glyph01
       Stack = 'Interface/Icons/INV_Misc_Coin_02',
       -- COIN ALTS: Interface/Icons/INV_Misc_Coin_01, INV_Misc_Coin_05
-      Trash = 'Interface/AddOns/mark-as-junk/trash-sm',
+      Trash = 'Interface/AddOns/mark-item-as/trash-sm',
    },
    modFunctionsMap = {
       ['Alt'] = IsAltKeyDown,

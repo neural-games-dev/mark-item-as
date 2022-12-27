@@ -2,28 +2,28 @@
 --## ALL REQUIRED IMPORTS
 --## ==========================================================================
 -- Libs / Packages
-local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
-local Config = MarkAsJunk:NewModule('Config');
+local Config = MarkItemAs:NewModule('Config');
 
 --## ==========================================================================
 --## DEFINING THE MAIN OPTIONS FRAME
 --## ==========================================================================
--- `addon` is a passed in reference of MarkAsJunk's `self`
+-- `addon` is a passed in reference of MarkItemAs's `self`
 function Config:Init(addon)
-   LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkAsJunk', self:GetBlizzOptionsFrame(addon));
-   self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('MarkAsJunk', 'Mark Item As');
+   LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkItemAs', self:GetBlizzOptionsFrame(addon));
+   self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('MarkItemAs', 'Mark Item As');
 end
 
--- `mia` that's passed in is a reference to MarkAsJunk's `self`
+-- `mia` that's passed in is a reference to MarkItemAs's `self`
 function Config:GetBlizzOptionsFrame(mia)
    local db = mia.db.profile;
 
    return {
-      desc = 'Configure the ' .. mia.chalk:ace('MarkAsJunk') .. ' options for your junk items.',
+      desc = 'Configure the ' .. mia.chalk:ace('MarkItemAs') .. ' options for your junk items.',
       --handler = self, -- keeping this for reference
       name = 'Mark Item As (' .. tostring(mia.version) .. ')',
       type = 'group',

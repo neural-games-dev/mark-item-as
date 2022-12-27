@@ -3,7 +3,7 @@
 --## ===============================================================================================
 -- Libs / Packages
 local dialog = LibStub("AceConfigDialog-3.0");
-local mia = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+local mia = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
@@ -20,18 +20,18 @@ end
 function Utils:handleConfigOptionsDisplay()
    local db = mia.db.profile;
 
-   if (dialog.OpenFrames['MarkAsJunk']) then
+   if (dialog.OpenFrames['MarkItemAs']) then
       if (db.showCommandOutput) then
          mia.logger:Print('Hiding the config options window.');
       end
 
-      dialog:Close('MarkAsJunk');
+      dialog:Close('MarkItemAs');
    else
       if (db.showCommandOutput) then
          mia.logger:Print('Showing the config options window.');
       end
 
-      dialog:Open('MarkAsJunk');
+      dialog:Open('MarkItemAs');
    end
 end
 

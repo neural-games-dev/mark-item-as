@@ -2,21 +2,21 @@
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
 -- Libs / Packages
-local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
-local Logger = MarkAsJunk:NewModule('Logger');
+local Logger = MarkItemAs:NewModule('Logger');
 
 --## ===============================================================================================
 --## DEFINING THE LOGGER METHODS
 --## ===============================================================================================
 function Logger:Debug(...)
-   if (MarkAsJunk.db.profile.debugEnabled) then
-      local chalk = MarkAsJunk.chalk;
+   if (MarkItemAs.db.profile.debugEnabled) then
+      local chalk = MarkItemAs.chalk;
       local prefix = chalk:debug('[DEBUG] ') .. chalk:ace('(' .. tostring(date()) .. ')');
-      MarkAsJunk:Print(prefix, ...);
+      MarkItemAs:Print(prefix, ...);
    end
 end
 
@@ -41,9 +41,9 @@ function Logger:DebugClickInfo(bagIndex, bagName, button, down, frame, frameID, 
 end
 
 function Logger:Print(...)
-   if (MarkAsJunk.db.profile.debugEnabled) then
+   if (MarkItemAs.db.profile.debugEnabled) then
       self:Debug(...);
    else
-      MarkAsJunk:Print(...);
+      MarkItemAs:Print(...);
    end
 end

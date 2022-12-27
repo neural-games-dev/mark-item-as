@@ -2,7 +2,7 @@
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
 -- Libs / Packages
-local mia = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+local mia = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
