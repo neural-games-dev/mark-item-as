@@ -27,7 +27,7 @@ function MarkAsJunk:OnInitialize()
    self.config:Init(self)
 
    -- we're slashing prices so much it's like we're crazy!
-   self:RegisterChatCommand('maj', 'SlashCommandInfoConfig');
+   self:RegisterChatCommand('mia', 'SlashCommandInfoConfig');
    self:RegisterChatCommand('nrl', 'SlashCommandReload');
    self:RegisterChatCommand('nfs', 'SlashCommandFrameStack');
 end
@@ -43,7 +43,7 @@ function MarkAsJunk:OnEnable()
 
    if (self.db.profile.showGreeting) then
       self.logger:Print('Hi, ' .. UnitName('player') ..
-         '! Thanks for using "MarkAsJunk"! Type ' ..
+         '! Thanks for using ' .. MAJ_Constants.addOnNameQuoted .. '! Type ' ..
          MAJ_Constants.slashCommandQuoted .. ' to get more info.'
       );
    end

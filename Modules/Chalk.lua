@@ -2,12 +2,12 @@
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
 -- Libs / Packages
-local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+local mia = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
-local Chalk = MarkAsJunk:NewModule('Chalk');
+local Chalk = mia:NewModule('Chalk');
 
 --## ===============================================================================================
 --## DEFINING ALL TEXT COLORIZING UTILS TO BE USED THROUGHOUT THE ADDON

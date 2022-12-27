@@ -2,12 +2,12 @@
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
 -- Libs / Packages
-local maj = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
+local mia = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
-local chalk = maj:GetModule('Chalk');
+local chalk = mia:GetModule('Chalk');
 
 --## ==========================================================================
 --## DEFINING THE GLOBAL CONSTANTS TABLE TO BE USED THROUGHOUT THE ADDON
@@ -18,8 +18,8 @@ MAJ_Constants = {
       ['LeftButton'] = 'LeftButton',
       ['RightButton'] = 'RightButton',
    },
-   addOnName = chalk:ace('Mark As Junk'),
-   addOnNameQuoted = chalk:ace('"Mark As Junk"'),
+   addOnName = chalk:ace('Mark Item As'),
+   addOnNameQuoted = chalk:ace('"Mark Item As"'),
    iconListMap = {
       Coin = 'Coin',
       Stack = 'Stack',
@@ -54,8 +54,8 @@ MAJ_Constants = {
       ['Shift'] = 'Shift',
    },
    numContainers = 4,
-   slashCommand = '|cFFbada55/maj|r',
-   slashCommandQuoted = '|cFFbada55"/maj"|r',
+   slashCommand = '|cFFbada55/mia|r',
+   slashCommandQuoted = '|cFFbada55"/mia"|r',
    warnings = {
       bagginsLoaded = chalk:warn('(WARNING): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.'),
       peddlerLoaded = chalk:warn('(WARNING): "Peddler" addon is also loaded. There may be conflicting behavior.'),
