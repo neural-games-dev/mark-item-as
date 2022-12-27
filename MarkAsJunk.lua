@@ -33,13 +33,13 @@ function MarkAsJunk:OnInitialize()
 end
 
 function MarkAsJunk:OnEnable()
-   --self:RegisterEvent("BAG_UPDATE");
-   --self:RegisterEvent("MERCHANT_CLOSED");
-   --self:RegisterEvent("MERCHANT_SHOW");
-   --self:RegisterEvent("PLAYER_LOGIN"); -- use this to `UpdateSlots` and iterate through everything to re-add the junk markings
-
+   -- Third args can be passed to these callbacks
+   -- these args are extra values that you want the CBs to have
+   self:RegisterEvent('BAG_UPDATE', 'BagUpdateCB');
+   self:RegisterEvent('MERCHANT_CLOSED', 'MerchantClosedCB');
+   self:RegisterEvent('MERCHANT_SHOW', 'MerchantShowCB');
+   self:RegisterEvent('PLAYER_LOGIN', 'PlayerLoginCB');
    self.utils:registerClickListeners();
-   -- TODO **[G]** :: Add the invocation of the util that will loop through all the bag slots and update their marked status/overlays
 
    if (self.db.profile.showGreeting) then
       self.logger:Print('Hi, ' .. UnitName('player') ..
@@ -62,5 +62,24 @@ function MarkAsJunk:OnEnable()
 end
 
 --## ===============================================================================================
---## bllr
+--## REGISTERED EVENT LISTENER CALLBACKS
 --## ===============================================================================================
+function MarkAsJunk:BagUpdateCB()
+   self.logger:Debug('BAG_UPDATE registered event callback has been triggered. Doing stuff...');
+   --self.utils:updateBagMarkings();
+end
+
+function MarkAsJunk:MerchantClosedCB()
+   self.logger:Debug('MERCHANT_CLOSED registered event callback has been triggered. Doing stuff...');
+end
+
+function MarkAsJunk:MerchantShowCB()
+   self.logger:Debug('MERCHANT_SHOW registered event callback has been triggered. Doing stuff...');
+end
+
+-- This handles both when the player logs in (as is obvious by the name)
+-- but it also handles when the game reloads
+function MarkAsJunk:PlayerLoginCB()
+   self.logger:Debug('PLAYER_LOGIN registered event callback has been triggered. Doing stuff...');
+   self.utils:updateBagMarkings();
+end

@@ -39,28 +39,27 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
    -- "down" is a boolean that tells me that the current `button` is pressed?
    return function(frame, button, down)
       local db = maj.db.profile;
+      -- CLEAN UP: Can this `slotFrame` below be replaced by the `frame` from the returned handler instead?
       local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
       local itemID = item:GetItemID();
       local itemName = item:GetItemName();
       local frameID = frame:GetID();
 
-      if (db.debugEnabled) then
-         maj.logger:PrintClickInfo(
-            bagIndex, bagName, button, down, frame,
-            frameID, item, itemID, numSlots, slotFrame
-         );
-      end
+      maj.logger:DebugClickInfo(
+         bagIndex, bagName, button, down, frame,
+         frameID, item, itemID, numSlots, slotFrame
+      );
 
       if (self:isMajKeyCombo(button)) then
          if (item:IsItemEmpty()) then
-            -- use `frame.hasItem` instead?
+            -- ☝ use `frame.hasItem` instead?
             if (db.showCommandOutput and not db.debugEnabled) then
                maj.logger:Print('No item present. Ignoring.');
             end
 
             return ;
          elseif (IsAddOnLoaded('ItemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
-            -- TODO **[G]** :: Add another condition above this to check if item is sellable or not
+            -- TODO **[G]** :: Add another condition above this to check if item is sellable or not -- DO THIS ON `selling` PR/BRANCH
             if (db.showCommandOutput and not db.debugEnabled) then
                maj.logger:Print('Item is locked. Ignoring.');
             end
@@ -89,10 +88,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             return ;
          end
       else
-         if (db.debugEnabled) then
-            maj.logger:Print('Add-on key combo was not pressed. Ignoring click event listener.');
-         end
-
+         maj.logger:Debug('Add-on key combo was not pressed. Ignoring click event listener.');
          return ;
       end
    end
@@ -111,13 +107,11 @@ function Utils:registerClickListeners()
 
       if (numSlots > 0) then
          for slotIndex = 1, numSlots, 1 do
-            local slotFrame = _G[bagName .. "Item" .. slotIndex];
+            local slotFrame = _G[bagName .. 'Item' .. slotIndex];
             slotFrame:HookScript('OnClick', self:handleOnClick(bagIndex, bagName, slotFrame, numSlots));
          end
       else
-         if (maj.db.profile.debugEnabled) then
-            maj.logger:Print('Container at bag index "' .. tostring(bagIndex) .. '" appears to be empty.');
-         end
+         maj.logger:Debug('Container at bag index "' .. tostring(bagIndex) .. '" appears to be empty. Skipping.');
       end
    end
 end
@@ -136,8 +130,86 @@ function Utils:sortBags()
    end
 end
 
+function Utils:updateBagMarkings()
+   local db = maj.db.profile;
+   maj.logger:Debug('UPDATING BAG MARKINGS. Beginning iteration...');
+
+   for bagIndex = 0, MAJ_Constants.numContainers, 1 do
+      local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
+      local numSlots = C_Container.GetContainerNumSlots(bagIndex);
+      local isBagOpen = IsBagOpen(bagIndex);
+      local wasBagOpened = false;
+
+      maj.logger:Debug('Processing Bag Number: ' .. tostring(bagIndex) .. '\n' ..
+         'bagName = ' .. tostring(bagName) .. '\n' ..
+         'numSlots = ' .. tostring(numSlots) .. '\n' ..
+         'isBagOpen = ' .. tostring(isBagOpen)
+      );
+
+      -- The bags need to be open, or at least to have been opened, so that the `itemID`'s show up
+      -- This mostly just covers when a reload or initial game login occurs
+      -- and the location value has been changed before the bags have been opened
+      if (not isBagOpen) then
+         OpenBag(bagIndex);
+         wasBagOpened = true;
+      end
+
+      for slotIndex = 1, numSlots, 1 do
+         local slotFrame = _G[bagName .. 'Item' .. slotIndex];
+         local slotFrameID = slotFrame:GetID();
+         local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
+         local itemName = item:GetItemName();
+         local itemID = item:GetItemID();
+         local isItemEmpty = item:IsItemEmpty();
+
+         if (itemID ~= nil) then
+            maj.logger:Debug('Processing Item & Slot Frame:\n' ..
+               'item = ' .. tostring(item) .. '\n' ..
+               'itemName = ' .. tostring(itemName) .. '\n' ..
+               'itemID = ' .. tostring(itemID) .. '\n' ..
+               'isItemEmpty = ' .. tostring(isItemEmpty) .. '\n' ..
+               'slotIndex = ' .. tostring(slotIndex) .. '\n' ..
+               'slotFrameID = ' .. tostring(slotFrameID)
+            );
+
+            local isItemMarked = db.markedItems[itemID];
+
+            if (isItemMarked) then
+               local overlayStatus = '';
+
+               if (not slotFrame.markedJunkOverlay) then
+                  -- This should just be for when we login/reload and we need to re-apply the MAJ overlays
+                  overlayStatus = 'overlayMissing';
+               elseif (slotFrame.markedJunkOverlay:IsShown()) then
+                  -- This should just be for when we need to update the overlays visually
+                  -- because the user has been been logged in/reloaded for a while
+                  overlayStatus = 'updateOverlay';
+               end
+
+               maj.logger:Debug('Item is marked. Updating marking for:\n' ..
+                  'itemName = ' .. tostring(itemName) .. '\n' ..
+                  'itemID = ' .. tostring(itemID) .. '\n' ..
+                  'markerIconLocation = ' .. tostring(db.markerIconLocationSelected) .. '\n' ..
+                  'overlayStatus = ' .. tostring(overlayStatus)
+               );
+
+               self:updateMarkedJunkOverlay(
+                  overlayStatus, bagIndex, db.overlayColor, db,
+                  slotFrame, slotFrameID, itemName, itemID
+               );
+            end
+         end
+      end
+
+      -- Closing the bags opened by MAJ and leaving the user opened bags alone
+      if (wasBagOpened) then
+         CloseBag(bagIndex);
+      end
+   end
+end
+
 function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID)
-   if (status == 'overlayMissing' or status == 'overlayHidden') then
+   if (status == 'overlayMissing' or status == 'overlayHidden' or status == 'updateOverlay') then
       if (db.showCommandOutput and not db.debugEnabled) then
          maj.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
       end
@@ -155,12 +227,10 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
          });
 
          if (not frame.markedJunkOverlay.texture) then
-            if (db.debugEnabled) then
-               maj.logger:Print('Adding a frame overlay texture to "' .. itemName .. '"...\n' ..
-                  'position: ' .. position .. '\n' ..
-                  'iconPath: ' .. iconPath
-               );
-            end
+            maj.logger:Debug('Adding a frame overlay texture to "' .. tostring(itemName) .. '"...\n' ..
+               'position = ' .. position .. '\n' ..
+               'iconPath = ' .. iconPath
+            );
 
             frame.markedJunkOverlay.texture = frame.markedJunkOverlay:CreateTexture(nil, 'OVERLAY');
             frame.markedJunkOverlay.texture:ClearAllPoints();
@@ -173,13 +243,11 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
       frame.markedJunkOverlay:SetFrameLevel(17);
       frame.markedJunkOverlay:SetBackdropColor(color.r, color.g, color.b, color.a);
 
-      if (status == 'overlayHidden') then
-         if (db.debugEnabled) then
-            maj.logger:Print('Updating the frame overlay texture for "' .. itemName .. '"...\n' ..
-               'position: ' .. position .. '\n' ..
-               'iconPath: ' .. iconPath
-            );
-         end
+      if (status == 'overlayHidden' or status == 'updateOverlay') then
+         maj.logger:Debug('Updating the frame overlay texture for "' .. tostring(itemName) .. '"...\n' ..
+            'position = ' .. position .. '\n' ..
+            'iconPath = ' .. iconPath
+         );
 
          -- `ClearAllPoints` will clear the previous location before setting a/the new one
          -- Not using `ClearAllPoints` will make the icon image stretch all over the place
@@ -202,10 +270,10 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
       if (db.debugEnabled) then
          local overlayHexID = tostring(frame.markedJunkOverlay):gsub("table: ", "", 1);
 
-         maj.logger:Print('Clearing the overlay:\n' ..
-            'bag: ' .. tostring(bagIndex) .. '\n' ..
-            'frame: ' .. tostring(frameID) .. '\n' ..
-            'overlayHexID: ' .. overlayHexID
+         maj.logger:Debug('Clearing the overlay:\n' ..
+            'bag = ' .. tostring(bagIndex) .. '\n' ..
+            'frame = ' .. tostring(frameID) .. '\n' ..
+            'overlayHexID = ' .. overlayHexID
          );
       end
 
