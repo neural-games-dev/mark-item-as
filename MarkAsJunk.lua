@@ -66,7 +66,7 @@ end
 --## ===============================================================================================
 function MarkAsJunk:BagUpdateCB()
    self.logger:Debug('BAG_UPDATE registered event callback has been triggered. Doing stuff...');
-   --self.utils:updateBagMarkings();
+   self.utils:updateBagMarkings();
 end
 
 function MarkAsJunk:MerchantClosedCB()

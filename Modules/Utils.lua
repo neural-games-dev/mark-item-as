@@ -183,6 +183,7 @@ function Utils:updateBagMarkings()
                elseif (slotFrame.markedJunkOverlay:IsShown()) then
                   -- This should just be for when we need to update the overlays visually
                   -- because the user has been been logged in/reloaded for a while
+                  -- and has interacted with the bags already
                   overlayStatus = 'updateOverlay';
                end
 
@@ -198,6 +199,13 @@ function Utils:updateBagMarkings()
                   slotFrame, slotFrameID, itemName, itemID
                );
             end
+         elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
+            -- Clearing the still showing bag slot's overlay because it is empty,
+            -- or it has been emptied by moving the item
+            self:updateMarkedJunkOverlay(
+               'overlayShowing', bagIndex, { r = 0, g = 0, b = 0, a = 0 }, db,
+               slotFrame, slotFrameID, itemName, itemID
+            );
          end
       end
 
@@ -281,7 +289,11 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
       frame.markedJunkOverlay:SetBackdropColor(0, 0, 0, 0);
       frame.markedJunkOverlay:Hide();
       frame.markedJunkOverlay.texture:Hide();
-      db.markedItems[itemID] = false;
+
+      if (itemID) then
+         db.markedItems[itemID] = false;
+      end
+
       return ;
    end
 end

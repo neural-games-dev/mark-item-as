@@ -165,13 +165,22 @@ function Config:GetBlizzOptionsFrame(maj)
                   name = 'Select your icon...',
                   order = 111,
                   set = function(info, value)
+                     local newValue = MAJ_Constants.iconListMap[value];
+                     local oldValue = db.markerIconSelected;
+
+                     maj.logger:Debug('SELECTED ICON CHANGED. Updating bags...\n' ..
+                        'OLD VALUE = ' .. oldValue .. '\n' ..
+                        'NEW VALUE = ' .. newValue .. '\n'
+                     );
+
                      maj.utils:setDbValue('markerIconSelected', value);
+                     maj.utils:updateBagMarkings();
                   end,
                   type = 'select',
                   values = MAJ_Constants.iconListMap,
                },
                markerIconLocation = {
-                  desc = 'Select the position on the item where you want the JUNK icon to appear.\n\n' .. maj.chalk:warn('WARNING:') .. '\nChanging this value toggles all currently closed bags so that the location can be updated.',
+                  desc = 'Select the position on the item where you want the JUNK icon to appear.',
                   get = function()
                      return db.markerIconLocationSelected;
                   end,
@@ -181,17 +190,13 @@ function Config:GetBlizzOptionsFrame(maj)
                      local newValue = MAJ_Constants.iconLocationsMap[value];
                      local oldValue = db.markerIconLocationSelected;
 
-                     if (newValue ~= oldValue) then
-                        if (db.debugEnabled) then
-                           maj.logger:Print('SELECTED ICON LOCATION CHANGED. Updating bags...\n' ..
-                              'OLD VALUE = ' .. oldValue .. '\n' ..
-                              'NEW VALUE = ' .. newValue .. '\n'
-                           );
-                        end
+                     maj.logger:Debug('SELECTED ICON LOCATION CHANGED. Updating bags...\n' ..
+                        'OLD VALUE = ' .. oldValue .. '\n' ..
+                        'NEW VALUE = ' .. newValue .. '\n'
+                     );
 
-                        db.markerIconLocationSelected = newValue;
-                        maj.utils:updateBagMarkings();
-                     end
+                     maj.utils:setDbValue('markerIconLocationSelected', newValue);
+                     maj.utils:updateBagMarkings();
                   end,
                   type = 'select',
                   values = MAJ_Constants.iconLocationsMap,
