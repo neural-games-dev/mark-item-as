@@ -10,7 +10,7 @@ MAJ_Defaults = {
    enableBorder = true,
    enableOverlay = true,
    markedItems = {},
-   markerIconLocationSelected = 'TOPLEFT',
+   markerIconLocationSelected = 'BOTTOMLEFT',
    markerIconSelected = 'Trash',
    overlayColor = { r = 0, g = 0, b = 0, a = 0.75 },
    showCommandOutput = true,
