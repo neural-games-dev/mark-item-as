@@ -66,21 +66,21 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return ;
          elseif (not frame.markedJunkOverlay) then
-            self:updateMarkedJunkOverlay(
+            maj.utils:updateMarkedJunkOverlay(
                'overlayMissing', bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
 
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
-            self:updateMarkedJunkOverlay(
+            maj.utils:updateMarkedJunkOverlay(
                'overlayHidden', bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
 
             return ;
          else
-            self:updateMarkedJunkOverlay(
+            maj.utils:updateMarkedJunkOverlay(
                'overlayShowing', bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
@@ -194,7 +194,7 @@ function Utils:updateBagMarkings()
                   'overlayStatus = ' .. tostring(overlayStatus)
                );
 
-               self:updateMarkedJunkOverlay(
+               maj.utils:updateMarkedJunkOverlay(
                   overlayStatus, bagIndex, db.overlayColor, db,
                   slotFrame, slotFrameID, itemName, itemID
                );
@@ -202,7 +202,7 @@ function Utils:updateBagMarkings()
          elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
             -- Clearing the still showing bag slot's overlay because it is empty,
             -- or it has been emptied by moving the item
-            self:updateMarkedJunkOverlay(
+            maj.utils:updateMarkedJunkOverlay(
                'overlayShowing', bagIndex, { r = 0, g = 0, b = 0, a = 0 }, db,
                slotFrame, slotFrameID, itemName, itemID
             );

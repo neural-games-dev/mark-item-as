@@ -15,7 +15,7 @@ local Logger = MarkAsJunk:NewModule('Logger');
 function Logger:Debug(...)
    if (MarkAsJunk.db.profile.debugEnabled) then
       local chalk = MarkAsJunk.chalk;
-      local prefix = chalk:debug('[DEBUGGING] ') .. chalk:ace('(' .. tostring(date()) .. ')');
+      local prefix = chalk:debug('[DEBUG] ') .. chalk:ace('(' .. tostring(date()) .. ')');
       MarkAsJunk:Print(prefix, ...);
    end
 end

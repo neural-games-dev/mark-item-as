@@ -25,7 +25,7 @@ function Config:GetBlizzOptionsFrame(maj)
    return {
       desc = 'Configure the ' .. maj.chalk:ace('MarkAsJunk') .. ' options for your junk items.',
       --handler = self, -- keeping this for reference
-      name = 'Mark As Junk (' .. tostring(maj.version) .. ')',
+      name = 'Mark Item As (' .. tostring(maj.version) .. ')',
       type = 'group',
       args = {
          markingOptions = {
@@ -72,33 +72,34 @@ function Config:GetBlizzOptionsFrame(maj)
                   type = 'header',
                   width = 'full',
                },
-               enableOverlay = {
-                  desc = '',
-                  get = function()
-                     return maj.utils:getDbValue('enableOverlay');
-                  end,
-                  name = 'Enable overlay?',
-                  order = 105,
-                  set = function(info, value)
-                     maj.utils:setDbValue('enableOverlay', value);
-                  end,
-                  type = 'toggle',
-               },
-               enableBorder = {
-                  desc = '',
-                  get = function()
-                     return maj.utils:getDbValue('enableBorder');
-                  end,
-                  name = 'Enable border?',
-                  order = 106,
-                  set = function(info, value)
-                     maj.utils:setDbValue('enableBorder', value);
-                  end,
-                  type = 'toggle',
-               },
+               -- NOTE :: `enableOverlay` and `enableBorder` will be added in another phase
+               --enableOverlay = {
+               --   desc = '',
+               --   get = function()
+               --      return maj.utils:getDbValue('enableOverlay');
+               --   end,
+               --   name = 'Enable overlay?',
+               --   order = 105,
+               --   set = function(info, value)
+               --      maj.utils:setDbValue('enableOverlay', value);
+               --   end,
+               --   type = 'toggle',
+               --},
+               --enableBorder = {
+               --   desc = '',
+               --   get = function()
+               --      return maj.utils:getDbValue('enableBorder');
+               --   end,
+               --   name = 'Enable border?',
+               --   order = 106,
+               --   set = function(info, value)
+               --      maj.utils:setDbValue('enableBorder', value);
+               --   end,
+               --   type = 'toggle',
+               --},
                overlayColorPicker = {
                   desc = 'This overlay will be added on top of the items you mark to better visualize your junk.',
-                  disabled = not maj.utils:getDbValue('enableOverlay'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
+                  --disabled = not maj.utils:getDbValue('enableOverlay'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
                      local r, g, b, a = db.overlayColor.r,
@@ -111,13 +112,14 @@ function Config:GetBlizzOptionsFrame(maj)
                   name = 'Overlay Color',
                   order = 107,
                   set = function(info, r, g, b, a)
-                     db.overlayColor = { r = r, g = g, b = b, a = a };
+                     maj.utils:setDbValue('overlayColor', { r = r, g = g, b = b, a = a });
+                     maj.utils.updateBagMarkings();
                   end,
                   type = 'color',
                },
                borderColorPicker = {
                   desc = 'This border will be added around the items you mark to better visualize your junk.',
-                  disabled = not maj.utils:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
+                  --disabled = not maj.utils:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
                      local r, g, b, a = db.borderColor.r,
@@ -130,7 +132,8 @@ function Config:GetBlizzOptionsFrame(maj)
                   name = 'Border Color',
                   order = 108,
                   set = function(info, r, g, b, a)
-                     db.borderColor = { r = r, g = g, b = b, a = a };
+                     maj.utils:setDbValue('borderColor', { r = r, g = g, b = b, a = a });
+                     maj.utils:updateBagMarkings();
                   end,
                   type = 'color',
                },
