@@ -39,7 +39,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
    -- "down" is a boolean that tells me that the current `button` is pressed?
    return function(frame, button, down)
       local db = mia.db.profile;
-      -- CLEAN UP: Can this `slotFrame` below be replaced by the `frame` from the returned handler instead?
+      -- NOTE **[G]** :: CLEAN UP: Can this `slotFrame` below be replaced by the `frame` from the returned handler instead?
       local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
       local itemID = item:GetItemID();
       local itemName = item:GetItemName();
@@ -71,6 +71,8 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
                frame, frameID, itemName, itemID
             );
 
+            mia.utils:updateMarkedBorder(frame, db.borderThickness, db.borderColor);
+
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
             mia.utils:updateMarkedJunkOverlay(
@@ -78,12 +80,16 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
                frame, frameID, itemName, itemID
             );
 
+            mia.utils:updateMarkedBorder(frame, db.borderThickness, db.borderColor);
+
             return ;
          else
             mia.utils:updateMarkedJunkOverlay(
                'overlayShowing', bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
+
+            mia.utils:updateMarkedBorder(frame, 0, { r = 0, g = 0, b = 0, a = 0 });
 
             return ;
          end
@@ -216,6 +222,37 @@ function Utils:updateBagMarkings()
    end
 end
 
+function Utils:updateMarkedBorder(frame, thickness, color)
+   if (not frame.border) then
+      frame.border = {};
+   end
+
+   local borderOffset = thickness / 2;
+
+   for i = 0, 3, 1 do
+      if (not frame.border[i]) then
+         frame.border[i] = frame:CreateLine(nil, 'BACKGROUND', nil, 0);
+      end
+
+      frame.border[i]:SetColorTexture(color.r, color.g, color.b, color.a);
+      frame.border[i]:SetThickness(thickness);
+
+      if i == 0 then
+         frame.border[i]:SetStartPoint('TOPLEFT', -borderOffset, 0);
+         frame.border[i]:SetEndPoint('TOPRIGHT', borderOffset, 0);
+      elseif i == 1 then
+         frame.border[i]:SetStartPoint('TOPRIGHT', 0, borderOffset);
+         frame.border[i]:SetEndPoint('BOTTOMRIGHT', 0, -borderOffset);
+      elseif i == 2 then
+         frame.border[i]:SetStartPoint('BOTTOMRIGHT', borderOffset, 0);
+         frame.border[i]:SetEndPoint('BOTTOMLEFT', -borderOffset, 0);
+      else
+         frame.border[i]:SetStartPoint('BOTTOMLEFT', 0, -borderOffset);
+         frame.border[i]:SetEndPoint('TOPLEFT', 0, borderOffset);
+      end
+   end
+end
+
 function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID)
    if (status == 'overlayMissing' or status == 'overlayHidden' or status == 'updateOverlay') then
       if (db.showCommandOutput and not db.debugEnabled) then
@@ -276,6 +313,7 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
       end
 
       if (db.debugEnabled) then
+         -- NOTE **[G]** :: I could prolly get rid of this. The idea was to try and delete the table by its hex ID.
          local overlayHexID = tostring(frame.markedJunkOverlay):gsub("table: ", "", 1);
 
          mia.logger:Debug('Clearing the overlay:\n' ..
