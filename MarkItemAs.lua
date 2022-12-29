@@ -43,18 +43,18 @@ function MarkItemAs:OnEnable()
 
    if (self.db.profile.showGreeting) then
       self.logger:Print('Hi, ' .. UnitName('player') ..
-         '! Thanks for using ' .. MAJ_Constants.addOnNameQuoted .. '! Type ' ..
-         MAJ_Constants.slashCommandQuoted .. ' to get more info.'
+         '! Thanks for using ' .. MIA_Constants.addOnNameQuoted .. '! Type ' ..
+         MIA_Constants.slashCommandQuoted .. ' to get more info.'
       );
    end
 
    if (self.db.profile.showWarnings) then
       if (IsAddOnLoaded('Baggins')) then
-         self.logger:Print(MAJ_Constants.warnings.bagginsLoaded);
+         self.logger:Print(MIA_Constants.warnings.bagginsLoaded);
       end
 
       if (IsAddOnLoaded('Peddler')) then
-         self.logger:Print(MAJ_Constants.warnings.peddlerLoaded);
+         self.logger:Print(MIA_Constants.warnings.peddlerLoaded);
       end
    end
 

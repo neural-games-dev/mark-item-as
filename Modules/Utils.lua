@@ -14,7 +14,7 @@ local Utils = mia:NewModule('Utils');
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
 function Utils:getModifierFunction(modKey)
-   return MAJ_Constants.modFunctionsMap[modKey];
+   return MIA_Constants.modFunctionsMap[modKey];
 end
 
 function Utils:handleConfigOptionsDisplay()
@@ -67,7 +67,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             return ;
          elseif (not frame.markedJunkOverlay) then
             mia.utils:updateMarkedJunkOverlay(
-               'overlayMissing', bagIndex, db.overlayColor, db,
+               MIA_Constants.overlayStatus.MISSING, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
 
@@ -76,7 +76,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
             mia.utils:updateMarkedJunkOverlay(
-               'overlayHidden', bagIndex, db.overlayColor, db,
+               MIA_Constants.overlayStatus.HIDDEN, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
 
@@ -85,7 +85,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             return ;
          else
             mia.utils:updateMarkedJunkOverlay(
-               'overlayShowing', bagIndex, db.overlayColor, db,
+               MIA_Constants.overlayStatus.SHOWING, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
 
@@ -107,7 +107,7 @@ function Utils:isMajKeyCombo(button)
 end
 
 function Utils:registerClickListeners()
-   for bagIndex = 0, MAJ_Constants.numContainers, 1 do
+   for bagIndex = 0, MIA_Constants.numContainers, 1 do
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
       local numSlots = C_Container.GetContainerNumSlots(bagIndex);
 
@@ -124,7 +124,7 @@ end
 
 function Utils:sortBags()
    if (IsAddOnLoaded('Baggins')) then
-      mia.logger:Print(MAJ_Constants.warnings.bagginsLoaded);
+      mia.logger:Print(MIA_Constants.warnings.bagginsLoaded);
       return ;
    end
 
@@ -140,7 +140,7 @@ function Utils:updateBagMarkings()
    local db = mia.db.profile;
    mia.logger:Debug('UPDATING BAG MARKINGS. Beginning iteration...');
 
-   for bagIndex = 0, MAJ_Constants.numContainers, 1 do
+   for bagIndex = 0, MIA_Constants.numContainers, 1 do
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
       local numSlots = C_Container.GetContainerNumSlots(bagIndex);
       local isBagOpen = IsBagOpen(bagIndex);
@@ -185,12 +185,15 @@ function Utils:updateBagMarkings()
 
                if (not slotFrame.markedJunkOverlay) then
                   -- This should just be for when we login/reload and we need to re-apply the MAJ overlays
-                  overlayStatus = 'overlayMissing';
+                  overlayStatus = MIA_Constants.overlayStatus.MISSING;
                elseif (slotFrame.markedJunkOverlay:IsShown()) then
                   -- This should just be for when we need to update the overlays visually
                   -- because the user has been been logged in/reloaded for a while
                   -- and has interacted with the bags already
-                  overlayStatus = 'updateOverlay';
+                  overlayStatus = MIA_Constants.overlayStatus.UPDATE;
+               else
+                  -- This re-shows the overlay after moving an item back to a previous spot
+                  overlayStatus = MIA_Constants.overlayStatus.HIDDEN;
                end
 
                mia.logger:Debug('Item is marked. Updating marking for:\n' ..
@@ -209,7 +212,7 @@ function Utils:updateBagMarkings()
             -- Clearing the still showing bag slot's overlay because it is empty,
             -- or it has been emptied by moving the item
             mia.utils:updateMarkedJunkOverlay(
-               'overlayShowing', bagIndex, { r = 0, g = 0, b = 0, a = 0 }, db,
+               MIA_Constants.overlayStatus.SHOWING, bagIndex, { r = 0, g = 0, b = 0, a = 0 }, db,
                slotFrame, slotFrameID, itemName, itemID
             );
          end
@@ -254,15 +257,19 @@ function Utils:updateMarkedBorder(frame, thickness, color)
 end
 
 function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID)
-   if (status == 'overlayMissing' or status == 'overlayHidden' or status == 'updateOverlay') then
+   local isMissingHiddenOrUpdate = status == MIA_Constants.overlayStatus.MISSING or
+      status == MIA_Constants.overlayStatus.HIDDEN or
+      status == MIA_Constants.overlayStatus.UPDATE;
+
+   if (isMissingHiddenOrUpdate) then
       if (db.showCommandOutput and not db.debugEnabled) then
          mia.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
       end
 
-      local iconPath = MAJ_Constants.iconPathMap[db.markerIconSelected];
-      local position = MAJ_Constants.iconLocationsMap[db.markerIconLocationSelected];
+      local iconPath = MIA_Constants.iconPathMap[db.markerIconSelected];
+      local position = MIA_Constants.iconLocationsMap[db.markerIconLocationSelected];
 
-      if (status == 'overlayMissing') then
+      if (status == MIA_Constants.overlayStatus.MISSING) then
          frame.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate");
          frame.markedJunkOverlay:SetSize(frame:GetSize());
          frame.markedJunkOverlay:SetPoint("CENTER");
@@ -287,8 +294,9 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
 
       frame.markedJunkOverlay:SetFrameLevel(17);
       frame.markedJunkOverlay:SetBackdropColor(color.r, color.g, color.b, color.a);
+      local isHiddenOrUpdate = status == MIA_Constants.overlayStatus.HIDDEN or status == MIA_Constants.overlayStatus.UPDATE;
 
-      if (status == 'overlayHidden' or status == 'updateOverlay') then
+      if (isHiddenOrUpdate) then
          mia.logger:Debug('Updating the frame overlay texture for "' .. tostring(itemName) .. '"...\n' ..
             'position = ' .. position .. '\n' ..
             'iconPath = ' .. iconPath
@@ -307,21 +315,15 @@ function Utils:updateMarkedJunkOverlay(status, bagIndex, color, db, frame, frame
       return ;
    end
 
-   if (status == 'overlayShowing') then
+   if (status == MIA_Constants.overlayStatus.SHOWING) then
       if (db.showCommandOutput and not db.debugEnabled) then
          mia.logger:Print('Removing the junk marking from "' .. tostring(itemName) .. '".');
       end
 
-      if (db.debugEnabled) then
-         -- NOTE **[G]** :: I could prolly get rid of this. The idea was to try and delete the table by its hex ID.
-         local overlayHexID = tostring(frame.markedJunkOverlay):gsub("table: ", "", 1);
-
-         mia.logger:Debug('Clearing the overlay:\n' ..
-            'bag = ' .. tostring(bagIndex) .. '\n' ..
-            'frame = ' .. tostring(frameID) .. '\n' ..
-            'overlayHexID = ' .. overlayHexID
-         );
-      end
+      mia.logger:Debug('Clearing the overlay:\n' ..
+         'bag = ' .. tostring(bagIndex) .. '\n' ..
+         'frame = ' .. tostring(frameID)
+      );
 
       frame.markedJunkOverlay:SetFrameLevel(0);
       frame.markedJunkOverlay:SetBackdropColor(0, 0, 0, 0);

@@ -48,10 +48,10 @@ function Config:GetBlizzOptionsFrame(mia)
                   name = 'Select your modifier key...',
                   order = 102,
                   set = function(info, value)
-                     mia.utils:setDbValue('userSelectedModKey', MAJ_Constants.modKeysMap[value])
+                     mia.utils:setDbValue('userSelectedModKey', MIA_Constants.modKeysMap[value])
                   end,
                   type = 'select',
-                  values = MAJ_Constants.modKeysMap,
+                  values = MIA_Constants.modKeysMap,
                },
                activatorKey = {
                   desc = 'This is the main mouse key to press, along with your modifier, to mark your items.',
@@ -61,10 +61,10 @@ function Config:GetBlizzOptionsFrame(mia)
                   name = 'Select your activator key...',
                   order = 103,
                   set = function(info, value)
-                     db.userSelectedActivatorKey = MAJ_Constants.activatorKeysMap[value];
+                     db.userSelectedActivatorKey = MIA_Constants.activatorKeysMap[value];
                   end,
                   type = 'select',
-                  values = MAJ_Constants.activatorKeysMap,
+                  values = MIA_Constants.activatorKeysMap,
                },
                itemMaskIconHeader = {
                   name = 'Overlay & Border',
@@ -168,7 +168,7 @@ function Config:GetBlizzOptionsFrame(mia)
                   name = 'Select your icon...',
                   order = 111,
                   set = function(info, value)
-                     local newValue = MAJ_Constants.iconListMap[value];
+                     local newValue = MIA_Constants.iconListMap[value];
                      local oldValue = db.markerIconSelected;
 
                      mia.logger:Debug('SELECTED ICON CHANGED. Updating bags...\n' ..
@@ -180,7 +180,7 @@ function Config:GetBlizzOptionsFrame(mia)
                      mia.utils:updateBagMarkings();
                   end,
                   type = 'select',
-                  values = MAJ_Constants.iconListMap,
+                  values = MIA_Constants.iconListMap,
                },
                markerIconLocation = {
                   desc = 'Select the position on the item where you want the JUNK icon to appear.',
@@ -190,7 +190,7 @@ function Config:GetBlizzOptionsFrame(mia)
                   name = 'Select your icon location...',
                   order = 112,
                   set = function(info, value)
-                     local newValue = MAJ_Constants.iconLocationsMap[value];
+                     local newValue = MIA_Constants.iconLocationsMap[value];
                      local oldValue = db.markerIconLocationSelected;
 
                      mia.logger:Debug('SELECTED ICON LOCATION CHANGED. Updating bags...\n' ..
@@ -202,7 +202,7 @@ function Config:GetBlizzOptionsFrame(mia)
                      mia.utils:updateBagMarkings();
                   end,
                   type = 'select',
-                  values = MAJ_Constants.iconLocationsMap,
+                  values = MIA_Constants.iconLocationsMap,
                },
             },
          },

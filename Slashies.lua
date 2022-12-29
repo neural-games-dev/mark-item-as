@@ -30,8 +30,8 @@ function MarkItemAs:SlashCommandInfoConfig(command)
       self.logger:Print(self.chalk:cyan('----- COMMANDS -----') .. '\n' ..
          self.chalk:badass('/mia config (c)') .. ' -- Shows the config window to customize this addon.\n' ..
          self.chalk:badass('/mia options (o)') .. ' -- This is an alias for "config".\n' ..
-         self.chalk:badass('/mia hidetext (ht)') .. ' -- ' .. self.chalk:red('DISABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
-         self.chalk:badass('/mia showtext (st)') .. ' -- ' .. self.chalk:green('ENABLES') .. ' text output when using a ' .. MAJ_Constants.slashCommandQuoted .. ' command.\n' ..
+         self.chalk:badass('/mia hidetext (ht)') .. ' -- ' .. self.chalk:red('DISABLES') .. ' text output when using a ' .. MIA_Constants.slashCommandQuoted .. ' command.\n' ..
+         self.chalk:badass('/mia showtext (st)') .. ' -- ' .. self.chalk:green('ENABLES') .. ' text output when using a ' .. MIA_Constants.slashCommandQuoted .. ' command.\n' ..
          self.chalk:badass('/mia debug (d)') .. ' -- This enables debug logging. Really only useful for add-on devs. ' .. self.chalk:warn('WARNING!!!:') .. ' This can get REALLY SPAMMY. Enable with caution.'
       );
 

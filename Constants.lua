@@ -13,7 +13,7 @@ local chalk = mia:GetModule('Chalk');
 --## DEFINING THE GLOBAL CONSTANTS TABLE TO BE USED THROUGHOUT THE ADDON
 --## ==========================================================================
 -- TODO **[G]** :: Can/should I attach this as part of the main addon/self as a property?
-MAJ_Constants = {
+MIA_Constants = {
    activatorKeysMap = {
       ['LeftButton'] = 'LeftButton',
       ['RightButton'] = 'RightButton',
@@ -54,6 +54,12 @@ MAJ_Constants = {
       ['Shift'] = 'Shift',
    },
    numContainers = 4,
+   overlayStatus = {
+      HIDDEN = 'overlayHidden',
+      MISSING = 'overlayMissing',
+      SHOWING = 'overlayShowing',
+      UPDATE = 'updateOverlay',
+   },
    slashCommand = '|cFFbada55/mia|r',
    slashCommandQuoted = '|cFFbada55"/mia"|r',
    warnings = {
