@@ -44,10 +44,11 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
       local itemID = item:GetItemID();
       local itemName = item:GetItemName();
       local frameID = frame:GetID();
+      local itemSellPrice = select('11', GetItemInfo(itemName));
 
       mia.logger:DebugClickInfo(
-         bagIndex, bagName, button, down, frame,
-         frameID, item, itemID, numSlots, slotFrame
+         bagIndex, bagName, button, down, frame, frameID,
+         item, itemID, itemSellPrice, numSlots, slotFrame
       );
 
       if (self:isMajKeyCombo(button)) then
@@ -59,9 +60,14 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return ;
          elseif (IsAddOnLoaded('ItemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
-            -- TODO **[G]** :: Add another condition above this to check if item is sellable or not -- DO THIS ON `selling` PR/BRANCH
             if (db.showCommandOutput and not db.debugEnabled) then
                mia.logger:Print('Item is locked. Ignoring.');
+            end
+
+            return ;
+         elseif (itemSellPrice == 0 or itemSellPrice == nil) then
+            if (db.showCommandOutput and not db.debugEnabled) then
+               mia.logger:Print('Item is not sellable. Ignoring.');
             end
 
             return ;
@@ -184,7 +190,7 @@ function Utils:updateBagMarkings()
                local overlayStatus = '';
 
                if (not slotFrame.markedJunkOverlay) then
-                  -- This should just be for when we login/reload and we need to re-apply the MAJ overlays
+                  -- This should just be for when we login/reload and we need to re-apply the MIA overlays
                   overlayStatus = MIA_Constants.overlayStatus.MISSING;
                elseif (slotFrame.markedJunkOverlay:IsShown()) then
                   -- This should just be for when we need to update the overlays visually
@@ -218,7 +224,7 @@ function Utils:updateBagMarkings()
          end
       end
 
-      -- Closing the bags opened by MAJ and leaving the user opened bags alone
+      -- Closing the bags opened by MIA and leaving the user opened bags alone
       if (wasBagOpened) then
          CloseBag(bagIndex);
       end

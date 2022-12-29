@@ -20,7 +20,7 @@ function Logger:Debug(...)
    end
 end
 
-function Logger:DebugClickInfo(bagIndex, bagName, button, down, frame, frameID, item, itemID, numSlots, slotFrame)
+function Logger:DebugClickInfo(bagIndex, bagName, button, down, frame, frameID, item, itemID, itemSellPrice, numSlots, slotFrame)
    self:Debug('HANDLE ON CLICK INFO:\n' ..
       '————————————————————————\n' ..
       'BagName = ' .. tostring(bagName) .. '\n' ..
@@ -35,6 +35,7 @@ function Logger:DebugClickInfo(bagIndex, bagName, button, down, frame, frameID, 
       '————————————————————————\n' ..
       'ItemName = ' .. tostring(item:GetItemName()) .. '\n' ..
       'ItemID = ' .. tostring(itemID) .. '\n' ..
+      'ItemSellPrice = ' .. tostring(itemSellPrice) .. '\n' ..
       'ItemLocation.SlotIndex = ' .. tostring(item:GetItemLocation().slotIndex) .. '\n' ..
       '————————————————————————'
    );

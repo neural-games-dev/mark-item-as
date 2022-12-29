@@ -293,11 +293,11 @@ function Config:GetBlizzOptionsFrame(mia)
                   width = 'full',
                },
                slashCommandOutput = {
-                  desc = 'This will hide/show the chat output after triggering a ' .. mia.chalk:badass('MAJ') .. ' command or action.',
+                  desc = 'This will hide/show the chat output after triggering a ' .. mia.chalk:badass('MIA') .. ' command or action.',
                   get = function()
                      return mia.utils:getDbValue('showCommandOutput');
                   end,
-                  name = 'Show MAJ command output?',
+                  name = 'Show MIA command output?',
                   order = 404,
                   set = function(info, value)
                      mia.utils:setDbValue('showCommandOutput', value);
@@ -310,7 +310,7 @@ function Config:GetBlizzOptionsFrame(mia)
                   get = function()
                      return mia.utils:getDbValue('debugEnabled');
                   end,
-                  name = 'Enable MAJ debugging?',
+                  name = 'Enable MIA debugging?',
                   order = 405,
                   set = function(info, value)
                      mia.utils:setDbValue('debugEnabled', value);

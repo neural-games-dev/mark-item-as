@@ -17,10 +17,10 @@ Libs.xml
 # Main core file
 MarkItemAs.lua
 
-# MAJ modules
+# MIA modules
 Modules.xml
 
-# MAJ helpers
+# MIA helpers
 Constants.lua
 Options.lua
 Slashies.lua
