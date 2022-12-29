@@ -9,6 +9,16 @@ local mia = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
 local Utils = mia:NewModule('Utils');
+local itemLock;
+local ilConfig;
+
+if (IsAddOnLoaded('ItemLock')) then
+   itemLock = LibStub('AceAddon-3.0'):GetAddon('ItemLock');
+
+   if (itemLock) then
+      ilConfig = itemLock:GetModule('Config');
+   end
+end
 
 --## ===============================================================================================
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
@@ -46,28 +56,47 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
       local frameID = frame:GetID();
       local itemSellPrice = select('11', GetItemInfo(itemName));
 
+      if (ilConfig and ilConfig:IsClickBindEnabled()) then
+         local isItemLockKeyCombo = self:isItemLockKeyCombo(button, ilConfig);
+         mia.logger:Debug('Was ItemLock key combo pressed? -> ' .. tostring(isItemLockKeyCombo));
+
+         if (isItemLockKeyCombo and self:isMiaKeyCombo(button)) then
+            if (db.showWarnings) then
+               mia.logger:Print(MIA_Constants.warnings.itemLockConflict);
+            end
+
+            return ;
+         elseif (isItemLockKeyCombo and frame.markedJunkOverlay and frame.markedJunkOverlay:IsShown()) then
+            if (db.showWarnings) then
+               mia.logger:Print(MIA_Constants.warnings.itemLockDoubledUp);
+            end
+
+            return ;
+         end
+      end
+
       mia.logger:DebugClickInfo(
          bagIndex, bagName, button, down, frame, frameID,
          item, itemID, itemSellPrice, numSlots, slotFrame
       );
 
-      if (self:isMajKeyCombo(button)) then
+      if (self:isMiaKeyCombo(button)) then
          if (item:IsItemEmpty()) then
             -- ☝ use `frame.hasItem` instead?
             if (db.showCommandOutput and not db.debugEnabled) then
-               mia.logger:Print('No item present. Ignoring.');
+               mia.logger:Print('No item present. Ignoring marking.');
             end
 
             return ;
          elseif (IsAddOnLoaded('ItemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
             if (db.showCommandOutput and not db.debugEnabled) then
-               mia.logger:Print('Item is locked. Ignoring.');
+               mia.logger:Print('Item is locked. Ignoring marking.');
             end
 
             return ;
          elseif (itemSellPrice == 0 or itemSellPrice == nil) then
             if (db.showCommandOutput and not db.debugEnabled) then
-               mia.logger:Print('Item is not sellable. Ignoring.');
+               mia.logger:Print('Item is not sellable. Ignoring marking.');
             end
 
             return ;
@@ -106,7 +135,13 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
    end
 end
 
-function Utils:isMajKeyCombo(button)
+function Utils:isItemLockKeyCombo(button, config)
+   local ilModKey = self:capitalize(config:GetClickBindModifier());
+   local modKeyIsPressed = self:getModifierFunction(ilModKey);
+   return button == config:GetClickBindButton() and modKeyIsPressed();
+end
+
+function Utils:isMiaKeyCombo(button)
    local db = mia.db.profile;
    local modKeyIsPressed = self:getModifierFunction(db.userSelectedModKey);
    return button == db.userSelectedActivatorKey and modKeyIsPressed();
@@ -126,6 +161,11 @@ function Utils:registerClickListeners()
          mia.logger:Debug('Container at bag index "' .. tostring(bagIndex) .. '" appears to be empty. Skipping.');
       end
    end
+end
+
+function Utils:capitalize(str)
+   local lower = string.lower(str);
+   return (lower:gsub("^%l", string.upper));
 end
 
 function Utils:sortBags()
