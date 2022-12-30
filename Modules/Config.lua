@@ -102,18 +102,14 @@ function Config:GetBlizzOptionsFrame(mia)
                   --disabled = not mia.utils:getDbValue('enableOverlay'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
-                     local r, g, b, a = db.overlayColor.r,
-                     db.overlayColor.g,
-                     db.overlayColor.b,
-                     db.overlayColor.a;
-
-                     return r, g, b, a;
+                     local color = mia.utils:getDbValue('overlayColor');
+                     return color.r, color.g, color.b, color.a;
                   end,
                   name = 'Overlay Color',
                   order = 107,
                   set = function(info, r, g, b, a)
                      mia.utils:setDbValue('overlayColor', { r = r, g = g, b = b, a = a });
-                     mia.utils.updateBagMarkings();
+                     mia.utils:updateBagMarkings();
                   end,
                   type = 'color',
                },
@@ -122,12 +118,8 @@ function Config:GetBlizzOptionsFrame(mia)
                   --disabled = not mia.utils:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
-                     local r, g, b, a = db.borderColor.r,
-                     db.borderColor.g,
-                     db.borderColor.b,
-                     db.borderColor.a;
-
-                     return r, g, b, a;
+                     local color = mia.utils:getDbValue('borderColor');
+                     return color.r, color.g, color.b, color.a;
                   end,
                   name = 'Border Color',
                   order = 108,
@@ -139,9 +131,9 @@ function Config:GetBlizzOptionsFrame(mia)
                },
                borderThicknessSlider = {
                   desc = 'Select the size of the border that will wrap around your marked item.',
-                  disabled = not mia.utils:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
+                  --disabled = not mia.utils:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   get = function()
-                     return db.borderThickness;
+                     return mia.utils:getDbValue('borderThickness');
                   end,
                   isPercent = false,
                   max = 3,
@@ -149,7 +141,8 @@ function Config:GetBlizzOptionsFrame(mia)
                   name = 'Border Thickness',
                   order = 109,
                   set = function(info, value)
-                     db.borderThickness = value;
+                     mia.utils:setDbValue('borderThickness', value);
+                     mia.utils:updateBagMarkings();
                   end,
                   step = 0.05,
                   type = 'range',

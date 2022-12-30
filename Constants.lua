@@ -20,6 +20,7 @@ MIA_Constants = {
    },
    addOnName = chalk:ace('Mark Item As'),
    addOnNameQuoted = chalk:ace('"Mark Item As"'),
+   colorReset = { r = 0, g = 0, b = 0, a = 0 },
    iconListMap = {
       Coin = 'Coin',
       Stack = 'Stack',

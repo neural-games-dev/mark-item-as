@@ -124,7 +124,7 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
                frame, frameID, itemName, itemID
             );
 
-            mia.utils:updateMarkedBorder(frame.markedJunkOverlay, 0, { r = 0, g = 0, b = 0, a = 0 });
+            mia.utils:updateMarkedBorder(frame.markedJunkOverlay, 0, MIA_Constants.colorReset);
 
             return ;
          end
@@ -253,14 +253,18 @@ function Utils:updateBagMarkings()
                   overlayStatus, bagIndex, db.overlayColor, db,
                   slotFrame, slotFrameID, itemName, itemID
                );
+
+               mia.utils:updateMarkedBorder(slotFrame.markedJunkOverlay, db.borderThickness, db.borderColor);
             end
          elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
             -- Clearing the still showing bag slot's overlay because it is empty,
             -- or it has been emptied by moving the item
             mia.utils:updateMarkedOverlay(
-               MIA_Constants.overlayStatus.SHOWING, bagIndex, { r = 0, g = 0, b = 0, a = 0 }, db,
+               MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
                slotFrame, slotFrameID, itemName, itemID
             );
+
+            mia.utils:updateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
          end
       end
 
