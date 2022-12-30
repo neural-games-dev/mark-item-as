@@ -144,7 +144,7 @@ function Config:GetBlizzOptionsFrame(mia)
                      return db.borderThickness;
                   end,
                   isPercent = false,
-                  max = 2,
+                  max = 3,
                   min = 0,
                   name = 'Border Thickness',
                   order = 109,

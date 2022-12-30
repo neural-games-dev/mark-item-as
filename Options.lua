@@ -1,11 +1,11 @@
 --## ==========================================================================
 --## DEFINING THE DEFAULT OPTIONS TABLE
 --## ==========================================================================
-MAJ_Defaults = {
+MIA_Defaults = {
    autoSortMarking = false,
    autoSortSelling = false,
    borderColor = { r = 0.4, g = 0.4, b = 0.4, a = 1 },
-   borderThickness = 1.25,
+   borderThickness = 2,
    debugEnabled = false,
    enableBorder = true,
    enableOverlay = true,

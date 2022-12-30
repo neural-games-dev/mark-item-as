@@ -15,7 +15,7 @@ MarkItemAs.version = GetAddOnMetadata('MarkItemAs', 'Version');
 
 function MarkItemAs:OnInitialize()
    self.version = 'v0.1.0';
-   self.db = LibStub('AceDB-3.0'):New('MarkItemAsDB', { profile = MAJ_Defaults }, true);
+   self.db = LibStub('AceDB-3.0'):New('MarkItemAsDB', { profile = MIA_Defaults }, true);
 
    -- calling all modules! all modules to the front!
    self.chalk = self:GetModule('Chalk');
