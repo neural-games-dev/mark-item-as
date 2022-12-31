@@ -2,174 +2,225 @@
 --## ALL REQUIRED IMPORTS
 --## ==========================================================================
 -- Libs / Packages
-local MarkAsJunk = LibStub('AceAddon-3.0'):GetAddon('MarkAsJunk');
-local Config = MarkAsJunk:NewModule('Config');
-local Utils = MarkAsJunk:GetModule('Utils');
+local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
+
+--## ===============================================================================================
+--## INTERNAL VARS & SET UP
+--## ===============================================================================================
+local Config = MarkItemAs:NewModule('Config');
 
 --## ==========================================================================
 --## DEFINING THE MAIN OPTIONS FRAME
 --## ==========================================================================
-function Config:GetBlizzOptionsFrame()
-   local p = MarkAsJunk.db.profile;
+-- `addon` is a passed in reference of MarkItemAs's `self`
+function Config:Init(addon)
+   LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkItemAs', self:GetBlizzOptionsFrame(addon));
+   self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('MarkItemAs', 'Mark Item As');
+end
+
+-- `mia` that's passed in is a reference to MarkItemAs's `self`
+function Config:GetBlizzOptionsFrame(mia)
+   local db = mia.db.profile;
 
    return {
-      desc = 'Configure the marking & selling options for your junk items.',
-      handler = self,
-      name = 'Mark As Junk',
+      desc = 'Configure the ' .. mia.chalk:ace('MarkItemAs') .. ' options for your junk items.',
+      --handler = self, -- keeping this for reference
+      name = 'Mark Item As (' .. tostring(mia.version) .. ')',
       type = 'group',
       args = {
          markingOptions = {
             desc = '',
             name = 'Marking',
-            order = 10,
+            order = 100,
             type = 'group',
             args = {
                keybindHeader = {
                   name = 'Keybind',
-                  order = 11,
+                  order = 101,
                   type = 'header',
                   width = 'full',
                },
                modifierKey = {
                   desc = 'This is the additional key to press, along with your activator, to mark your items.',
                   get = function()
-                     return Utils:getDbValue('userSelectedModKey');
+                     return mia.utils:getDbValue('userSelectedModKey');
                   end,
                   name = 'Select your modifier key...',
-                  order = 12,
+                  order = 102,
                   set = function(info, value)
-                     Utils:setDbValue('userSelectedModKey', MAJ_Constants.modKeysMap[value])
+                     mia.utils:setDbValue('userSelectedModKey', MIA_Constants.modKeysMap[value])
                   end,
                   type = 'select',
-                  values = MAJ_Constants.modKeysMap,
+                  values = MIA_Constants.modKeysMap,
                },
                activatorKey = {
                   desc = 'This is the main mouse key to press, along with your modifier, to mark your items.',
                   get = function()
-                     return p.userSelectedActivatorKey;
+                     return db.userSelectedActivatorKey;
                   end,
                   name = 'Select your activator key...',
-                  order = 13,
+                  order = 103,
                   set = function(info, value)
-                     p.userSelectedActivatorKey = MAJ_Constants.activatorKeysMap[value];
+                     db.userSelectedActivatorKey = MIA_Constants.activatorKeysMap[value];
                   end,
                   type = 'select',
-                  values = MAJ_Constants.activatorKeysMap,
+                  values = MIA_Constants.activatorKeysMap,
                },
                itemMaskIconHeader = {
                   name = 'Overlay & Border',
-                  order = 14,
+                  order = 104,
                   type = 'header',
                   width = 'full',
                },
+               -- NOTE :: `enableOverlay` and `enableBorder` will be added in another phase
+               --enableOverlay = {
+               --   desc = '',
+               --   get = function()
+               --      return mia.utils:getDbValue('enableOverlay');
+               --   end,
+               --   name = 'Enable overlay?',
+               --   order = 105,
+               --   set = function(info, value)
+               --      mia.utils:setDbValue('enableOverlay', value);
+               --   end,
+               --   type = 'toggle',
+               --},
+               --enableBorder = {
+               --   desc = '',
+               --   get = function()
+               --      return mia.utils:getDbValue('enableBorder');
+               --   end,
+               --   name = 'Enable border?',
+               --   order = 106,
+               --   set = function(info, value)
+               --      mia.utils:setDbValue('enableBorder', value);
+               --   end,
+               --   type = 'toggle',
+               --},
                overlayColorPicker = {
                   desc = 'This overlay will be added on top of the items you mark to better visualize your junk.',
+                  --disabled = not mia.utils:getDbValue('enableOverlay'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
-                     local r, g, b, a = p.overlayColor.r,
-                     p.overlayColor.g,
-                     p.overlayColor.b,
-                     p.overlayColor.a;
-
-                     return r, g, b, a;
+                     local color = mia.utils:getDbValue('overlayColor');
+                     return color.r, color.g, color.b, color.a;
                   end,
                   name = 'Overlay Color',
-                  order = 15,
+                  order = 107,
                   set = function(info, r, g, b, a)
-                     p.overlayColor = { r = r, g = g, b = b, a = a };
+                     mia.utils:setDbValue('overlayColor', { r = r, g = g, b = b, a = a });
+                     mia.utils:updateBagMarkings();
                   end,
                   type = 'color',
                },
                borderColorPicker = {
                   desc = 'This border will be added around the items you mark to better visualize your junk.',
+                  --disabled = not mia.utils:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
-                     local r, g, b, a = p.borderColor.r,
-                     p.borderColor.g,
-                     p.borderColor.b,
-                     p.borderColor.a;
-
-                     return r, g, b, a;
+                     local color = mia.utils:getDbValue('borderColor');
+                     return color.r, color.g, color.b, color.a;
                   end,
                   name = 'Border Color',
-                  order = 16,
+                  order = 108,
                   set = function(info, r, g, b, a)
-                     p.borderColor = { r = r, g = g, b = b, a = a };
+                     mia.utils:setDbValue('borderColor', { r = r, g = g, b = b, a = a });
+                     mia.utils:updateBagMarkings();
                   end,
                   type = 'color',
                },
                borderThicknessSlider = {
                   desc = 'Select the size of the border that will wrap around your marked item.',
+                  --disabled = not mia.utils:getDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   get = function()
-                     return p.borderThickness;
+                     return mia.utils:getDbValue('borderThickness');
                   end,
                   isPercent = false,
-                  max = 2,
+                  max = 3,
                   min = 0,
                   name = 'Border Thickness',
-                  order = 17,
+                  order = 109,
                   set = function(info, value)
-                     p.borderThickness = value;
+                     mia.utils:setDbValue('borderThickness', value);
+                     mia.utils:updateBagMarkings();
                   end,
                   step = 0.05,
                   type = 'range',
                },
                iconHeader = {
                   name = 'Icon',
-                  order = 18,
+                  order = 110,
                   type = 'header',
                   width = 'full',
                },
                markerIcon = {
-                  desc = 'Select the MAJ icon that you want to appear on the item.',
+                  desc = 'Select the JUNK icon that you want to appear on the item.',
                   get = function()
-                     return Utils:getDbValue('markerIconSelected');
+                     return mia.utils:getDbValue('markerIconSelected');
                   end,
                   name = 'Select your icon...',
-                  order = 19,
+                  order = 111,
                   set = function(info, value)
-                     Utils:setDbValue('markerIconSelected', value);
+                     local newValue = MIA_Constants.iconListMap[value];
+                     local oldValue = db.markerIconSelected;
+
+                     mia.logger:Debug('SELECTED ICON CHANGED. Updating bags...\n' ..
+                        'OLD VALUE = ' .. oldValue .. '\n' ..
+                        'NEW VALUE = ' .. newValue .. '\n'
+                     );
+
+                     mia.utils:setDbValue('markerIconSelected', value);
+                     mia.utils:updateBagMarkings();
                   end,
                   type = 'select',
-                  values = MAJ_Constants.iconListMap,
+                  values = MIA_Constants.iconListMap,
                },
                markerIconLocation = {
-                  desc = 'Select the position on the item where you want the MAJ icon to appear.',
+                  desc = 'Select the position on the item where you want the JUNK icon to appear.',
                   get = function()
-                     return p.markerIconLocationSelected;
+                     return db.markerIconLocationSelected;
                   end,
                   name = 'Select your icon location...',
-                  order = 20,
+                  order = 112,
                   set = function(info, value)
-                     p.markerIconLocationSelected = MAJ_Constants.iconLocationsMap[value];
+                     local newValue = MIA_Constants.iconLocationsMap[value];
+                     local oldValue = db.markerIconLocationSelected;
+
+                     mia.logger:Debug('SELECTED ICON LOCATION CHANGED. Updating bags...\n' ..
+                        'OLD VALUE = ' .. oldValue .. '\n' ..
+                        'NEW VALUE = ' .. newValue .. '\n'
+                     );
+
+                     mia.utils:setDbValue('markerIconLocationSelected', newValue);
+                     mia.utils:updateBagMarkings();
                   end,
                   type = 'select',
-                  values = MAJ_Constants.iconLocationsMap,
+                  values = MIA_Constants.iconLocationsMap,
                },
             },
          },
          sellingOptions = {
             desc = '',
             name = 'Selling',
-            order = 20,
+            order = 200,
             type = 'group',
             args = {},
          },
          sortingOptions = {
             desc = '',
             name = 'Sorting',
-            order = 30,
+            order = 300,
             type = 'group',
             args = {
                sortAfterMarking = {
                   desc = 'After an item gets marked, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
-                     return Utils:getDbValue('autoSortMarking');
+                     return mia.utils:getDbValue('autoSortMarking');
                   end,
                   name = 'Auto sort bags after Marking?',
-                  order = 41,
+                  order = 301,
                   set = function(info, value)
-                     Utils:setDbValue('autoSortMarking', value);
+                     mia.utils:setDbValue('autoSortMarking', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -177,46 +228,85 @@ function Config:GetBlizzOptionsFrame()
                sortAfterSelling = {
                   desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
-                     return Utils:getDbValue('autoSortSelling');
+                     return mia.utils:getDbValue('autoSortSelling');
                   end,
                   name = 'Auto sort bags after Selling?',
-                  order = 43,
+                  order = 302,
                   set = function(info, value)
-                     Utils:setDbValue('autoSortSelling', value);
+                     mia.utils:setDbValue('autoSortSelling', value);
                   end,
                   type = 'toggle',
                   width = 'full',
                },
             },
          },
-         miscOptions = {
+         chatOptions = {
             desc = '',
-            name = 'Miscellaneous',
-            order = 40,
+            name = 'Chat',
+            order = 400,
             type = 'group',
             args = {
-               startupGreeting = {
-                  desc = 'This will hide or show the initial greeting in chat when the game starts or reloads.',
+               saleSummary = {
+                  desc = 'This will hide/show the gold & items summary in chat after selling to a merchant.',
                   get = function()
-                     return Utils:getDbValue('showGreeting');
+                     return mia.utils:getDbValue('showSaleSummary');
+                  end,
+                  name = 'Show summary after selling?',
+                  order = 401,
+                  set = function(info, value)
+                     mia.utils:setDbValue('showSaleSummary', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+               showWarnings = {
+                  desc = 'This will hide/show the warnings in chat when another potentially conflicting addon is detected.',
+                  get = function()
+                     return mia.utils:getDbValue('showWarnings');
+                  end,
+                  name = 'Show addon warnings?',
+                  order = 402,
+                  set = function(info, value)
+                     mia.utils:setDbValue('showWarnings', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+               startupGreeting = {
+                  desc = 'This will hide/show the initial greeting in chat when the game starts or reloads.',
+                  get = function()
+                     return mia.utils:getDbValue('showGreeting');
                   end,
                   name = 'Show startup greeting in chat?',
-                  order = 41,
+                  order = 403,
                   set = function(info, value)
-                     Utils:setDbValue('showGreeting', value);
+                     mia.utils:setDbValue('showGreeting', value);
                   end,
                   type = 'toggle',
                   width = 'full',
                },
                slashCommandOutput = {
-                  desc = 'This will hide or show the chat output after entering in a ' .. MAJ_Constants.slashCommandQuoted .. ' command.',
+                  desc = 'This will hide/show the chat output after triggering a ' .. mia.chalk:badass('MIA') .. ' command or action.',
                   get = function()
-                     return Utils:getDbValue('showSlashCommandOutput');
+                     return mia.utils:getDbValue('showCommandOutput');
                   end,
-                  name = 'Show slash command output?',
-                  order = 43,
+                  name = 'Show MIA command output?',
+                  order = 404,
                   set = function(info, value)
-                     Utils:setDbValue('showSlashCommandOutput', value);
+                     mia.utils:setDbValue('showCommandOutput', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+               enableDebugging = {
+                  desc = 'This will enable/disable debugging for this add-on. It is really only useful for other add-on devs.',
+                  get = function()
+                     return mia.utils:getDbValue('debugEnabled');
+                  end,
+                  name = 'Enable MIA debugging?',
+                  order = 405,
+                  set = function(info, value)
+                     mia.utils:setDbValue('debugEnabled', value);
                   end,
                   type = 'toggle',
                   width = 'full',
@@ -225,10 +315,4 @@ function Config:GetBlizzOptionsFrame()
          },
       },
    };
-end
-
--- `addon` is a passed in reference of MarkAsJunk's `self`
-function Config:Init(addon)
-   LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkAsJunk', self:GetBlizzOptionsFrame());
-   self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('MarkAsJunk', 'Mark As Junk');
 end
