@@ -13,11 +13,8 @@ local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
 function MarkItemAs:SlashCommandFrameStack()
-   if (self.db.profile.debugEnabled) then
-      LoadAddOn('Blizzard_DebugTools');
-      FrameStackTooltip_Toggle();
-   end
-
+   LoadAddOn('Blizzard_DebugTools');
+   FrameStackTooltip_Toggle();
    return ;
 end
 

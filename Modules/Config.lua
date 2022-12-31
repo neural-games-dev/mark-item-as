@@ -213,7 +213,7 @@ function Config:GetBlizzOptionsFrame(mia)
             type = 'group',
             args = {
                sortAfterMarking = {
-                  desc = 'After an item gets marked, this will sort your bags (i.e. "click" the broom icon) automatically.',
+                  desc = 'After an item gets marked or unmarked, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
                      return mia.utils:getDbValue('autoSortMarking');
                   end,
