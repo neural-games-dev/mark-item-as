@@ -197,6 +197,25 @@ function Config:GetBlizzOptionsFrame(mia)
                   type = 'select',
                   values = MIA_Constants.iconLocationsMap,
                },
+               tooltipHeader = {
+                  name = 'Tooltip',
+                  order = 113,
+                  type = 'header',
+                  width = 'full',
+               },
+               showTooltipText = {
+                  desc = "This will add a text note to a marked item's tooltip.",
+                  get = function()
+                     return mia.utils:getDbValue('showTooltipText');
+                  end,
+                  name = 'Show tooltip text?',
+                  order = 114,
+                  set = function(info, value)
+                     mia.utils:setDbValue('showTooltipText', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
             },
          },
          sellingOptions = {

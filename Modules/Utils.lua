@@ -153,6 +153,11 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
    end
 end
 
+function Utils:capitalize(str)
+   local lower = string.lower(str);
+   return (lower:gsub("^%l", string.upper));
+end
+
 function Utils:isItemLockKeyCombo(button, config)
    local ilModKey = self:capitalize(config:GetClickBindModifier());
    local modKeyIsPressed = self:getModifierFunction(ilModKey);
@@ -179,11 +184,6 @@ function Utils:registerClickListeners()
          mia.logger:Debug('Container at bag index "' .. tostring(bagIndex) .. '" appears to be empty. Skipping.');
       end
    end
-end
-
-function Utils:capitalize(str)
-   local lower = string.lower(str);
-   return (lower:gsub("^%l", string.upper));
 end
 
 function Utils:sortBags()

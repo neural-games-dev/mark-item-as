@@ -10,6 +10,7 @@
    <Script file="Modules/Utils.lua"/>
    <Script file="Modules/Config.lua"/>
    <Script file="Modules/Logger.lua"/>
+   <Script file="Modules/Tooltip.lua"/>
 
    <!-- ========================================================================== -->
    <!-- PLUG-INS FOR EXTERNAL ADDONS -->

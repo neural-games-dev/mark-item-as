@@ -17,6 +17,7 @@ MIA_Defaults = {
    showCommandOutput = true,
    showGreeting = true,
    showSaleSummary = true,
+   showTooltipText = false,
    showWarnings = true,
    userSelectedActivatorKey = 'RightButton',
    userSelectedModKey = 'Alt',
