@@ -6,10 +6,10 @@
 ## Author: Neural Games
 ## eMail: anewlevelmp@gmail.com
 ## URL: https://www.curseforge.com/wow/addons/mark-item-as
-## GitHub: https://github.com/gflujan/mark-as-junk
+## GitHub: https://github.com/gflujan/mark-item-as
 ## DefaultState: enabled
 ## Created: 07-Nov-2022
-## Last Updated: 27-Dec-2022
+## Last Updated: 09-Jan-2023
 
 # 3rd party libs
 Libs.xml

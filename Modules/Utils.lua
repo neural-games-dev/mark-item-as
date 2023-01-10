@@ -131,7 +131,11 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             );
 
             self:updateMarkedBorder(frame.markedJunkOverlay, 0, MIA_Constants.colorReset);
-            self:sortBags();
+
+            if (db.autoSortUnmarking) then
+               self:sortBags();
+            end
+
             return ;
          end
       else
