@@ -113,7 +113,11 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             );
 
             self:updateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
-            self:sortBags();
+
+            if (db.autoSortMarking) then
+               self:sortBags();
+            end
+
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
             self:updateMarkedOverlay(
@@ -122,7 +126,11 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
             );
 
             self:updateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
-            self:sortBags();
+
+            if (db.autoSortMarking) then
+               self:sortBags();
+            end
+
             return ;
          else
             self:updateMarkedOverlay(
@@ -179,20 +187,16 @@ function Utils:capitalize(str)
 end
 
 function Utils:sortBags()
-   local db = mia.db.profile;
-
-   if (db.autoSortMarking) then
-      if (IsAddOnLoaded('Baggins')) then
-         mia.logger:Print(MIA_Constants.warnings.bagginsLoaded);
-         return ;
-      elseif (C_Container) then
-         C_Container.SortBags();
-         return ;
-      else
-         local sortButton = _G[BagItemAutoSortButton:GetName()];
-         sortButton:Click();
-         return ;
-      end
+   if (IsAddOnLoaded('Baggins')) then
+      mia.logger:Print(MIA_Constants.warnings.bagginsLoaded);
+      return ;
+   elseif (C_Container) then
+      C_Container.SortBags();
+      return ;
+   else
+      local sortButton = _G[BagItemAutoSortButton:GetName()];
+      sortButton:Click();
+      return ;
    end
 end
 
