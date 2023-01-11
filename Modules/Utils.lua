@@ -410,9 +410,12 @@ end
 --## DATABASE OPERATION FUNCTIONS
 --## --------------------------------------------------------------------------
 function Utils:getDbValue(key)
-   return mia.db.profile[key];
+   local value = mia.db.profile[key];
+   mia.logger:Debug('getDbValue: Returning "' .. tostring(value) .. '" for "' .. tostring(key) .. '".');
+   return value;
 end
 
 function Utils:setDbValue(key, value)
+   mia.logger:Debug('setDbValue: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '".');
    mia.db.profile[key] = value;
 end

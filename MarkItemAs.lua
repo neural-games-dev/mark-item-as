@@ -26,7 +26,7 @@ function MarkItemAs:OnInitialize()
 
    -- do you init or not bro?!
    self.config:Init(self);
-   self.tooltip:Init(self);
+   self.tooltip:Init(self.logger);
 
    -- we're slashing prices so much it's like we're crazy!
    self:RegisterChatCommand('mia', 'SlashCommandInfoConfig');
