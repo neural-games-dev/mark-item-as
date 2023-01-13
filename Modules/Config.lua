@@ -197,6 +197,25 @@ function Config:GetBlizzOptionsFrame(mia)
                   type = 'select',
                   values = MIA_Constants.iconLocationsMap,
                },
+               tooltipHeader = {
+                  name = 'Tooltip',
+                  order = 113,
+                  type = 'header',
+                  width = 'full',
+               },
+               showTooltipText = {
+                  desc = "This will add a text note to a marked item's tooltip.",
+                  get = function()
+                     return mia.utils:getDbValue('showTooltipText');
+                  end,
+                  name = 'Show tooltip text?',
+                  order = 114,
+                  set = function(info, value)
+                     mia.utils:setDbValue('showTooltipText', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
             },
          },
          sellingOptions = {
@@ -213,7 +232,7 @@ function Config:GetBlizzOptionsFrame(mia)
             type = 'group',
             args = {
                sortAfterMarking = {
-                  desc = 'After an item gets marked, this will sort your bags (i.e. "click" the broom icon) automatically.',
+                  desc = 'After an item gets MARKED, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
                      return mia.utils:getDbValue('autoSortMarking');
                   end,
@@ -225,13 +244,26 @@ function Config:GetBlizzOptionsFrame(mia)
                   type = 'toggle',
                   width = 'full',
                },
+               sortAfterUnmarking = {
+                  desc = 'After an item gets UN-MARKED, this will sort your bags (i.e. "click" the broom icon) automatically.',
+                  get = function()
+                     return mia.utils:getDbValue('autoSortUnmarking');
+                  end,
+                  name = 'Auto sort bags after Un-marking?',
+                  order = 302,
+                  set = function(info, value)
+                     mia.utils:setDbValue('autoSortUnmarking', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
                sortAfterSelling = {
                   desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.',
                   get = function()
                      return mia.utils:getDbValue('autoSortSelling');
                   end,
                   name = 'Auto sort bags after Selling?',
-                  order = 302,
+                  order = 303,
                   set = function(info, value)
                      mia.utils:setDbValue('autoSortSelling', value);
                   end,

@@ -56,6 +56,9 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
       local frameID = frame:GetID();
       local itemSellPrice = select('11', GetItemInfo(itemName));
 
+      --## ==========================================================================
+      --## Handling "ItemLock" addon key bind actions & conflicts
+      --## ==========================================================================
       if (ilConfig and ilConfig:IsClickBindEnabled()) then
          local isItemLockKeyCombo = self:isItemLockKeyCombo(button, ilConfig);
          mia.logger:Debug('Was ItemLock key combo pressed? -> ' .. tostring(isItemLockKeyCombo));
@@ -80,6 +83,9 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
          item, itemID, itemSellPrice, numSlots, slotFrame
       );
 
+      --## ==========================================================================
+      --## Handling "MarkItemAs" key bind actions
+      --## ==========================================================================
       if (self:isMiaKeyCombo(button)) then
          if (item:IsItemEmpty()) then
             -- ☝ use `frame.hasItem` instead?
@@ -101,30 +107,42 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return ;
          elseif (not frame.markedJunkOverlay) then
-            mia.utils:updateMarkedOverlay(
+            self:updateMarkedOverlay(
                MIA_Constants.overlayStatus.MISSING, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
 
-            mia.utils:updateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
+            self:updateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
+
+            if (db.autoSortMarking) then
+               self:sortBags();
+            end
 
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
-            mia.utils:updateMarkedOverlay(
+            self:updateMarkedOverlay(
                MIA_Constants.overlayStatus.HIDDEN, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
 
-            mia.utils:updateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
+            self:updateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
+
+            if (db.autoSortMarking) then
+               self:sortBags();
+            end
 
             return ;
          else
-            mia.utils:updateMarkedOverlay(
+            self:updateMarkedOverlay(
                MIA_Constants.overlayStatus.SHOWING, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
             );
 
-            mia.utils:updateMarkedBorder(frame.markedJunkOverlay, 0, MIA_Constants.colorReset);
+            self:updateMarkedBorder(frame.markedJunkOverlay, 0, MIA_Constants.colorReset);
+
+            if (db.autoSortUnmarking) then
+               self:sortBags();
+            end
 
             return ;
          end
@@ -133,6 +151,11 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
          return ;
       end
    end
+end
+
+function Utils:capitalize(str)
+   local lower = string.lower(str);
+   return (lower:gsub("^%l", string.upper));
 end
 
 function Utils:isItemLockKeyCombo(button, config)
@@ -163,22 +186,17 @@ function Utils:registerClickListeners()
    end
 end
 
-function Utils:capitalize(str)
-   local lower = string.lower(str);
-   return (lower:gsub("^%l", string.upper));
-end
-
 function Utils:sortBags()
    if (IsAddOnLoaded('Baggins')) then
       mia.logger:Print(MIA_Constants.warnings.bagginsLoaded);
       return ;
-   end
-
-   if (C_Container) then
+   elseif (C_Container) then
       C_Container.SortBags();
+      return ;
    else
       local sortButton = _G[BagItemAutoSortButton:GetName()];
       sortButton:Click();
+      return ;
    end
 end
 
@@ -249,22 +267,22 @@ function Utils:updateBagMarkings()
                   'overlayStatus = ' .. tostring(overlayStatus)
                );
 
-               mia.utils:updateMarkedOverlay(
+               self:updateMarkedOverlay(
                   overlayStatus, bagIndex, db.overlayColor, db,
                   slotFrame, slotFrameID, itemName, itemID
                );
 
-               mia.utils:updateMarkedBorder(slotFrame.markedJunkOverlay, db.borderThickness, db.borderColor);
+               self:updateMarkedBorder(slotFrame.markedJunkOverlay, db.borderThickness, db.borderColor);
             end
          elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
             -- Clearing the still showing bag slot's overlay because it is empty,
             -- or it has been emptied by moving the item
-            mia.utils:updateMarkedOverlay(
+            self:updateMarkedOverlay(
                MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
                slotFrame, slotFrameID, itemName, itemID
             );
 
-            mia.utils:updateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
+            self:updateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
          end
       end
 
@@ -392,9 +410,12 @@ end
 --## DATABASE OPERATION FUNCTIONS
 --## --------------------------------------------------------------------------
 function Utils:getDbValue(key)
-   return mia.db.profile[key];
+   local value = mia.db.profile[key];
+   mia.logger:Debug('getDbValue: Returning "' .. tostring(value) .. '" for "' .. tostring(key) .. '".');
+   return value;
 end
 
 function Utils:setDbValue(key, value)
+   mia.logger:Debug('setDbValue: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '".');
    mia.db.profile[key] = value;
 end

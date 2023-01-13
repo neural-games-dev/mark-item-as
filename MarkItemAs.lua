@@ -21,10 +21,12 @@ function MarkItemAs:OnInitialize()
    self.chalk = self:GetModule('Chalk');
    self.config = self:GetModule('Config');
    self.logger = self:GetModule('Logger');
+   self.tooltip = self:GetModule('Tooltip');
    self.utils = self:GetModule('Utils');
 
    -- do you init or not bro?!
-   self.config:Init(self)
+   self.config:Init(self);
+   self.tooltip:Init(self.logger);
 
    -- we're slashing prices so much it's like we're crazy!
    self:RegisterChatCommand('mia', 'SlashCommandInfoConfig');
