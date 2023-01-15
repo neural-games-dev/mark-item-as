@@ -41,7 +41,7 @@ function MarkItemAs:SlashCommandInfoConfig(command)
       command == 'o';
 
    if (isConfigOptionsCommand) then
-      self.utils:handleConfigOptionsDisplay();
+      self.utils:HandleConfigOptionsDisplay();
       return ;
    end
 
@@ -65,7 +65,7 @@ function MarkItemAs:SlashCommandInfoConfig(command)
       end
 
       self.logger:Print('The slash command output text has been ' .. showOutputLogMessage .. '.');
-      self.utils:setDbValue('showCommandOutput', showOutputValue);
+      self.utils:SetDbValue('showCommandOutput', showOutputValue);
       return ;
    end
 
@@ -79,7 +79,7 @@ function MarkItemAs:SlashCommandInfoConfig(command)
          self.logger:Print('Setting the debug value to: ' .. self.chalk:debug(debugValueDisplay));
       end
 
-      self.utils:setDbValue('debugEnabled', debugValue);
+      self.utils:SetDbValue('debugEnabled', debugValue);
       return ;
    end
 

@@ -21,11 +21,15 @@ function MarkItemAs:OnInitialize()
    self.chalk = self:GetModule('Chalk');
    self.config = self:GetModule('Config');
    self.logger = self:GetModule('Logger');
+   self.selling = self:GetModule('Selling');
+   --self.sorting = self:GetModule('Sorting');
    self.tooltip = self:GetModule('Tooltip');
    self.utils = self:GetModule('Utils');
 
    -- do you init or not bro?!
    self.config:Init(self);
+   self.selling:Init(self);
+   --self.sorting:Init(self);
    self.tooltip:Init(self.logger);
 
    -- we're slashing prices so much it's like we're crazy!
@@ -41,7 +45,7 @@ function MarkItemAs:OnEnable()
    self:RegisterEvent('MERCHANT_CLOSED', 'MerchantClosedCB');
    self:RegisterEvent('MERCHANT_SHOW', 'MerchantShowCB');
    self:RegisterEvent('PLAYER_LOGIN', 'PlayerLoginCB');
-   self.utils:registerClickListeners();
+   self.utils:RegisterClickListeners();
 
    if (self.db.profile.showGreeting) then
       self.logger:Print('Hi, ' .. UnitName('player') ..
@@ -68,7 +72,7 @@ end
 --## ===============================================================================================
 function MarkItemAs:BagUpdateCB()
    self.logger:Debug('BAG_UPDATE registered event callback has been triggered. Doing stuff...');
-   self.utils:updateBagMarkings();
+   self.utils:UpdateBagMarkings();
 end
 
 function MarkItemAs:MerchantClosedCB()
@@ -77,11 +81,12 @@ end
 
 function MarkItemAs:MerchantShowCB()
    self.logger:Debug('MERCHANT_SHOW registered event callback has been triggered. Doing stuff...');
+   self.selling:SellItems();
 end
 
 -- This handles both when the player logs in (as is obvious by the name)
 -- but it also handles when the game reloads
 function MarkItemAs:PlayerLoginCB()
    self.logger:Debug('PLAYER_LOGIN registered event callback has been triggered. Doing stuff...');
-   self.utils:updateBagMarkings();
+   self.utils:UpdateBagMarkings();
 end

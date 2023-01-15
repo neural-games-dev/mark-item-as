@@ -28,10 +28,10 @@ function Tooltip:Init(logger)
 end
 
 function Tooltip:setGameTooltip(logger, tooltip, context)
-   local debugEnabled = Utils:getDbValue('debugEnabled');
-   local junkItems = Utils:getDbValue('junkItems');
-   local showCommandOutput = Utils:getDbValue('showCommandOutput');
-   local showTooltipText = Utils:getDbValue('showTooltipText');
+   local debugEnabled = Utils:GetDbValue('debugEnabled');
+   local junkItems = Utils:GetDbValue('junkItems');
+   local showCommandOutput = Utils:GetDbValue('showCommandOutput');
+   local showTooltipText = Utils:GetDbValue('showTooltipText');
 
    logger:Debug(context .. ': setGameTooltip has been called. Show text? -> ' .. tostring(showTooltipText));
 
