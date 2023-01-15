@@ -29,7 +29,7 @@ end
 
 function Tooltip:setGameTooltip(logger, tooltip, context)
    local debugEnabled = Utils:getDbValue('debugEnabled');
-   local markedItems = Utils:getDbValue('markedItems');
+   local junkItems = Utils:getDbValue('junkItems');
    local showCommandOutput = Utils:getDbValue('showCommandOutput');
    local showTooltipText = Utils:getDbValue('showTooltipText');
 
@@ -43,9 +43,9 @@ function Tooltip:setGameTooltip(logger, tooltip, context)
    if (showTooltipText) then
       local itemName, itemLink = tooltip:GetItem();
       local itemID = tonumber(string.match(itemLink, 'item:(%d+):'));
-      local isItemMarked = markedItems[itemID];
+      local isItemMarkedJunk = junkItems[itemID];
 
-      if (isItemMarked) then
+      if (isItemMarkedJunk) then
          if (showCommandOutput and not debugEnabled) then
             logger:Print('Adding tooltip text to "' .. tostring(itemName) .. '".');
          end

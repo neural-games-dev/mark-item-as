@@ -10,7 +10,7 @@ MIA_Defaults = {
    debugEnabled = false,
    enableBorder = true,
    enableOverlay = true,
-   markedItems = {},
+   junkItems = {},
    markerIconLocationSelected = 'BOTTOMLEFT',
    markerIconSelected = 'Trash',
    overlayColor = { r = 0, g = 0, b = 0, a = 0.75 },

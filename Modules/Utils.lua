@@ -10,13 +10,13 @@ local mia = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 --## ===============================================================================================
 local Utils = mia:NewModule('Utils');
 local itemLock;
-local ilConfig;
+local itemLockConfig;
 
 if (IsAddOnLoaded('ItemLock')) then
    itemLock = LibStub('AceAddon-3.0'):GetAddon('ItemLock');
 
    if (itemLock) then
-      ilConfig = itemLock:GetModule('Config');
+      itemLockConfig = itemLock:GetModule('Config');
    end
 end
 
@@ -59,8 +59,8 @@ function Utils:handleOnClick(bagIndex, bagName, slotFrame, numSlots)
       --## ==========================================================================
       --## Handling "ItemLock" addon key bind actions & conflicts
       --## ==========================================================================
-      if (ilConfig and ilConfig:IsClickBindEnabled()) then
-         local isItemLockKeyCombo = self:isItemLockKeyCombo(button, ilConfig);
+      if (itemLockConfig and itemLockConfig:IsClickBindEnabled()) then
+         local isItemLockKeyCombo = self:isItemLockKeyCombo(button, itemLockConfig);
          mia.logger:Debug('Was ItemLock key combo pressed? -> ' .. tostring(isItemLockKeyCombo));
 
          if (isItemLockKeyCombo and self:isMiaKeyCombo(button)) then
@@ -242,9 +242,9 @@ function Utils:updateBagMarkings()
                'slotFrameID = ' .. tostring(slotFrameID)
             );
 
-            local isItemMarked = db.markedItems[itemID];
+            local isItemMarkedJunk = db.junkItems[itemID];
 
-            if (isItemMarked) then
+            if (isItemMarkedJunk) then
                local overlayStatus = '';
 
                if (not slotFrame.markedJunkOverlay) then
@@ -379,7 +379,7 @@ function Utils:updateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
          frame.markedJunkOverlay.texture:Show();
       end
 
-      db.markedItems[itemID] = true;
+      db.junkItems[itemID] = true;
       return ;
    end
 
@@ -399,7 +399,7 @@ function Utils:updateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
       frame.markedJunkOverlay.texture:Hide();
 
       if (itemID) then
-         db.markedItems[itemID] = false;
+         db.junkItems[itemID] = false;
       end
 
       return ;
