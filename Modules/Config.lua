@@ -223,7 +223,21 @@ function Config:GetBlizzOptionsFrame(mia)
             name = 'Selling',
             order = 200,
             type = 'group',
-            args = {},
+            args = {
+               saleSummary = {
+                  desc = 'This will hide/show the gold & items summary in chat during & after selling to a merchant.',
+                  get = function()
+                     return mia.utils:GetDbValue('showSaleSummary');
+                  end,
+                  name = 'Show selling info & summary?',
+                  order = 201,
+                  set = function(info, value)
+                     mia.utils:SetDbValue('showSaleSummary', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+            },
          },
          sortingOptions = {
             desc = '',
@@ -278,26 +292,13 @@ function Config:GetBlizzOptionsFrame(mia)
             order = 400,
             type = 'group',
             args = {
-               saleSummary = {
-                  desc = 'This will hide/show the gold & items summary in chat after selling to a merchant.',
-                  get = function()
-                     return mia.utils:GetDbValue('showSaleSummary');
-                  end,
-                  name = 'Show summary after selling?',
-                  order = 401,
-                  set = function(info, value)
-                     mia.utils:SetDbValue('showSaleSummary', value);
-                  end,
-                  type = 'toggle',
-                  width = 'full',
-               },
                showWarnings = {
                   desc = 'This will hide/show the warnings in chat when another potentially conflicting addon is detected.',
                   get = function()
                      return mia.utils:GetDbValue('showWarnings');
                   end,
                   name = 'Show addon warnings?',
-                  order = 402,
+                  order = 401,
                   set = function(info, value)
                      mia.utils:SetDbValue('showWarnings', value);
                   end,
@@ -310,7 +311,7 @@ function Config:GetBlizzOptionsFrame(mia)
                      return mia.utils:GetDbValue('showGreeting');
                   end,
                   name = 'Show startup greeting in chat?',
-                  order = 403,
+                  order = 402,
                   set = function(info, value)
                      mia.utils:SetDbValue('showGreeting', value);
                   end,
@@ -323,7 +324,7 @@ function Config:GetBlizzOptionsFrame(mia)
                      return mia.utils:GetDbValue('showCommandOutput');
                   end,
                   name = 'Show MIA command output?',
-                  order = 404,
+                  order = 403,
                   set = function(info, value)
                      mia.utils:SetDbValue('showCommandOutput', value);
                   end,
@@ -336,7 +337,7 @@ function Config:GetBlizzOptionsFrame(mia)
                      return mia.utils:GetDbValue('debugEnabled');
                   end,
                   name = 'Enable MIA debugging?',
-                  order = 405,
+                  order = 404,
                   set = function(info, value)
                      mia.utils:SetDbValue('debugEnabled', value);
                   end,

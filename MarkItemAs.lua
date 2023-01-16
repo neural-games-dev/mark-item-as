@@ -30,7 +30,7 @@ function MarkItemAs:OnInitialize()
    self.config:Init(self);
    self.selling:Init(self);
    --self.sorting:Init(self);
-   self.tooltip:Init(self.logger);
+   self.tooltip:Init(self);
 
    -- we're slashing prices so much it's like we're crazy!
    self:RegisterChatCommand('mia', 'SlashCommandInfoConfig');

@@ -23,8 +23,26 @@ end
 --## ===============================================================================================
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
+function Utils:Capitalize(str)
+   local lower = string.lower(str);
+   return (lower:gsub("^%l", string.upper));
+end
+
 function Utils:GetModifierFunction(modKey)
    return MIA_Constants.modFunctionsMap[modKey];
+end
+
+function Utils:GetSellableItemsLength(table)
+   local length = 0;
+
+   for k, v in pairs(table) do
+      if (v) then
+         mia.logger:Debug('GetSellableItemsLength: Counting "' .. tostring(k) .. ': ' .. tostring(v) .. '" as part of the table length.');
+         length = length + 1;
+      end
+   end
+
+   return length;
 end
 
 function Utils:HandleConfigOptionsDisplay()
@@ -88,7 +106,6 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
       --## ==========================================================================
       if (self:IsMiaKeyCombo(button)) then
          if (item:IsItemEmpty()) then
-            -- ☝ use `frame.hasItem` instead?
             if (db.showCommandOutput and not db.debugEnabled) then
                mia.logger:Print('No item present. Ignoring marking.');
             end
@@ -107,6 +124,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return ;
          elseif (not frame.markedJunkOverlay) then
+            print('🚀--BLLR ONE?: ' .. tostring(itemID)) -- TODO **[G]** :: 🚀--BLLR?: REMOVE ME!!!
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.MISSING, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
@@ -120,6 +138,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
+            print('🚀--BLLR TWO?: ' .. tostring(itemID)) -- TODO **[G]** :: 🚀--BLLR?: REMOVE ME!!!
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.HIDDEN, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
@@ -153,11 +172,6 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
    end
 end
 
-function Utils:Capitalize(str)
-   local lower = string.lower(str);
-   return (lower:gsub("^%l", string.upper));
-end
-
 function Utils:IsItemLockKeyCombo(button, config)
    local ilModKey = self:Capitalize(config:GetClickBindModifier());
    local modKeyIsPressed = self:GetModifierFunction(ilModKey);
@@ -170,6 +184,14 @@ function Utils:IsMiaKeyCombo(button)
    return button == db.userSelectedActivatorKey and modKeyIsPressed();
 end
 
+function Utils:PriceToGold(price)
+   local gold = price / 10000;
+   local silver = (price % 10000) / 100;
+   local copper = (price % 10000) % 100;
+
+   return math.floor(gold) .. '|cFFffcc33g|r ' .. math.floor(silver) .. '|cFFc9c9c9s|r ' .. math.floor(copper) .. '|cFFcc8890c|r';
+end
+
 function Utils:RegisterClickListeners()
    for bagIndex = 0, MIA_Constants.numContainers, 1 do
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
@@ -177,7 +199,8 @@ function Utils:RegisterClickListeners()
 
       if (numSlots > 0) then
          for slotIndex = 1, numSlots, 1 do
-            local slotFrame = _G[bagName .. 'Item' .. slotIndex];
+            local slotIndexInverted = numSlots - slotIndex + 1; -- Blizz bag slot indexes are weird
+            local slotFrame = _G[bagName .. 'Item' .. slotIndexInverted];
             slotFrame:HookScript('OnClick', self:HandleOnClick(bagIndex, bagName, slotFrame, numSlots));
          end
       else
@@ -225,9 +248,10 @@ function Utils:UpdateBagMarkings()
       end
 
       for slotIndex = 1, numSlots, 1 do
-         local slotFrame = _G[bagName .. 'Item' .. slotIndex];
+         local slotIndexInverted = numSlots - slotIndex + 1; -- Blizz bag slot indexes are weird
+         local slotFrame = _G[bagName .. 'Item' .. slotIndexInverted];
          local slotFrameID = slotFrame:GetID();
-         local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
+         local item = Item:CreateFromBagAndSlot(bagIndex, slotFrameID);
          local itemName = item:GetItemName();
          local itemID = item:GetItemID();
          local isItemEmpty = item:IsItemEmpty();
@@ -239,14 +263,14 @@ function Utils:UpdateBagMarkings()
                'itemID = ' .. tostring(itemID) .. '\n' ..
                'isItemEmpty = ' .. tostring(isItemEmpty) .. '\n' ..
                'slotIndex = ' .. tostring(slotIndex) .. '\n' ..
+               'slotIndexInverted = ' .. tostring(slotIndexInverted) .. '\n' ..
                'slotFrameID = ' .. tostring(slotFrameID)
             );
 
             local isItemMarkedJunk = db.junkItems[itemID];
+            local overlayStatus = '';
 
             if (isItemMarkedJunk) then
-               local overlayStatus = '';
-
                if (not slotFrame.markedJunkOverlay) then
                   -- This should just be for when we login/reload and we need to re-apply the MIA overlays
                   overlayStatus = MIA_Constants.overlayStatus.MISSING;
@@ -273,6 +297,14 @@ function Utils:UpdateBagMarkings()
                );
 
                self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, db.borderThickness, db.borderColor);
+            elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
+               -- Clearing the still showing bag slot's overlay because it was moved,
+               self:UpdateMarkedOverlay(
+                  MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
+                  slotFrame, slotFrameID, itemName, itemID
+               );
+
+               self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
             end
          elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
             -- Clearing the still showing bag slot's overlay because it is empty,
@@ -411,11 +443,11 @@ end
 --## --------------------------------------------------------------------------
 function Utils:GetDbValue(key)
    local value = mia.db.profile[key];
-   mia.logger:Debug('getDbValue: Returning "' .. tostring(value) .. '" for "' .. tostring(key) .. '".');
+   --mia.logger:Debug('getDbValue: Returning "' .. tostring(value) .. '" for "' .. tostring(key) .. '".');
    return value;
 end
 
 function Utils:SetDbValue(key, value)
-   mia.logger:Debug('setDbValue: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '".');
+   --mia.logger:Debug('setDbValue: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '".');
    mia.db.profile[key] = value;
 end
