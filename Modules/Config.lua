@@ -48,7 +48,7 @@ function Config:GetBlizzOptionsFrame(mia)
                   name = 'Select your modifier key...',
                   order = 102,
                   set = function(info, value)
-                     mia.utils:SetDbValue('userSelectedModKey', MIA_Constants.modKeysMap[value])
+                     mia.utils:SetDbValue('userSelectedModKey', MIA_Constants.modKeysMap[value]);
                   end,
                   type = 'select',
                   values = MIA_Constants.modKeysMap,
@@ -56,12 +56,12 @@ function Config:GetBlizzOptionsFrame(mia)
                activatorKey = {
                   desc = 'This is the main mouse key to press, along with your modifier, to mark your items.',
                   get = function()
-                     return db.userSelectedActivatorKey;
+                     return mia.utils:GetDbValue('userSelectedActivatorKey');
                   end,
                   name = 'Select your activator key...',
                   order = 103,
                   set = function(info, value)
-                     db.userSelectedActivatorKey = MIA_Constants.activatorKeysMap[value];
+                     mia.utils:SetDbValue('userSelectedActivatorKey', MIA_Constants.activatorKeysMap[value]);
                   end,
                   type = 'select',
                   values = MIA_Constants.activatorKeysMap,
@@ -178,7 +178,7 @@ function Config:GetBlizzOptionsFrame(mia)
                markerIconLocation = {
                   desc = 'Select the position on the item where you want the JUNK icon to appear.',
                   get = function()
-                     return db.markerIconLocationSelected;
+                     return mia.utils:GetDbValue('markerIconLocationSelected');
                   end,
                   name = 'Select your icon location...',
                   order = 112,
@@ -311,7 +311,7 @@ function Config:GetBlizzOptionsFrame(mia)
                   width = 'full',
                },
                sortAfterSelling = {
-                  desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.',
+                  desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.\n\nNote that this happens after you close the merchant window.',
                   get = function()
                      return mia.utils:GetDbValue('autoSortSelling');
                   end,

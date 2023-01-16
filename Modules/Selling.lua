@@ -59,6 +59,7 @@ function Selling:SellItems()
 
             self.mia.logger:Debug('Current total sell price: ' .. self.mia.utils:PriceToGold(totalSellPrice));
             -- actually sell the item to the merchant
+            C_Item.UnlockItem(itemLocation);
             C_Container.PickupContainerItem(bagIndex, slotIndexInverted);
             PickupMerchantItem();
 
@@ -71,11 +72,6 @@ function Selling:SellItems()
    end
 
    self.mia.utils:UpdateBagMarkings();
-
-   if (self.mia.utils:GetDbValue('autoSortSelling')) then
-      self.mia.logger:Debug('SellItems: Auto sorting the bags.');
-      self.mia.utils:SortBags();
-   end
 
    if (self.mia.utils:GetDbValue('showSaleSummary')) then
       -- TODO **[G]** :: Print out the sale summary here
