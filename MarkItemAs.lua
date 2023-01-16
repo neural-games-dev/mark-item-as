@@ -79,11 +79,13 @@ end
 
 function MarkItemAs:MerchantClosedCB()
    self.logger:Debug('MERCHANT_CLOSED registered event callback has been triggered. Doing stuff...');
+   local autoSortSelling = self.utils:GetDbValue('autoSortSelling');
+   local soldItemsAtMerchant = self.utils:GetDbValue('soldItemsAtMerchant');
 
-   -- TODO **[G]** :: Check for if things were sold as well?
-   if (self.utils:GetDbValue('autoSortSelling')) then
+   if (autoSortSelling and soldItemsAtMerchant) then
       self.logger:Debug('MerchantClosedCB: Auto sorting the bags after closing/selling.');
       self.utils:SortBags();
+      self.utils:SetDbValue('soldItemsAtMerchant', false);
    end
 end
 

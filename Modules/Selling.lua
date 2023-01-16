@@ -29,6 +29,9 @@ function Selling:SellItems()
    local suffix = junkItemsLength == 1 and ' item.' or ' items.';
    self.mia.logger:Debug('Iterating through all of the bags now and selling ' .. tostring(junkItemsLength) .. suffix);
    local totalSellPrice = 0;
+   local totalItemsSold = 0;
+   local uniqueItemsSold = 0;
+   local itemsSoldLinksList = {};
 
    for bagIndex = 0, MIA_Constants.numContainers, 1 do
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
@@ -45,13 +48,13 @@ function Selling:SellItems()
 
          if (not isItemEmpty and isItemMarkedJunk) then
             local slotIndexInverted = numSlots - slotIndex + 1; -- Blizz bag slot indexes are weird
-            local itemSellPrice = select('11', GetItemInfo(itemName));
+            local itemLink = select('2', GetItemInfo(itemName));
             local itemLocation = ItemLocation:CreateFromBagAndSlot(bagIndex, slotIndexInverted);
+            local itemSellPrice = select('11', GetItemInfo(itemName));
             local itemStackCount = C_Item.GetStackCount(itemLocation);
-            totalSellPrice = totalSellPrice + (itemSellPrice * itemStackCount);
 
             if (self.mia.utils:GetDbValue('showSaleSummary')) then
-               self.mia.logger:Print('Selling ' .. tostring(itemStackCount) .. ' "' .. tostring(itemName) .. '" for:\n' ..
+               self.mia.logger:Print('Selling ' .. tostring(itemStackCount) .. itemLink .. ' for:\n' ..
                   self.mia.utils:PriceToGold(itemSellPrice) .. ' each.\n' ..
                   self.mia.utils:PriceToGold(itemSellPrice * itemStackCount) .. ' total.'
                );
@@ -59,9 +62,15 @@ function Selling:SellItems()
 
             self.mia.logger:Debug('Current total sell price: ' .. self.mia.utils:PriceToGold(totalSellPrice));
             -- actually sell the item to the merchant
-            C_Item.UnlockItem(itemLocation);
             C_Container.PickupContainerItem(bagIndex, slotIndexInverted);
             PickupMerchantItem();
+            self.mia.utils:SetDbValue('soldItemsAtMerchant', true);
+
+            -- calculate the tallies up, bruh!
+            totalSellPrice = totalSellPrice + (itemSellPrice * itemStackCount);
+            totalItemsSold = totalItemsSold + itemStackCount;
+            uniqueItemsSold = uniqueItemsSold + 1
+            table.insert(itemsSoldLinksList, itemLink);
 
             if (self.mia.utils:GetDbValue('unmarkAfterSelling')) then
                -- Setting the item to `false` in the db to remove the overlay & border
@@ -74,6 +83,11 @@ function Selling:SellItems()
    self.mia.utils:UpdateBagMarkings();
 
    if (self.mia.utils:GetDbValue('showSaleSummary')) then
-      -- TODO **[G]** :: Print out the sale summary here
+      self.mia.logger:PrintSaleSummary(
+         totalSellPrice,
+         totalItemsSold,
+         uniqueItemsSold,
+         itemsSoldLinksList
+      );
    end
 end

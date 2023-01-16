@@ -22,6 +22,7 @@ MIA_Defaults = {
    showSaleSummary = true,
    showTooltipText = true,
    showWarnings = true,
+   soldItemsAtMerchant = false,
    unmarkAfterSelling = true,
    userSelectedActivatorKey = 'RightButton',
    userSelectedModKey = 'Alt',

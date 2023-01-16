@@ -311,7 +311,7 @@ function Config:GetBlizzOptionsFrame(mia)
                   width = 'full',
                },
                sortAfterSelling = {
-                  desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.\n\nNote that this happens after you close the merchant window.',
+                  desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.\n\nNote that this only happens if you actually sold items and after you close the merchant window.',
                   get = function()
                      return mia.utils:GetDbValue('autoSortSelling');
                   end,

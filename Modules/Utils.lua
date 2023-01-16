@@ -23,6 +23,14 @@ end
 --## ===============================================================================================
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
+function Utils:AddLeadingZero(number)
+   if (number < 10) then
+      return '0' .. tostring(number);
+   end
+
+   return number;
+end
+
 function Utils:Capitalize(str)
    local lower = string.lower(str);
    return (lower:gsub("^%l", string.upper));
@@ -126,7 +134,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
          elseif (not frame.markedJunkOverlay) then
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.MISSING, bagIndex, db.overlayColor, db,
-               frame, frameID, itemName, itemID
+               frame, frameID, itemName, itemID, true
             );
 
             self:UpdateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
@@ -139,7 +147,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
          elseif (not frame.markedJunkOverlay:IsShown()) then
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.HIDDEN, bagIndex, db.overlayColor, db,
-               frame, frameID, itemName, itemID
+               frame, frameID, itemName, itemID, true
             );
 
             self:UpdateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
@@ -152,7 +160,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
          else
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.SHOWING, bagIndex, db.overlayColor, db,
-               frame, frameID, itemName, itemID
+               frame, frameID, itemName, itemID, true
             );
 
             self:UpdateMarkedBorder(frame.markedJunkOverlay, 0, MIA_Constants.colorReset);
@@ -187,15 +195,13 @@ function Utils:PriceToGold(price)
    local silver = (price % 10000) / 100;
    local copper = (price % 10000) % 100;
 
-   -- rounding down
    gold = math.floor(gold);
    silver = math.floor(silver);
    copper = math.floor(copper);
 
-   -- add leading zero to copper if needed
-   if (copper < 10) then
-      copper = '0' .. tostring(copper);
-   end
+   gold = self:AddLeadingZero(gold);
+   silver = self:AddLeadingZero(silver);
+   copper = self:AddLeadingZero(copper);
 
    return tostring(gold) .. '|cFFffcc33g|r ' .. tostring(silver) .. '|cFFc9c9c9s|r ' .. tostring(copper) .. '|cFFcc8890c|r';
 end
@@ -364,13 +370,17 @@ function Utils:UpdateMarkedBorder(frame, thickness, color)
    end
 end
 
-function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID)
+function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID, isClickEvent)
+   if (not isClickEvent) then
+      isClickEvent = false;
+   end
+
    local isMissingHiddenOrUpdate = status == MIA_Constants.overlayStatus.MISSING or
       status == MIA_Constants.overlayStatus.HIDDEN or
       status == MIA_Constants.overlayStatus.UPDATE;
 
    if (isMissingHiddenOrUpdate) then
-      if (db.showCommandOutput and not db.debugEnabled) then
+      if (db.showCommandOutput and not db.debugEnabled and isClickEvent) then
          mia.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
       end
 
@@ -424,7 +434,7 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
    end
 
    if (status == MIA_Constants.overlayStatus.SHOWING) then
-      if (db.showCommandOutput and not db.debugEnabled) then
+      if (db.showCommandOutput and not db.debugEnabled and isClickEvent) then
          mia.logger:Print('Removing the junk marking from "' .. tostring(itemName) .. '".');
       end
 
