@@ -12,6 +12,11 @@ local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 --## ===============================================================================================
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
+function MarkItemAs:EnableVerboseLogging()
+   local currentValue = self.utils:GetDbValue('enableVerboseLogging');
+   self.utils:SetDbValue('enableVerboseLogging', not currentValue);
+end
+
 function MarkItemAs:SlashCommandFrameStack()
    LoadAddOn('Blizzard_DebugTools');
    FrameStackTooltip_Toggle();

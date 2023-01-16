@@ -28,6 +28,7 @@ function MarkItemAs:OnInitialize()
 
    -- do you init or not bro?!
    self.config:Init(self);
+   self.logger:Init(self);
    self.selling:Init(self);
    --self.sorting:Init(self);
    self.tooltip:Init(self);
@@ -36,6 +37,7 @@ function MarkItemAs:OnInitialize()
    self:RegisterChatCommand('mia', 'SlashCommandInfoConfig');
    self:RegisterChatCommand('nrl', 'SlashCommandReload');
    self:RegisterChatCommand('nfs', 'SlashCommandFrameStack');
+   self:RegisterChatCommand('nvdl', 'EnableVerboseLogging');
 end
 
 function MarkItemAs:OnEnable()

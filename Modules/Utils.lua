@@ -124,7 +124,6 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return ;
          elseif (not frame.markedJunkOverlay) then
-            print('🚀--BLLR ONE?: ' .. tostring(itemID)) -- TODO **[G]** :: 🚀--BLLR?: REMOVE ME!!!
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.MISSING, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
@@ -138,7 +137,6 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return ;
          elseif (not frame.markedJunkOverlay:IsShown()) then
-            print('🚀--BLLR TWO?: ' .. tostring(itemID)) -- TODO **[G]** :: 🚀--BLLR?: REMOVE ME!!!
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.HIDDEN, bagIndex, db.overlayColor, db,
                frame, frameID, itemName, itemID
@@ -189,7 +187,17 @@ function Utils:PriceToGold(price)
    local silver = (price % 10000) / 100;
    local copper = (price % 10000) % 100;
 
-   return math.floor(gold) .. '|cFFffcc33g|r ' .. math.floor(silver) .. '|cFFc9c9c9s|r ' .. math.floor(copper) .. '|cFFcc8890c|r';
+   -- rounding down
+   gold = math.floor(gold);
+   silver = math.floor(silver);
+   copper = math.floor(copper);
+
+   -- add leading zero to copper if needed
+   if (copper < 10) then
+      copper = '0' .. tostring(copper);
+   end
+
+   return tostring(gold) .. '|cFFffcc33g|r ' .. tostring(silver) .. '|cFFc9c9c9s|r ' .. tostring(copper) .. '|cFFcc8890c|r';
 end
 
 function Utils:RegisterClickListeners()
@@ -443,11 +451,16 @@ end
 --## --------------------------------------------------------------------------
 function Utils:GetDbValue(key)
    local value = mia.db.profile[key];
-   --mia.logger:Debug('getDbValue: Returning "' .. tostring(value) .. '" for "' .. tostring(key) .. '".');
+   mia.logger:Debug('GetDbValue: Returning "' .. tostring(value) .. '" for "' .. tostring(key) .. '".');
    return value;
 end
 
+function Utils:SetDbMarkedItem(table, key, value)
+   mia.logger:Debug('SetDbMarkedItem: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '" in table "' .. tostring(table) .. '".');
+   mia.db.profile[table][key] = value;
+end
+
 function Utils:SetDbValue(key, value)
-   --mia.logger:Debug('setDbValue: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '".');
+   mia.logger:Debug('SetDbValue: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '".');
    mia.db.profile[key] = value;
 end

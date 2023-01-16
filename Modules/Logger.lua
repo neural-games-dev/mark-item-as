@@ -12,10 +12,22 @@ local Logger = MarkItemAs:NewModule('Logger');
 --## ===============================================================================================
 --## DEFINING THE LOGGER METHODS
 --## ===============================================================================================
+function Logger:Init(mia)
+   self.mia = mia;
+   self.isPratLoaded = IsAddOnLoaded('Prat-3.0');
+end
+
 function Logger:Debug(...)
    if (MarkItemAs.db.profile.debugEnabled) then
       local chalk = MarkItemAs.chalk;
-      local prefix = chalk:debug('[DEBUG] ') .. chalk:ace('(' .. tostring(date()) .. ')');
+      local prefix;
+
+      if (self.isPratLoaded) then
+         prefix = chalk:debug('[DEBUG]');
+      else
+         prefix = chalk:debug('[DEBUG] ') .. chalk:ace('(' .. tostring(date()) .. ')');
+      end
+
       MarkItemAs:Print(prefix, ...);
    end
 end

@@ -237,6 +237,45 @@ function Config:GetBlizzOptionsFrame(mia)
                   type = 'toggle',
                   width = 'full',
                },
+               limitSales = {
+                  desc = 'This will prevent you from selling more than 12 items at a time, so you can do a full buyback if wanted.',
+                  get = function()
+                     return mia.utils:GetDbValue('limitSaleItems');
+                  end,
+                  name = 'Limit number of items sold?',
+                  order = 202,
+                  set = function(info, value)
+                     mia.utils:SetDbValue('limitSaleItems', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+               unmarkAfterSelling = {
+                  desc = 'After visiting a merchant and selling your items, you can set them as "un-marked".\n\nIf you leave them marked after selling, the overlay will be there when you buy back.',
+                  get = function()
+                     return mia.utils:GetDbValue('unmarkAfterSelling');
+                  end,
+                  name = 'Un-mark after selling?',
+                  order = 203,
+                  set = function(info, value)
+                     mia.utils:SetDbValue('unmarkAfterSelling', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
+               autoSell = {
+                  desc = "You can disable auto-selling marked items when visiting a merchant. But I'm not sure why you'd want to. ;-)",
+                  get = function()
+                     return mia.utils:GetDbValue('autoSellMerchant');
+                  end,
+                  name = 'Auto sell at merchant?',
+                  order = 204,
+                  set = function(info, value)
+                     mia.utils:SetDbValue('autoSellMerchant', value);
+                  end,
+                  type = 'toggle',
+                  width = 'full',
+               },
             },
          },
          sortingOptions = {
@@ -319,7 +358,7 @@ function Config:GetBlizzOptionsFrame(mia)
                   width = 'full',
                },
                slashCommandOutput = {
-                  desc = 'This will hide/show the chat output after triggering a ' .. mia.chalk:badass('MIA') .. ' command or action.',
+                  desc = 'This will hide/show the chat output after triggering certain ' .. mia.chalk:badass('MIA') .. ' commands or actions.\n\nThink of this like INFO level logging.',
                   get = function()
                      return mia.utils:GetDbValue('showCommandOutput');
                   end,
@@ -332,7 +371,7 @@ function Config:GetBlizzOptionsFrame(mia)
                   width = 'full',
                },
                enableDebugging = {
-                  desc = 'This will enable/disable debugging for this add-on. It is really only useful for other add-on devs.',
+                  desc = 'This will enable/disable debugging for this add-on. It is really only useful for other add-on devs.\n\nBE WARNED! It can get SPAMMY!',
                   get = function()
                      return mia.utils:GetDbValue('debugEnabled');
                   end,

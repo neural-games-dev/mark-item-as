@@ -58,13 +58,24 @@ function Selling:SellItems()
             end
 
             self.mia.logger:Debug('Current total sell price: ' .. self.mia.utils:PriceToGold(totalSellPrice));
-            -- Setting the item to `false` in the db to remove the overlay & border
-            --self.mia.db.junkItems[itemID] = false;
+            -- actually sell the item to the merchant
+            C_Container.PickupContainerItem(bagIndex, slotIndexInverted);
+            PickupMerchantItem();
+
+            if (self.mia.utils:GetDbValue('unmarkAfterSelling')) then
+               -- Setting the item to `false` in the db to remove the overlay & border
+               self.mia.utils:SetDbMarkedItem('junkItems', itemID, false);
+            end
          end
       end
    end
 
-   --self.mia.utils:UpdateBagMarkings();
+   self.mia.utils:UpdateBagMarkings();
+
+   if (self.mia.utils:GetDbValue('autoSortSelling')) then
+      self.mia.logger:Debug('SellItems: Auto sorting the bags.');
+      self.mia.utils:SortBags();
+   end
 
    if (self.mia.utils:GetDbValue('showSaleSummary')) then
       -- TODO **[G]** :: Print out the sale summary here

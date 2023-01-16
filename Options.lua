@@ -2,6 +2,7 @@
 --## DEFINING THE DEFAULT OPTIONS TABLE
 --## ==========================================================================
 MIA_Defaults = {
+   autoSellMerchant = true,
    autoSortMarking = false,
    autoSortSelling = false,
    autoSortUnmarking = false,
@@ -10,15 +11,18 @@ MIA_Defaults = {
    debugEnabled = false,
    enableBorder = true,
    enableOverlay = true,
+   enableVerboseLogging = false,
    junkItems = {},
+   limitSaleItems = true,
    markerIconLocationSelected = 'BOTTOMLEFT',
    markerIconSelected = 'Trash',
    overlayColor = { r = 0, g = 0, b = 0, a = 0.75 },
-   showCommandOutput = true,
+   showCommandOutput = false,
    showGreeting = true,
    showSaleSummary = true,
-   showTooltipText = false,
+   showTooltipText = true,
    showWarnings = true,
+   unmarkAfterSelling = true,
    userSelectedActivatorKey = 'RightButton',
    userSelectedModKey = 'Alt',
 };
