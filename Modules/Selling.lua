@@ -17,21 +17,16 @@ function Selling:Init(mia)
 end
 
 function Selling:SellItems()
-   local debugEnabled = self.mia.utils:GetDbValue('debugEnabled');
    local junkItems = self.mia.utils:GetDbValue('junkItems');
    local junkItemsLength = self.mia.utils:GetSellableItemsLength(junkItems);
-   local showCommandOutput = self.mia.utils:GetDbValue('showCommandOutput');
-
-   if (showCommandOutput and not debugEnabled) then
-      self.mia.logger:Print('Selling ' .. tostring(junkItemsLength) .. ' items marked as junk.');
-   end
-
    local suffix = junkItemsLength == 1 and ' item.' or ' items.';
+
    self.mia.logger:Debug('Iterating through all of the bags now and selling ' .. tostring(junkItemsLength) .. suffix);
-   local totalSellPrice = 0;
-   local totalItemsSold = 0;
-   local uniqueItemsSold = 0;
+
    local itemsSoldLinksList = {};
+   local totalItemsSold = 0;
+   local totalSellPrice = 0;
+   local uniqueItemsSold = 0;
 
    for bagIndex = 0, MIA_Constants.numContainers, 1 do
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
@@ -54,7 +49,7 @@ function Selling:SellItems()
             local itemStackCount = C_Item.GetStackCount(itemLocation);
 
             if (self.mia.utils:GetDbValue('showSaleSummary')) then
-               self.mia.logger:Print('Selling ' .. tostring(itemStackCount) .. itemLink .. ' for:\n' ..
+               self.mia.logger:Print('Selling ' .. tostring(itemStackCount) .. ' ' .. itemLink .. ' for:\n' ..
                   self.mia.utils:PriceToGold(itemSellPrice) .. ' each.\n' ..
                   self.mia.utils:PriceToGold(itemSellPrice * itemStackCount) .. ' total.'
                );
@@ -72,9 +67,16 @@ function Selling:SellItems()
             uniqueItemsSold = uniqueItemsSold + 1
             table.insert(itemsSoldLinksList, itemLink);
 
-            if (self.mia.utils:GetDbValue('unmarkAfterSelling')) then
-               -- Setting the item to `false` in the db to remove the overlay & border
-               self.mia.utils:SetDbMarkedItem('junkItems', itemID, false);
+            -- Setting the item to `false` in the db to remove the overlay & border
+            self.mia.utils:SetDbTableItem('junkItems', itemID, false);
+
+            -- stop selling once we've already sold 12 unique items
+            local limitSaleItems = self.mia.utils:GetDbValue('limitSaleItems');
+            local isTooManyItemsSold = uniqueItemsSold > MIA_Constants.buybackLimit;
+
+            if (limitSaleItems and isTooManyItemsSold) then
+               self.mia.logger:Debug('SellItems: 12 unique items have already been sold. Stopping selling iteration.');
+               break ;
             end
          end
       end
@@ -82,7 +84,7 @@ function Selling:SellItems()
 
    self.mia.utils:UpdateBagMarkings();
 
-   if (self.mia.utils:GetDbValue('showSaleSummary')) then
+   if (self.mia.utils:GetDbValue('soldItemsAtMerchant') and self.mia.utils:GetDbValue('showSaleSummary')) then
       self.mia.logger:PrintSaleSummary(
          totalSellPrice,
          totalItemsSold,

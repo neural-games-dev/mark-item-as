@@ -12,6 +12,12 @@ MIA_Defaults = {
    enableBorder = true,
    enableOverlay = true,
    enableVerboseLogging = false,
+   isLoaded = {
+      baggins = nil,
+      itemLock = nil,
+      peddler = nil,
+      prat = nil,
+   },
    junkItems = {},
    limitSaleItems = true,
    markerIconLocationSelected = 'BOTTOMLEFT',
@@ -23,7 +29,6 @@ MIA_Defaults = {
    showTooltipText = true,
    showWarnings = true,
    soldItemsAtMerchant = false,
-   unmarkAfterSelling = true,
    userSelectedActivatorKey = 'RightButton',
    userSelectedModKey = 'Alt',
 };

@@ -80,7 +80,13 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
       local itemID = item:GetItemID();
       local itemName = item:GetItemName();
       local frameID = frame:GetID();
-      local itemSellPrice = select('11', GetItemInfo(itemName));
+      local itemSellPrice;
+
+      if (itemName) then
+         itemSellPrice = select('11', GetItemInfo(itemName));
+      else
+         itemSellPrice = 'N/A';
+      end
 
       --## ==========================================================================
       --## Handling "ItemLock" addon key bind actions & conflicts
@@ -119,7 +125,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
             end
 
             return ;
-         elseif (IsAddOnLoaded('ItemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
+         elseif (self:GetDbValue('isLoaded.itemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
             if (db.showCommandOutput and not db.debugEnabled) then
                mia.logger:Print('Item is locked. Ignoring marking.');
             end
@@ -139,7 +145,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             self:UpdateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
 
-            if (db.autoSortMarking) then
+            if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
                self:SortBags();
             end
 
@@ -152,7 +158,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             self:UpdateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
 
-            if (db.autoSortMarking) then
+            if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
                self:SortBags();
             end
 
@@ -165,7 +171,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             self:UpdateMarkedBorder(frame.markedJunkOverlay, 0, MIA_Constants.colorReset);
 
-            if (db.autoSortUnmarking) then
+            if (db.autoSortUnmarking and not self:GetDbValue('isLoaded.baggins')) then
                self:SortBags();
             end
 
@@ -224,10 +230,7 @@ function Utils:RegisterClickListeners()
 end
 
 function Utils:SortBags()
-   if (IsAddOnLoaded('Baggins')) then
-      mia.logger:Print(MIA_Constants.warnings.bagginsLoaded);
-      return ;
-   elseif (C_Container) then
+   if (C_Container) then
       C_Container.SortBags();
       return ;
    else
@@ -460,13 +463,22 @@ end
 --## DATABASE OPERATION FUNCTIONS
 --## --------------------------------------------------------------------------
 function Utils:GetDbValue(key)
-   local value = mia.db.profile[key];
+   local value;
+   local isMultiKey = key:match('%.');
+
+   if (isMultiKey) then
+      local key1, key2 = string.match(key, '(.*)%.(.*)');
+      value = mia.db.profile[key1][key2];
+   else
+      value = mia.db.profile[key];
+   end
+
    mia.logger:Debug('GetDbValue: Returning "' .. tostring(value) .. '" for "' .. tostring(key) .. '".');
    return value;
 end
 
-function Utils:SetDbMarkedItem(table, key, value)
-   mia.logger:Debug('SetDbMarkedItem: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '" in table "' .. tostring(table) .. '".');
+function Utils:SetDbTableItem(table, key, value)
+   mia.logger:Debug('SetDbTableItem: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '" in table "' .. tostring(table) .. '".');
    mia.db.profile[table][key] = value;
 end
 

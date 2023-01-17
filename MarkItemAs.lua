@@ -17,14 +17,14 @@ function MarkItemAs:OnInitialize()
    self.version = 'v0.1.0';
    self.db = LibStub('AceDB-3.0'):New('MarkItemAsDB', { profile = MIA_Defaults }, true);
 
-   -- calling all modules! all modules to the front!
+   -- calling all modules! all modules to the front! (keep in this order)
    self.chalk = self:GetModule('Chalk');
+   self.utils = self:GetModule('Utils');
    self.config = self:GetModule('Config');
    self.logger = self:GetModule('Logger');
    self.selling = self:GetModule('Selling');
    --self.sorting = self:GetModule('Sorting');
    self.tooltip = self:GetModule('Tooltip');
-   self.utils = self:GetModule('Utils');
 
    -- do you init or not bro?!
    self.config:Init(self);
@@ -42,26 +42,33 @@ end
 
 function MarkItemAs:OnEnable()
    -- Third args can be passed to these callbacks
-   -- these args are extra values that you want the CBs to have
+   -- these third args are extra values that you want the CBs to have
    self:RegisterEvent('BAG_UPDATE', 'BagUpdateCB');
    self:RegisterEvent('MERCHANT_CLOSED', 'MerchantClosedCB');
    self:RegisterEvent('MERCHANT_SHOW', 'MerchantShowCB');
    self:RegisterEvent('PLAYER_LOGIN', 'PlayerLoginCB');
+   self:RegisterEvent('PLAYER_LOGOUT', 'PlayerLogoutCB');
    self.utils:RegisterClickListeners();
 
-   if (self.db.profile.showGreeting) then
+   -- checking for and storing loaded state of notable addons
+   self.utils:SetDbTableItem('isLoaded', 'baggins', IsAddOnLoaded('Baggins'));
+   self.utils:SetDbTableItem('isLoaded', 'itemLock', IsAddOnLoaded('ItemLock'));
+   self.utils:SetDbTableItem('isLoaded', 'peddler', IsAddOnLoaded('Peddler'));
+   self.utils:SetDbTableItem('isLoaded', 'prat', IsAddOnLoaded('Prat-3.0'));
+
+   if (self.utils:GetDbValue('showGreeting')) then
       self.logger:Print('Hi, ' .. UnitName('player') ..
          '! Thanks for using ' .. MIA_Constants.addOnNameQuoted .. '! Type ' ..
          MIA_Constants.slashCommandQuoted .. ' to get more info.'
       );
    end
 
-   if (self.db.profile.showWarnings) then
-      if (IsAddOnLoaded('Baggins')) then
+   if (self.utils:GetDbValue('showWarnings')) then
+      if (self.utils:GetDbValue('isLoaded.baggins')) then
          self.logger:Print(MIA_Constants.warnings.bagginsLoaded);
       end
 
-      if (IsAddOnLoaded('Peddler')) then
+      if (self.utils:GetDbValue('isLoaded.peddler')) then
          self.logger:Print(MIA_Constants.warnings.peddlerLoaded);
       end
    end
@@ -99,4 +106,8 @@ end
 function MarkItemAs:PlayerLoginCB()
    self.logger:Debug('PLAYER_LOGIN registered event callback has been triggered. Doing stuff...');
    self.utils:UpdateBagMarkings();
+end
+
+function MarkItemAs:PlayerLogoutCB()
+   self.utils:SetDbValue('soldItemsAtMerchant', false);
 end

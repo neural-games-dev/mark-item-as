@@ -2,12 +2,12 @@
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
 -- Libs / Packages
-local mia = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
+local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
-local Chalk = mia:NewModule('Chalk');
+local Chalk = MarkItemAs:NewModule('Chalk');
 
 --## ===============================================================================================
 --## DEFINING ALL TEXT COLORIZING UTILS TO BE USED THROUGHOUT THE ADDON
@@ -28,8 +28,16 @@ function Chalk:debug(text)
    return '|cFFfd4a4a' .. text .. '|r';
 end
 
+function Chalk:gray(text)
+   return '|cFFb0b0b0' .. text .. '|r';
+end
+
 function Chalk:green(text)
    return '|cFF00ff00' .. text .. '|r';
+end
+
+function Chalk:money(text)
+   return '|cFF118c4f' .. text .. '|r';
 end
 
 function Chalk:red(text)

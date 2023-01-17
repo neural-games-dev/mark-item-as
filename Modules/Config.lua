@@ -250,26 +250,13 @@ function Config:GetBlizzOptionsFrame(mia)
                   type = 'toggle',
                   width = 'full',
                },
-               unmarkAfterSelling = {
-                  desc = 'After visiting a merchant and selling your items, you can set them as "un-marked".\n\nIf you leave them marked after selling, the overlay will be there when you buy back.',
-                  get = function()
-                     return mia.utils:GetDbValue('unmarkAfterSelling');
-                  end,
-                  name = 'Un-mark after selling?',
-                  order = 203,
-                  set = function(info, value)
-                     mia.utils:SetDbValue('unmarkAfterSelling', value);
-                  end,
-                  type = 'toggle',
-                  width = 'full',
-               },
                autoSell = {
                   desc = "You can disable auto-selling marked items when visiting a merchant. But I'm not sure why you'd want to. ;-)",
                   get = function()
                      return mia.utils:GetDbValue('autoSellMerchant');
                   end,
                   name = 'Auto sell at merchant?',
-                  order = 204,
+                  order = 203,
                   set = function(info, value)
                      mia.utils:SetDbValue('autoSellMerchant', value);
                   end,
@@ -284,13 +271,22 @@ function Config:GetBlizzOptionsFrame(mia)
             order = 300,
             type = 'group',
             args = {
+               bagginsDisclaimer = {
+                  fontSize = 'medium',
+                  hidden = not IsAddOnLoaded('Baggins'),
+                  image = 'Interface/Icons/INV_Misc_Questionmark',
+                  name = MIA_Constants.warnings.bagginsLoadedMultiline,
+                  order = 301,
+                  type = 'description',
+               },
                sortAfterMarking = {
                   desc = 'After an item gets MARKED, this will sort your bags (i.e. "click" the broom icon) automatically.',
+                  disabled = IsAddOnLoaded('Baggins'),
                   get = function()
                      return mia.utils:GetDbValue('autoSortMarking');
                   end,
                   name = 'Auto sort bags after Marking?',
-                  order = 301,
+                  order = 302,
                   set = function(info, value)
                      mia.utils:SetDbValue('autoSortMarking', value);
                   end,
@@ -299,11 +295,12 @@ function Config:GetBlizzOptionsFrame(mia)
                },
                sortAfterUnmarking = {
                   desc = 'After an item gets UN-MARKED, this will sort your bags (i.e. "click" the broom icon) automatically.',
+                  disabled = IsAddOnLoaded('Baggins'),
                   get = function()
                      return mia.utils:GetDbValue('autoSortUnmarking');
                   end,
                   name = 'Auto sort bags after Un-marking?',
-                  order = 302,
+                  order = 303,
                   set = function(info, value)
                      mia.utils:SetDbValue('autoSortUnmarking', value);
                   end,
@@ -312,11 +309,12 @@ function Config:GetBlizzOptionsFrame(mia)
                },
                sortAfterSelling = {
                   desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.\n\nNote that this only happens if you actually sold items and after you close the merchant window.',
+                  disabled = IsAddOnLoaded('Baggins'),
                   get = function()
                      return mia.utils:GetDbValue('autoSortSelling');
                   end,
                   name = 'Auto sort bags after Selling?',
-                  order = 303,
+                  order = 304,
                   set = function(info, value)
                      mia.utils:SetDbValue('autoSortSelling', value);
                   end,

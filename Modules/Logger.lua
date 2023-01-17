@@ -14,18 +14,17 @@ local Logger = MarkItemAs:NewModule('Logger');
 --## ===============================================================================================
 function Logger:Init(mia)
    self.mia = mia;
-   self.isPratLoaded = IsAddOnLoaded('Prat-3.0');
+   self.isPratLoaded = self.mia.utils:GetDbValue('isLoaded.prat');
 end
 
 function Logger:Debug(...)
    if (MarkItemAs.db.profile.debugEnabled) then
-      local chalk = MarkItemAs.chalk;
       local prefix;
 
       if (self.isPratLoaded) then
-         prefix = chalk:debug('[DEBUG]');
+         prefix = self.mia.chalk:debug('[DEBUG]');
       else
-         prefix = chalk:debug('[DEBUG] ') .. chalk:ace('(' .. tostring(date()) .. ')');
+         prefix = self.mia.chalk:debug('[DEBUG] ') .. self.mia.chalk:ace('(' .. tostring(date()) .. ')');
       end
 
       MarkItemAs:Print(prefix, ...);
@@ -54,7 +53,7 @@ function Logger:DebugClickInfo(bagIndex, bagName, button, down, frame, frameID, 
 end
 
 function Logger:Print(...)
-   if (MarkItemAs.utils:GetDbValue('debugEnabled')) then
+   if (self.mia.utils:GetDbValue('debugEnabled')) then
       self:Debug(...);
    else
       MarkItemAs:Print(...);
@@ -62,11 +61,11 @@ function Logger:Print(...)
 end
 
 function Logger:PrintSaleSummary(totalSellPrice, totalItemsSold, uniqueItemsSold, itemLinksList)
-   local summaryOutput = '$$$$$ SALE SUMMARY $$$$$\n' ..
-      'Total Money Made: ' .. tostring(self.mia.utils:PriceToGold(totalSellPrice)) .. '\n' ..
-      'Total Unique Items Sold: ' .. tostring(uniqueItemsSold) .. '\n' ..
-      'Total Items Count Sold: ' .. tostring(totalItemsSold) .. '\n' ..
-      'Items List:' .. '\n';
+   local summaryOutput = self.mia.chalk:money('$$$$$ SALE SUMMARY $$$$$') .. '\n' ..
+      self.mia.chalk:money('Total Money Made: ') .. tostring(self.mia.utils:PriceToGold(totalSellPrice)) .. '\n' ..
+      self.mia.chalk:money('Total Unique Items Sold: ') .. tostring(uniqueItemsSold) .. '\n' ..
+      self.mia.chalk:money('Total Items Count Sold: ') .. tostring(totalItemsSold) .. '\n' ..
+      self.mia.chalk:money('Items List:') .. '\n';
 
    for idx, itemLink in ipairs(itemLinksList) do
       local itemLinkLine = '   ' .. tostring(idx) .. '. ' .. itemLink .. '\n';
