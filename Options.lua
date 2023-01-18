@@ -23,6 +23,10 @@ MIA_Defaults = {
    markerIconLocationSelected = 'BOTTOMLEFT',
    markerIconSelected = 'Trash',
    overlayColor = { r = 0, g = 0, b = 0, a = 0.75 },
+   playerInfo = {
+      factionGroup = nil,
+      name = '',
+   },
    showCommandOutput = false,
    showGreeting = true,
    showSaleSummary = true,

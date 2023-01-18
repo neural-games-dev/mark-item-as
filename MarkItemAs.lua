@@ -56,8 +56,13 @@ function MarkItemAs:OnEnable()
    self.utils:SetDbTableItem('isLoaded', 'peddler', IsAddOnLoaded('Peddler'));
    self.utils:SetDbTableItem('isLoaded', 'prat', IsAddOnLoaded('Prat-3.0'));
 
+   -- getting current player info
+   self.utils:SetDbTableItem('playerInfo', 'factionGroup', UnitFactionGroup('player'));
+   local playerName = UnitName('player');
+   self.utils:SetDbTableItem('playerInfo', 'name', playerName);
+
    if (self.utils:GetDbValue('showGreeting')) then
-      self.logger:Print('Hi, ' .. UnitName('player') ..
+      self.logger:Print('Hi, ' .. playerName ..
          '! Thanks for using ' .. MIA_Constants.addOnNameQuoted .. '! Type ' ..
          MIA_Constants.slashCommandQuoted .. ' to get more info.'
       );

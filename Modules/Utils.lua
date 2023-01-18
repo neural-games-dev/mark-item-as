@@ -84,7 +84,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
       local itemSellPrice;
 
       if (itemName) then
-         itemSellPrice = select(11, GetItemInfo(itemName));
+         itemSellPrice = self:SelectRespValue(11, itemName);
       else
          itemSellPrice = 'N/A';
       end
@@ -122,7 +122,17 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
       if (self:IsMiaKeyCombo(button)) then
          if (item:IsItemEmpty()) then
             if (db.showCommandOutput and not db.debugEnabled) then
-               mia.logger:Print('No item present. Ignoring marking.');
+               local suffix = 'from the Alliance.';
+
+               if (db.playerInfo.factionGroup == 'Alliance') then
+                  suffix = 'from the Horde.';
+               end
+
+               if (db.playerInfo.factionGroup == 'Neutral') then
+                  suffix = 'a Monk.';
+               end
+
+               mia.logger:Print("There's nothing to mark! You must be " .. suffix);
             end
 
             return;
@@ -229,6 +239,10 @@ function Utils:RegisterClickListeners()
          mia.logger:Debug('Container at bag index "' .. tostring(bagIndex) .. '" appears to be empty. Skipping.');
       end
    end
+end
+
+function Utils:SelectRespValue(position, itemName)
+   return select(position, GetItemInfo(itemName));
 end
 
 function Utils:SortBags()
