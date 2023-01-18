@@ -84,7 +84,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
       local itemSellPrice;
 
       if (itemName) then
-         itemSellPrice = select('11', GetItemInfo(itemName));
+         itemSellPrice = select(11, GetItemInfo(itemName));
       else
          itemSellPrice = 'N/A';
       end
@@ -206,12 +206,12 @@ function Utils:PriceToGold(price)
    silver = math.floor(silver);
    copper = math.floor(copper);
 
-   gold = self:AddLeadingZero(gold);
-   silver = self:AddLeadingZero(silver);
-   copper = self:AddLeadingZero(copper);
+   local goldPadded = self:AddLeadingZero(gold);
+   local silverPadded = self:AddLeadingZero(silver);
+   local copperPadded = self:AddLeadingZero(copper);
 
-   return tostring(gold) ..
-       '|cFFffcc33g|r ' .. tostring(silver) .. '|cFFc9c9c9s|r ' .. tostring(copper) .. '|cFFcc8890c|r';
+   return goldPadded ..
+       '|cFFffcc33g|r ' .. silverPadded .. '|cFFc9c9c9s|r ' .. copperPadded .. '|cFFcc8890c|r';
 end
 
 function Utils:RegisterClickListeners()

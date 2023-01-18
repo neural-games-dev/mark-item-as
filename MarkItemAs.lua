@@ -72,8 +72,6 @@ function MarkItemAs:OnEnable()
          self.logger:Print(MIA_Constants.warnings.peddlerLoaded);
       end
    end
-
-   return;
 end
 
 --## ===============================================================================================

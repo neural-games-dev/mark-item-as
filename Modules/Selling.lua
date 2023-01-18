@@ -43,9 +43,9 @@ function Selling:SellItems()
 
          if (not isItemEmpty and isItemMarkedJunk) then
             local slotIndexInverted = numSlots - slotIndex + 1; -- Blizz bag slot indexes are weird
-            local itemLink = select('2', GetItemInfo(itemName));
+            local itemLink = select(2, GetItemInfo(itemName));
             local itemLocation = ItemLocation:CreateFromBagAndSlot(bagIndex, slotIndexInverted);
-            local itemSellPrice = select('11', GetItemInfo(itemName));
+            local itemSellPrice = select(11, GetItemInfo(itemName));
             local itemStackCount = C_Item.GetStackCount(itemLocation);
 
             if (self.mia.utils:GetDbValue('showSaleSummary')) then
