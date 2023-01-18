@@ -1,0 +1,54 @@
+# Directories
+.expo/
+.gradle/
+.idea/
+.netlify/
+.settings/
+.vite/
+.vscode/
+_build/
+_build/**/*
+bin/
+build/
+build/**/*
+coverage/
+coverage/**/*
+dist/
+dist_electron/
+logs/
+
+# Environment Files
+.env
+.env.*
+# this needs to stay below the other .env rules
+!.env.example
+
+# Node & Node Modules Directories
+/node_modules
+node_modules/
+node_modules/**/*
+
+# Debugging & Logs
+.byebug_history
+.nyc_output/
+npm-debug.*
+yarn-debug.log*
+yarn-error.log*
+
+# Database Files
+.faunarc
+
+# Project Files
+**/.factorypath
+*.code-workspace
+!mark-item-as.code-workspace
+.java-version
+# .node-version
+*.sublime-project
+*.sublime-workspace
+.classpath
+.project
+dev-notes.md
+
+# Miscellaneous
+.DS_store
