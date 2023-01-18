@@ -121,6 +121,8 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
       --## ==========================================================================
       if (self:IsMiaKeyCombo(button)) then
          if (item:IsItemEmpty()) then
+            mia.logger:Debug('HandleOnClick: Processing item is empty scenario...');
+
             if (db.showCommandOutput and not db.debugEnabled) then
                local suffix = 'from the Alliance.';
 
@@ -137,24 +139,25 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return;
          elseif (self:GetDbValue('isLoaded.itemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
+            mia.logger:Debug('HandleOnClick: Processing item is locked scenario...');
+
             if (db.showCommandOutput and not db.debugEnabled) then
                mia.logger:Print('Item is locked. Ignoring marking.');
             end
 
             return;
          elseif (itemSellPrice == 0 or itemSellPrice == nil) then
+            mia.logger:Debug('HandleOnClick: Processing item is NOT sellable scenario...');
+
             if (db.showCommandOutput and not db.debugEnabled) then
                mia.logger:Print('Item is not sellable. Ignoring marking.');
             end
 
             return;
          elseif (not frame.markedJunkOverlay) then
-            self:UpdateMarkedOverlay(
-               MIA_Constants.overlayStatus.MISSING, bagIndex, db.overlayColor, db,
-               frame, frameID, itemName, itemID, true
-            );
-
-            self:UpdateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
+            mia.logger:Debug('HandleOnClick: Processing `overlayStatus.MISSING` scenario...');
+            mia.utils:SetDbTableItem('junkItems', itemID, true);
+            self:UpdateBagMarkings();
 
             if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
                self:SortBags();
@@ -162,12 +165,9 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return;
          elseif (not frame.markedJunkOverlay:IsShown()) then
-            self:UpdateMarkedOverlay(
-               MIA_Constants.overlayStatus.HIDDEN, bagIndex, db.overlayColor, db,
-               frame, frameID, itemName, itemID, true
-            );
-
-            self:UpdateMarkedBorder(frame.markedJunkOverlay, db.borderThickness, db.borderColor);
+            mia.logger:Debug('HandleOnClick: Processing `overlayStatus.HIDDEN` scenario...');
+            mia.utils:SetDbTableItem('junkItems', itemID, true);
+            self:UpdateBagMarkings();
 
             if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
                self:SortBags();
@@ -175,12 +175,9 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
 
             return;
          else
-            self:UpdateMarkedOverlay(
-               MIA_Constants.overlayStatus.SHOWING, bagIndex, db.overlayColor, db,
-               frame, frameID, itemName, itemID, true
-            );
-
-            self:UpdateMarkedBorder(frame.markedJunkOverlay, 0, MIA_Constants.colorReset);
+            mia.logger:Debug('HandleOnClick: Processing `overlayStatus.SHOWING` scenario...');
+            mia.utils:SetDbTableItem('junkItems', itemID, false);
+            self:UpdateBagMarkings();
 
             if (db.autoSortUnmarking and not self:GetDbValue('isLoaded.baggins')) then
                self:SortBags();
@@ -266,8 +263,10 @@ function Utils:UpdateBagMarkings()
       local isBagOpen = IsBagOpen(bagIndex);
       local wasBagOpened = false;
 
-      mia.logger:Debug('Processing Bag Number: ' .. tostring(bagIndex) .. '\n' ..
-         'bagName = ' .. tostring(bagName) .. '\n' ..
+      mia.logger:Debug('——————————————————————————————————————————');
+      mia.logger:Debug('Processing Bag Number: ' .. tostring(bagIndex));
+      mia.logger:Debug('——————————————————————————————————————————');
+      mia.logger:Debug('bagName = ' .. tostring(bagName) .. '\n' ..
          'numSlots = ' .. tostring(numSlots) .. '\n' ..
          'isBagOpen = ' .. tostring(isBagOpen)
       );
@@ -308,9 +307,12 @@ function Utils:UpdateBagMarkings()
                   -- This should just be for when we login/reload and we need to re-apply the MIA overlays
                   overlayStatus = MIA_Constants.overlayStatus.MISSING;
                elseif (slotFrame.markedJunkOverlay:IsShown()) then
+                  -- OLD COMMENT:
                   -- This should just be for when we need to update the overlays visually
                   -- because the user has been been logged in/reloaded for a while
                   -- and has interacted with the bags already
+                  -- NEW COMMENT:
+                  -- This status is for re-showing the overlay when the user moves a marked item
                   overlayStatus = MIA_Constants.overlayStatus.UPDATE;
                else
                   -- This re-shows the overlay after moving an item back to a previous spot
@@ -390,7 +392,7 @@ function Utils:UpdateMarkedBorder(frame, thickness, color)
 end
 
 function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID, isClickEvent)
-   if (not isClickEvent) then
+   if (isClickEvent == nil) then
       isClickEvent = false;
    end
 
@@ -417,8 +419,9 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
 
          if (not frame.markedJunkOverlay.texture) then
             mia.logger:Debug('Adding a frame overlay texture to "' .. tostring(itemName) .. '"...\n' ..
-               'position = ' .. position .. '\n' ..
-               'iconPath = ' .. iconPath
+               'iconPath = ' .. tostring(iconPath) .. '\n' ..
+               'position = ' .. tostring(position) .. '\n' ..
+               'status = ' .. tostring(status)
             );
 
             frame.markedJunkOverlay.texture = frame.markedJunkOverlay:CreateTexture(nil, 'OVERLAY');
@@ -436,8 +439,9 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
 
       if (isHiddenOrUpdate) then
          mia.logger:Debug('Updating the frame overlay texture for "' .. tostring(itemName) .. '"...\n' ..
-            'position = ' .. position .. '\n' ..
-            'iconPath = ' .. iconPath
+            'iconPath = ' .. tostring(iconPath) .. '\n' ..
+            'position = ' .. tostring(position) .. '\n' ..
+            'status = ' .. tostring(status)
          );
 
          -- `ClearAllPoints` will clear the previous location before setting a/the new one
@@ -460,7 +464,8 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
 
       mia.logger:Debug('Clearing the overlay:\n' ..
          'bag = ' .. tostring(bagIndex) .. '\n' ..
-         'frame = ' .. tostring(frameID)
+         'frame = ' .. tostring(frameID) .. '\n' ..
+         'status = ' .. tostring(status)
       );
 
       frame.markedJunkOverlay:SetFrameLevel(0);
@@ -490,17 +495,26 @@ function Utils:GetDbValue(key)
       value = mia.db.profile[key];
    end
 
-   mia.logger:Debug('GetDbValue: Returning "' .. tostring(value) .. '" for "' .. tostring(key) .. '".');
+   if (mia.db.profile.enableVerboseLogging) then
+      mia.logger:Debug('GetDbValue: Returning "' .. tostring(value) .. '" for "' .. tostring(key) .. '".');
+   end
+
    return value;
 end
 
 function Utils:SetDbTableItem(table, key, value)
-   mia.logger:Debug('SetDbTableItem: Setting "' ..
-      tostring(key) .. '" to "' .. tostring(value) .. '" in table "' .. tostring(table) .. '".');
+   if (mia.db.profile.enableVerboseLogging) then
+      mia.logger:Debug('SetDbTableItem: Setting "' ..
+         tostring(key) .. '" to "' .. tostring(value) .. '" in table "' .. tostring(table) .. '".');
+   end
+
    mia.db.profile[table][key] = value;
 end
 
 function Utils:SetDbValue(key, value)
-   mia.logger:Debug('SetDbValue: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '".');
+   if (mia.db.profile.enableVerboseLogging) then
+      mia.logger:Debug('SetDbValue: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '".');
+   end
+
    mia.db.profile[key] = value;
 end
