@@ -76,7 +76,7 @@ function Selling:SellItems()
 
             if (limitSaleItems and isTooManyItemsSold) then
                self.mia.logger:Debug('SellItems: 12 unique items have already been sold. Stopping selling iteration.');
-               break ;
+               break;
             end
          end
       end

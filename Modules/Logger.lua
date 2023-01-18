@@ -31,7 +31,8 @@ function Logger:Debug(...)
    end
 end
 
-function Logger:DebugClickInfo(bagIndex, bagName, button, down, frame, frameID, item, itemID, itemSellPrice, numSlots, slotFrame)
+function Logger:DebugClickInfo(bagIndex, bagName, button, down, frame, frameID, item, itemID, itemSellPrice, numSlots,
+                               slotFrame)
    self:Debug('HANDLE ON CLICK INFO:\n' ..
       '————————————————————————\n' ..
       'BagName = ' .. tostring(bagName) .. '\n' ..
@@ -62,10 +63,10 @@ end
 
 function Logger:PrintSaleSummary(totalSellPrice, totalItemsSold, uniqueItemsSold, itemLinksList)
    local summaryOutput = self.mia.chalk:money('$$$$$ SALE SUMMARY $$$$$') .. '\n' ..
-      self.mia.chalk:money('Total Money Made: ') .. tostring(self.mia.utils:PriceToGold(totalSellPrice)) .. '\n' ..
-      self.mia.chalk:money('Total Unique Items Sold: ') .. tostring(uniqueItemsSold) .. '\n' ..
-      self.mia.chalk:money('Total Items Count Sold: ') .. tostring(totalItemsSold) .. '\n' ..
-      self.mia.chalk:money('Items List:') .. '\n';
+       self.mia.chalk:money('Total Money Made: ') .. tostring(self.mia.utils:PriceToGold(totalSellPrice)) .. '\n' ..
+       self.mia.chalk:money('Total Unique Items Sold: ') .. tostring(uniqueItemsSold) .. '\n' ..
+       self.mia.chalk:money('Total Items Count Sold: ') .. tostring(totalItemsSold) .. '\n' ..
+       self.mia.chalk:money('Items List:') .. '\n';
 
    for idx, itemLink in ipairs(itemLinksList) do
       local itemLinkLine = '   ' .. tostring(idx) .. '. ' .. itemLink .. '\n';

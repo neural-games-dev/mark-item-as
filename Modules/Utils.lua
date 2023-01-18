@@ -45,7 +45,8 @@ function Utils:GetSellableItemsLength(table)
 
    for k, v in pairs(table) do
       if (v) then
-         mia.logger:Debug('GetSellableItemsLength: Counting "' .. tostring(k) .. ': ' .. tostring(v) .. '" as part of the table length.');
+         mia.logger:Debug('GetSellableItemsLength: Counting "' ..
+            tostring(k) .. ': ' .. tostring(v) .. '" as part of the table length.');
          length = length + 1;
       end
    end
@@ -100,13 +101,13 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
                mia.logger:Print(MIA_Constants.warnings.itemLockConflict);
             end
 
-            return ;
+            return;
          elseif (isItemLockKeyCombo and frame.markedJunkOverlay and frame.markedJunkOverlay:IsShown()) then
             if (db.showWarnings) then
                mia.logger:Print(MIA_Constants.warnings.itemLockDoubledUp);
             end
 
-            return ;
+            return;
          end
       end
 
@@ -124,19 +125,19 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
                mia.logger:Print('No item present. Ignoring marking.');
             end
 
-            return ;
+            return;
          elseif (self:GetDbValue('isLoaded.itemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
             if (db.showCommandOutput and not db.debugEnabled) then
                mia.logger:Print('Item is locked. Ignoring marking.');
             end
 
-            return ;
+            return;
          elseif (itemSellPrice == 0 or itemSellPrice == nil) then
             if (db.showCommandOutput and not db.debugEnabled) then
                mia.logger:Print('Item is not sellable. Ignoring marking.');
             end
 
-            return ;
+            return;
          elseif (not frame.markedJunkOverlay) then
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.MISSING, bagIndex, db.overlayColor, db,
@@ -149,7 +150,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
                self:SortBags();
             end
 
-            return ;
+            return;
          elseif (not frame.markedJunkOverlay:IsShown()) then
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.HIDDEN, bagIndex, db.overlayColor, db,
@@ -162,7 +163,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
                self:SortBags();
             end
 
-            return ;
+            return;
          else
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.SHOWING, bagIndex, db.overlayColor, db,
@@ -175,11 +176,11 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
                self:SortBags();
             end
 
-            return ;
+            return;
          end
       else
          mia.logger:Debug('Add-on key combo was not pressed. Ignoring click event listener.');
-         return ;
+         return;
       end
    end
 end
@@ -209,7 +210,8 @@ function Utils:PriceToGold(price)
    silver = self:AddLeadingZero(silver);
    copper = self:AddLeadingZero(copper);
 
-   return tostring(gold) .. '|cFFffcc33g|r ' .. tostring(silver) .. '|cFFc9c9c9s|r ' .. tostring(copper) .. '|cFFcc8890c|r';
+   return tostring(gold) ..
+       '|cFFffcc33g|r ' .. tostring(silver) .. '|cFFc9c9c9s|r ' .. tostring(copper) .. '|cFFcc8890c|r';
 end
 
 function Utils:RegisterClickListeners()
@@ -232,11 +234,11 @@ end
 function Utils:SortBags()
    if (C_Container) then
       C_Container.SortBags();
-      return ;
+      return;
    else
       local sortButton = _G[BagItemAutoSortButton:GetName()];
       sortButton:Click();
-      return ;
+      return;
    end
 end
 
@@ -379,8 +381,8 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
    end
 
    local isMissingHiddenOrUpdate = status == MIA_Constants.overlayStatus.MISSING or
-      status == MIA_Constants.overlayStatus.HIDDEN or
-      status == MIA_Constants.overlayStatus.UPDATE;
+       status == MIA_Constants.overlayStatus.HIDDEN or
+       status == MIA_Constants.overlayStatus.UPDATE;
 
    if (isMissingHiddenOrUpdate) then
       if (db.showCommandOutput and not db.debugEnabled and isClickEvent) then
@@ -415,7 +417,8 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
 
       frame.markedJunkOverlay:SetFrameLevel(17);
       frame.markedJunkOverlay:SetBackdropColor(color.r, color.g, color.b, color.a);
-      local isHiddenOrUpdate = status == MIA_Constants.overlayStatus.HIDDEN or status == MIA_Constants.overlayStatus.UPDATE;
+      local isHiddenOrUpdate = status == MIA_Constants.overlayStatus.HIDDEN or
+          status == MIA_Constants.overlayStatus.UPDATE;
 
       if (isHiddenOrUpdate) then
          mia.logger:Debug('Updating the frame overlay texture for "' .. tostring(itemName) .. '"...\n' ..
@@ -433,7 +436,7 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
       end
 
       db.junkItems[itemID] = true;
-      return ;
+      return;
    end
 
    if (status == MIA_Constants.overlayStatus.SHOWING) then
@@ -455,7 +458,7 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
          db.junkItems[itemID] = false;
       end
 
-      return ;
+      return;
    end
 end
 
@@ -478,7 +481,8 @@ function Utils:GetDbValue(key)
 end
 
 function Utils:SetDbTableItem(table, key, value)
-   mia.logger:Debug('SetDbTableItem: Setting "' .. tostring(key) .. '" to "' .. tostring(value) .. '" in table "' .. tostring(table) .. '".');
+   mia.logger:Debug('SetDbTableItem: Setting "' ..
+      tostring(key) .. '" to "' .. tostring(value) .. '" in table "' .. tostring(table) .. '".');
    mia.db.profile[table][key] = value;
 end
 

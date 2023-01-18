@@ -356,7 +356,8 @@ function Config:GetBlizzOptionsFrame(mia)
                   width = 'full',
                },
                slashCommandOutput = {
-                  desc = 'This will hide/show the chat output after triggering certain ' .. mia.chalk:badass('MIA') .. ' commands or actions.\n\nThink of this like INFO level logging.',
+                  desc = 'This will hide/show the chat output after triggering certain ' ..
+                      mia.chalk:badass('MIA') .. ' commands or actions.\n\nThink of this like INFO level logging.',
                   get = function()
                      return mia.utils:GetDbValue('showCommandOutput');
                   end,
