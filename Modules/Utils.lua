@@ -157,7 +157,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
          elseif (not frame.markedJunkOverlay) then
             mia.logger:Debug('HandleOnClick: Processing `overlayStatus.MISSING` scenario...');
             mia.utils:SetDbTableItem('junkItems', itemID, true);
-            self:UpdateBagMarkings();
+            self:UpdateBagMarkings(true); -- `true` = isClickEvent
 
             if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
                self:SortBags();
@@ -167,7 +167,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
          elseif (not frame.markedJunkOverlay:IsShown()) then
             mia.logger:Debug('HandleOnClick: Processing `overlayStatus.HIDDEN` scenario...');
             mia.utils:SetDbTableItem('junkItems', itemID, true);
-            self:UpdateBagMarkings();
+            self:UpdateBagMarkings(true); -- `true` = isClickEvent
 
             if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
                self:SortBags();
@@ -177,7 +177,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
          else
             mia.logger:Debug('HandleOnClick: Processing `overlayStatus.SHOWING` scenario...');
             mia.utils:SetDbTableItem('junkItems', itemID, false);
-            self:UpdateBagMarkings();
+            self:UpdateBagMarkings(true); -- `true` = isClickEvent
 
             if (db.autoSortUnmarking and not self:GetDbValue('isLoaded.baggins')) then
                self:SortBags();
@@ -253,7 +253,7 @@ function Utils:SortBags()
    end
 end
 
-function Utils:UpdateBagMarkings()
+function Utils:UpdateBagMarkings(isClickEvent)
    local db = mia.db.profile;
    mia.logger:Debug('UPDATING BAG MARKINGS. Beginning iteration...');
 
@@ -328,7 +328,7 @@ function Utils:UpdateBagMarkings()
 
                self:UpdateMarkedOverlay(
                   overlayStatus, bagIndex, db.overlayColor, db,
-                  slotFrame, slotFrameID, itemName, itemID
+                  slotFrame, slotFrameID, itemName, itemID, isClickEvent
                );
 
                self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, db.borderThickness, db.borderColor);
@@ -336,7 +336,7 @@ function Utils:UpdateBagMarkings()
                -- Clearing the still showing bag slot's overlay because it was moved,
                self:UpdateMarkedOverlay(
                   MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
-                  slotFrame, slotFrameID, itemName, itemID
+                  slotFrame, slotFrameID, itemName, itemID, isClickEvent
                );
 
                self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
@@ -346,7 +346,7 @@ function Utils:UpdateBagMarkings()
             -- or it has been emptied by moving the item
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
-               slotFrame, slotFrameID, itemName, itemID
+               slotFrame, slotFrameID, itemName, itemID, isClickEvent
             );
 
             self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
@@ -392,10 +392,6 @@ function Utils:UpdateMarkedBorder(frame, thickness, color)
 end
 
 function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID, isClickEvent)
-   if (isClickEvent == nil) then
-      isClickEvent = false;
-   end
-
    local isMissingHiddenOrUpdate = status == MIA_Constants.overlayStatus.MISSING or
        status == MIA_Constants.overlayStatus.HIDDEN or
        status == MIA_Constants.overlayStatus.UPDATE;
