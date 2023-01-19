@@ -256,6 +256,7 @@ end
 function Utils:UpdateBagMarkings(isClickEvent)
    local db = mia.db.profile;
    mia.logger:Debug('UPDATING BAG MARKINGS. Beginning iteration...');
+   local numMarkedActions = 0;
 
    for bagIndex = 0, MIA_Constants.numContainers, 1 do
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
@@ -287,6 +288,7 @@ function Utils:UpdateBagMarkings(isClickEvent)
          local itemName = item:GetItemName();
          local itemID = item:GetItemID();
          local isItemEmpty = item:IsItemEmpty();
+         local shouldLogMarkingAction = isClickEvent and numMarkedActions == 1;
 
          if (itemID ~= nil) then
             mia.logger:Debug('Processing Item & Slot Frame:\n' ..
@@ -319,34 +321,39 @@ function Utils:UpdateBagMarkings(isClickEvent)
                   overlayStatus = MIA_Constants.overlayStatus.HIDDEN;
                end
 
+               numMarkedActions = numMarkedActions + 1;
+
                mia.logger:Debug('Item is marked. Updating marking for:\n' ..
                   'itemName = ' .. tostring(itemName) .. '\n' ..
                   'itemID = ' .. tostring(itemID) .. '\n' ..
                   'markerIconLocation = ' .. tostring(db.markerIconLocationSelected) .. '\n' ..
+                  'numMarkedActions = ' .. tostring(numMarkedActions) .. '\n' ..
                   'overlayStatus = ' .. tostring(overlayStatus)
                );
 
                self:UpdateMarkedOverlay(
                   overlayStatus, bagIndex, db.overlayColor, db,
-                  slotFrame, slotFrameID, itemName, itemID, isClickEvent
+                  slotFrame, slotFrameID, itemName, itemID, shouldLogMarkingAction
                );
 
                self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, db.borderThickness, db.borderColor);
             elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
+               numMarkedActions = numMarkedActions + 1;
                -- Clearing the still showing bag slot's overlay because it was moved,
                self:UpdateMarkedOverlay(
                   MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
-                  slotFrame, slotFrameID, itemName, itemID, isClickEvent
+                  slotFrame, slotFrameID, itemName, itemID, shouldLogMarkingAction
                );
 
                self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
             end
          elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
+            numMarkedActions = numMarkedActions + 1;
             -- Clearing the still showing bag slot's overlay because it is empty,
             -- or it has been emptied by moving the item
             self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
-               slotFrame, slotFrameID, itemName, itemID, isClickEvent
+               slotFrame, slotFrameID, itemName, itemID, shouldLogMarkingAction
             );
 
             self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
@@ -391,13 +398,13 @@ function Utils:UpdateMarkedBorder(frame, thickness, color)
    end
 end
 
-function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID, isClickEvent)
+function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID, shouldLogMarkingAction)
    local isMissingHiddenOrUpdate = status == MIA_Constants.overlayStatus.MISSING or
        status == MIA_Constants.overlayStatus.HIDDEN or
        status == MIA_Constants.overlayStatus.UPDATE;
 
    if (isMissingHiddenOrUpdate) then
-      if (db.showCommandOutput and not db.debugEnabled and isClickEvent) then
+      if (db.showCommandOutput and not db.debugEnabled and shouldLogMarkingAction) then
          mia.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.');
       end
 
@@ -454,7 +461,7 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
    end
 
    if (status == MIA_Constants.overlayStatus.SHOWING) then
-      if (db.showCommandOutput and not db.debugEnabled and isClickEvent) then
+      if (db.showCommandOutput and not db.debugEnabled and shouldLogMarkingAction) then
          mia.logger:Print('Removing the junk marking from "' .. tostring(itemName) .. '".');
       end
 
