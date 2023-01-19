@@ -27,6 +27,7 @@ function Selling:SellItems()
    local totalItemsSold = 0;
    local totalSellPrice = 0;
    local uniqueItemsSold = 0;
+   local unmarkItemsList = {};
 
    for bagIndex = 0, MIA_Constants.numContainers, 1 do
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
@@ -67,8 +68,8 @@ function Selling:SellItems()
             uniqueItemsSold = uniqueItemsSold + 1
             table.insert(itemsSoldLinksList, itemLink);
 
-            -- Setting the item to `false` in the db to remove the overlay & border
-            self.mia.utils:SetDbTableItem('junkItems', itemID, false);
+            -- adding the current `itemID` to the unmark tracking list
+            table.insert(unmarkItemsList, itemID);
 
             -- stop selling once we've already sold 12 unique items
             local limitSaleItems = self.mia.utils:GetDbValue('limitSaleItems');
@@ -80,6 +81,11 @@ function Selling:SellItems()
             end
          end
       end
+
+      for _, currItemID in ipairs(self.mia.utils:DedupeList(unmarkItemsList)) do
+         -- Setting the item to `false` in the db to remove the overlay & border
+         self.mia.utils:SetDbTableItem('junkItems', currItemID, false);
+      end
    end
 
    self.mia.utils:UpdateBagMarkings();
@@ -89,7 +95,7 @@ function Selling:SellItems()
          totalSellPrice,
          totalItemsSold,
          uniqueItemsSold,
-         itemsSoldLinksList
+         self.mia.utils:DedupeList(itemsSoldLinksList)
       );
    end
 end

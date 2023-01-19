@@ -36,6 +36,20 @@ function Utils:Capitalize(str)
    return (lower:gsub("^%l", string.upper));
 end
 
+function Utils:DedupeList(list)
+   local hash = {};
+   local result = {};
+
+   for _, val in ipairs(list) do
+      if (not hash[val]) then
+         result[#result + 1] = val;
+         hash[val] = true;
+      end
+   end
+
+   return result;
+end
+
 function Utils:GetModifierFunction(modKey)
    return MIA_Constants.modFunctionsMap[modKey];
 end
