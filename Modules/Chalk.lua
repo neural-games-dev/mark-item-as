@@ -20,6 +20,10 @@ function Chalk:badass(text)
    return '|cFFbada55' .. text .. '|r';
 end
 
+function Chalk:blue(text)
+   return '|cFf4576bf' .. text .. '|r';
+end
+
 function Chalk:cyan(text)
    return '|cFF00ffff' .. text .. '|r';
 end

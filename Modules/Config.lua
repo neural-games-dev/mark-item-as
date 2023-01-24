@@ -357,7 +357,8 @@ function Config:GetBlizzOptionsFrame(mia)
                },
                slashCommandOutput = {
                   desc = 'This will hide/show the chat output after triggering certain ' ..
-                      mia.chalk:badass('MIA') .. ' commands or actions.\n\nThink of this like INFO level logging.',
+                      mia.chalk:badass('MIA') ..
+                      ' commands or actions.\n\n' .. mia.chalk:blue('Think of this like INFO level logging.'),
                   get = function()
                      return mia.utils:GetDbValue('showCommandOutput');
                   end,
@@ -370,7 +371,8 @@ function Config:GetBlizzOptionsFrame(mia)
                   width = 'full',
                },
                enableDebugging = {
-                  desc = 'This will enable/disable debugging for this add-on. It is really only useful for other add-on devs.\n\nBE WARNED! It can get SPAMMY!',
+                  desc = 'This will enable/disable debugging for this add-on. It is really only useful for other add-on devs.\n\n'
+                      .. mia.chalk:warn('BE WARNED! It can get SPAMMY!'),
                   get = function()
                      return mia.utils:GetDbValue('debugEnabled');
                   end,
