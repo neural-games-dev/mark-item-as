@@ -100,6 +100,6 @@ You can leave comments on [CurseForge](https://www.curseforge.com/wow/addons/mar
 - Add more icon options 
 - Ability to mark items as "ready for auction" 
 - Add bank, guild bank, and possibly void storage support 
-- Potentially add support for other popular bag add-ons 
-- Potentially add support for multiple user profiles 
+- (potentially) Add support for other popular bag add-ons 
+- (potentially) Add support for multiple user profiles 
 
