@@ -18,7 +18,7 @@ end
 
 function Selling:SellItems()
    local junkItems = self.mia.utils:GetDbValue('junkItems');
-   local junkItemsLength = self.mia.utils:GetSellableItemsLength(junkItems);
+   local junkItemsLength = self.mia.utils:GetNumSellableItems(junkItems);
    local suffix = junkItemsLength == 1 and ' item.' or ' items.';
 
    self.mia.logger:Debug('Iterating through all of the bags now and selling ' .. tostring(junkItemsLength) .. suffix);

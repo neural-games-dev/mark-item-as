@@ -25,19 +25,19 @@ There are 4 main groups of options: `Marking`, `Selling`, `Sorting`, and `Chat`.
 This is the main mouse button that you will use to trigger marking/un-marking your items. The possible options are:
 
 1. `LeftButton` 
-2. `RightButton` (this is the default value) 
+2. `RightButton` (*this is the default value*) 
 
 #### Combo Modifier Key 
 
 This is the supplementary keyboard modifier that you will use with the mouse click to mark/un-mark items. The possible options are:
 
 1. `Alt` 
-2. `Ctrl` (this is the default value) 
+2. `Ctrl` (*this is the default value*) 
 3. `Shift` 
 
 #### Item Overlay & Border 
 
-The overlay & border are visual indicators to help you identify which items you've marked. The overlay is a color mask that sits on top of the items artwork. And the border is a set of colored lines that surround the item/bag slot. The color of the overlay and border are customizable using a color picker which has an alpha/transparency setting. The thickness of the border can be adjusted using a slider. The following default values are:
+The overlay & border are visual indicators to help you identify which items you've marked. The overlay is a color mask that sits on top of the items artwork. And the border is a set of colored lines that surround the item/bag slot. The color of the overlay and border are customizable using a color picker which has an alpha/transparency setting. The thickness of the border can be adjusted using a slider. The following *default values* are:
 
 Overlay Color:  `{ r = 0, g = 0, b = 0, a = 0.75 }` (this is black with a 75% opacity) 
 
@@ -53,21 +53,56 @@ When you mark an item, a small icon will appear on top of the item and the overl
 
 1. `Coin` (this is similar to the coin icon that Scrap displays) 
 2. `Stack` 
-3. `Trash` (this is the default value) 
+3. `Trash` (*this is the default value*) 
 
 ##### Icon Location 
 
 1. `Top Left` 
 2. `Top Center` (a.k.a. TOP) 
 3. `Top Right` 
-4. `Left Center` (a.k.a. LEFT) 
+4. `Center Left` (a.k.a. LEFT) 
 5. `Center` 
-6. `Right Center` (a.k.a. RIGHT) 
-7. `Bottom Left` (this is the default value) 
+6. `Center Right` (a.k.a. RIGHT) 
+7. `Bottom Left` (*this is the default value*) 
 8. `Bottom Center` (a.k.a. BOTTOM) 
 9. `Bottom Right` 
 
+#### Tooltip Text 
+
+With this enabled, a line of text ("Marked as Junk - To be sold") will be added to the bottom of the item's tooltip after you mark it. 
+
+This can be toggled `on` or `off` via a checkbox. It is `on` by *default*. 
+
 ### Selling 
+
+#### Sale Summary 
+
+After visiting a merchant, and selling your items, MIA will display a summary of the items you sold. The summary includes the following info: 
+
+- A breakdown list of each item (or stack) sold: 
+   - How much each item/stack was sold for 
+   - The total amount made from that item/stack 
+- A total summary of: 
+   - How much money you made overall 
+   - How many unique items were sold 
+   - How many total items were sold 
+   - A list of all items as `ItemLink`'s (to easily hover and see the in-game tooltip info) 
+
+This can be toggled `on` or `off` via a checkbox. It is `on` by *default*. 
+
+#### Sale Limit 
+
+By *default*, MIA will limit the sale of marked items to 12, which is the most buyback items a merchant can hold at any one time. The items sold are determined by their place in the bags. 
+
+MIA will start with the backpack and then will work its way up until it reaches the last (i.e. top most) bag. 
+
+As it hits each bag, it will go through the bag slots from the top left corner down to the bottom right corner. 
+
+Once it reaches a count of 12, it will stop selling. And if auto-sort is turned on, the items will re-arrange themselves. 
+
+If the limit is disabled, everything marked gets sold. 
+
+#### Auto Sell 
 
 m 
 
@@ -102,4 +137,5 @@ You can leave comments on [CurseForge](https://www.curseforge.com/wow/addons/mar
 - Add bank, guild bank, and possibly void storage support 
 - (potentially) Add support for other popular bag add-ons 
 - (potentially) Add support for multiple user profiles 
+- (potentially) Add more options for activator & modifier keys 
 

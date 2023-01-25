@@ -54,12 +54,12 @@ function Utils:GetModifierFunction(modKey)
    return MIA_Constants.modFunctionsMap[modKey];
 end
 
-function Utils:GetSellableItemsLength(table)
+function Utils:GetNumSellableItems(table)
    local length = 0;
 
    for k, v in pairs(table) do
       if (v) then
-         mia.logger:Debug('GetSellableItemsLength: Counting "' ..
+         mia.logger:Debug('GetNumSellableItems: Counting "' ..
             tostring(k) .. ': ' .. tostring(v) .. '" as part of the table length.');
          length = length + 1;
       end
