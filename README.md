@@ -20,6 +20,8 @@ There are 4 main groups of options: `Marking`, `Selling`, `Sorting`, and `Chat`.
 
 ### Marking 
 
+![marking-01](./Screenshots/config-options-window/marking-01.png)
+
 #### Combo Activator Key 
 
 This is the main mouse button that you will use to trigger marking/un-marking your items. The possible options are:
@@ -27,13 +29,17 @@ This is the main mouse button that you will use to trigger marking/un-marking yo
 1. `LeftButton` 
 2. `RightButton` (*this is the default value*) 
 
+![marking-03](./Screenshots/config-options-window/marking-03.png)
+
 #### Combo Modifier Key 
 
 This is the supplementary keyboard modifier that you will use with the mouse click to mark/un-mark items. The possible options are:
 
-1. `Alt` 
-2. `Ctrl` (*this is the default value*) 
+1. `Alt` (*this is the default value*) 
+2. `Ctrl` 
 3. `Shift` 
+
+![marking-02](./Screenshots/config-options-window/marking-02.png)
 
 #### Item Overlay & Border 
 
