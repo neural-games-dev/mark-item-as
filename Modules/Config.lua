@@ -225,7 +225,7 @@ function Config:GetBlizzOptionsFrame(mia)
             type = 'group',
             args = {
                saleSummary = {
-                  desc = 'This will hide/show the gold & items summary in chat during & after selling to a merchant.',
+                  desc = 'This will hide/show the gold & items summary in chat during & after selling to a merchant.\n\nThis setting is irrelevant/ignored if "auto-sell" is disabled.',
                   get = function()
                      return mia.utils:GetDbValue('showSaleSummary');
                   end,
@@ -308,7 +308,7 @@ function Config:GetBlizzOptionsFrame(mia)
                   width = 'full',
                },
                sortAfterSelling = {
-                  desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.\n\nNote that this only happens if you actually sold items and after you close the merchant window.',
+                  desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.\n\nNote: This only happens if "auto-sell" is enabled, you sold at least 1 item, and after you close the merchant window.',
                   disabled = IsAddOnLoaded('Baggins'),
                   get = function()
                      return mia.utils:GetDbValue('autoSortSelling');
