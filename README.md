@@ -2,7 +2,7 @@
 
 ## Overview 
 
-"Mark Item As" is a World of Warcraft (WoW) utility add-on that helps you mark & automatically sell items that you don't want to keep. 
+[Mark Item As](https://www.curseforge.com/wow/addons/mark-item-as) is a World of Warcraft (WoW) utility add-on that helps you mark & automatically sell items that you don't want to keep. 
 
 ## How It Works 
 
@@ -233,7 +233,23 @@ If full support is added for Baggins, and it's discovered that there is no confl
 
 ### ItemLock 
 
-m 
+If you're using the [ItemLock](https://www.curseforge.com/wow/addons/itemlock) add-on, MIA will warn you of some possible conflicts if they occur. 
+
+#### Click Combo Conflict 
+
+The first possible conflict is if ItemLock and MIA both have the same click combo configured. 
+
+If this happens, and you activate the combo, MIA will give way to ItemLock and will not mark anything. 
+
+![chat-item-lock-key-conflict](./Screenshots/chat-output/chat-item-lock-key-conflict.png)
+
+#### Locking After Marking Conflict 
+
+If you mark an item with MIA first, and then lock the item afterward, the ItemLock setting will take precedence. 
+
+Meaning, if you visit a merchant, and have "auto-sell" enabled, the marked items will not be sold. ItemLock will prevent that from happening. 
+
+Similarly, you will have to remove the lock setting before you can remove the junk marking. 
 
 ![item-lock-double-up](./Screenshots/bags-merchant/item-lock-double-up.png)
 
@@ -241,7 +257,9 @@ m
 
 ### Peddler 
 
-m 
+Another warning that will get displayed is if you have the [Peddler](https://www.curseforge.com/wow/addons/peddler) add-on loaded. 
+
+To be honest, I didn't try to configure the add-ons to conflict, but I will update this README if I get a chance to test that out. 
 
 ![chat-warning-baggins](./Screenshots/chat-output/chat-warning-peddler.png)
 
