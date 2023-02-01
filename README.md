@@ -235,7 +235,7 @@ If full support is added for Baggins, and it's discovered that there is no confl
 
 m 
 
-![item-lock-double-up](/Users/gabriel/Developer/repos-r2g2/2_NRL/games/wow/addons/mark-item-as/Screenshots/bags-merchant/item-lock-double-up.png)
+![item-lock-double-up](./Screenshots/bags-merchant/item-lock-double-up.png)
 
 ![chat-warning-baggins](./Screenshots/chat-output/chat-item-lock-double-up.png)
 
