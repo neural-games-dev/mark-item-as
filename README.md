@@ -16,7 +16,12 @@ Another feature of MIA is that you can auto-sort your bags after marking, un-mar
 
 ## Options & Defaults 
 
-There are 4 main groups of options: `Marking`, `Selling`, `Sorting`, and `Chat`. 
+There are 4 main groups of options:
+
+1. [ `Marking`](#Marking) 
+2. [ `Selling`](#Selling) 
+3.  `Sorting` 
+4.  `Chat` 
 
 ### Marking 
 
@@ -49,7 +54,7 @@ Overlay Color:  `{ r = 0, g = 0, b = 0, a = 0.75 }` (this is black with a 75% op
 
 Border Color:  `{ r = 0.4, g = 0.4, b = 0.4, a = 1 }` (this is a dark-medium gray with 100% opacity) 
 
-Border Thickness: `2` (the slider has a min value of 0 and a max value of 3) 
+Border Thickness: `2` (the slider has a min value of `0` and a max value of `5`) 
 
 #### Marker Icon 
 
@@ -60,6 +65,8 @@ When you mark an item, a small icon will appear on top of the item and the overl
 1. `Coin` (this is similar to the coin icon that Scrap displays) 
 2. `Stack` 
 3. `Trash` (*this is the default value*) 
+
+ ![marking-04](./Screenshots/config-options-window/marking-04.png)
 
 ##### Icon Location 
 
@@ -73,13 +80,19 @@ When you mark an item, a small icon will appear on top of the item and the overl
 8. `Bottom Center` (a.k.a. BOTTOM) 
 9. `Bottom Right` 
 
-#### Tooltip Text 
+![marking-04](./Screenshots/config-options-window/marking-05.png)
+
+#### Tooltip Text +
 
 With this enabled, a line of text ("Marked as Junk - To be sold") will be added to the bottom of the item's tooltip after you mark it. 
 
 This can be toggled `on` or `off` via a checkbox. It is `on` by *default*. 
 
+![marking-04](./Screenshots/config-options-window/marking-06.png)
+
 ### Selling 
+
+![marking-04](./Screenshots/config-options-window/selling-01.png)
 
 #### Sale Summary 
 
@@ -96,6 +109,8 @@ After visiting a merchant, and selling your items, MIA will display a summary of
 
 This can be toggled `on` or `off` via a checkbox. It is `on` by *default*. 
 
+![marking-04](./Screenshots/config-options-window/selling-02.png)
+
 #### Sale Limit 
 
 By *default*, MIA will limit the sale of marked items to 12, which is the most buyback items a merchant can hold at any one time. The items sold are determined by their place in the bags. 
@@ -108,9 +123,13 @@ Once it reaches a count of 12, it will stop selling. And if auto-sort is turned 
 
 If the limit is disabled, everything marked gets sold. 
 
+![marking-04](./Screenshots/config-options-window/selling-03.png)
+
 #### Auto Sell 
 
 m 
+
+![marking-04](./Screenshots/config-options-window/selling-04.png)
 
 ### Sorting 
 
@@ -120,17 +139,23 @@ m
 
 m  
 
-## Customization 
+## Working with Other Add-Ons 
+
+### Baggins 
 
 m 
 
-## Screenshots 
+### ItemLock 
 
-coming soon...
+m 
+
+### Peddler 
+
+m 
 
 ## Support 
 
-If you encounter any bugs or issues, please submit them on [GitHub](https://github.com/gflujan/mark-item-as/issues). 
+If you encounter any bugs or issues, please submit them here on [GitHub](https://github.com/gflujan/mark-item-as/issues). 
 
 You can leave comments on [CurseForge](https://www.curseforge.com/wow/addons/mark-item-as), and I'll check them periodically, but you're more likely to get a faster response on GitHub. 
 
