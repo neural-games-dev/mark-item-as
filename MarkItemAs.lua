@@ -101,7 +101,10 @@ end
 
 function MarkItemAs:MerchantShowCB()
    self.logger:Debug('MERCHANT_SHOW registered event callback has been triggered. Doing stuff...');
-   self.selling:SellItems();
+
+   if (self.utils:GetDbValue('autoSellMerchant')) then
+      self.selling:SellItems();
+   end
 end
 
 -- This handles both when the player logs in (as is obvious by the name)

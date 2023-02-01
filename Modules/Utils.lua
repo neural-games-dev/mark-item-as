@@ -503,6 +503,7 @@ end
 --## --------------------------------------------------------------------------
 function Utils:GetDbValue(key)
    local value;
+   -- the line below does a RegExp `match` for strings that look like 'someTable.someKey'
    local isMultiKey = key:match('%.');
 
    if (isMultiKey) then

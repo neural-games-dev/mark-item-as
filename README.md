@@ -109,6 +109,8 @@ After visiting a merchant, and selling your items, MIA will display a summary of
 
 This can be toggled `on` or `off` via a checkbox. It is `on` by *default*. 
 
+> NOTE: If "auto-sell" is disabled, the sale summary will not be printed out. 
+
 ![marking-04](./Screenshots/config-options-window/selling-02.png)
 
 #### Sale Limit 
@@ -127,13 +129,31 @@ If the limit is disabled, everything marked gets sold.
 
 #### Auto Sell 
 
-m 
+Upon visiting a merchant, with this option checked, all of the marked items in your bags (or up to 12 if the limit is enabled) will be automatically sold.  
+
+You can disable this if you still want to manually sell the items, but I'm not sure why you'd want to. 😉 
 
 ![marking-04](./Screenshots/config-options-window/selling-04.png)
 
 ### Sorting 
 
-m 
+These options are pretty straight-forward. 
+
+If you **MARK** an item, and #1 is enabled, the bags get sorted. 
+
+If you **UN-MARK** an item, and #2 is enabled, the bags get sorted. 
+
+If you visit a merchant with #3 & "auto-sell" enabled, and at least 1 item is sold, the bags get sorted. 
+
+> NOTE: If "auto-sell" is disabled, the bags will not be automatically sorted when manually selling marked items. 
+
+![sorting-01](./Screenshots/config-options-window/sorting-01.png)
+
+![sorting-01](./Screenshots/config-options-window/sorting-02.png)
+
+![sorting-01](./Screenshots/config-options-window/sorting-03.png)
+
+![sorting-01](./Screenshots/config-options-window/sorting-04.png)
 
 ### Chat 
 
