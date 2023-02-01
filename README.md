@@ -165,7 +165,7 @@ Some features may be useful to normal players, while others are more geared for 
 
 #### Show Add-On Warnings 
 
-This checkbox will hide or display specific warnings for some add-ons that may cause conflicts. See [Working with Other Add-Ons](#Working with Other Add-Ons) for more details. 
+This checkbox will hide or display specific warnings for some add-ons that may cause conflicts. See [Working with Other Add-Ons](#working-with-other-add-ons) for more details. 
 
 ![sorting-01](./Screenshots/config-options-window/chat-02.png)
 
