@@ -68,6 +68,8 @@ When you mark an item, a small icon will appear on top of the item and the overl
 
  ![marking-04](./Screenshots/config-options-window/marking-04.png)
 
+![marker-icon-01](./Screenshots/bags-merchant/marker-icon-01.png) ![marker-icon-02](./Screenshots/bags-merchant/marker-icon-02.png) ![marker-icon-03](./Screenshots/bags-merchant/marker-icon-03.png)
+
 ##### Icon Location 
 
 1. `Top Left` 
@@ -82,7 +84,7 @@ When you mark an item, a small icon will appear on top of the item and the overl
 
 ![marking-04](./Screenshots/config-options-window/marking-05.png)
 
-#### Tooltip Text +
+#### Tooltip Text 
 
 With this enabled, a line of text ("Marked as Junk - To be sold") will be added to the bottom of the item's tooltip after you mark it. 
 
@@ -90,7 +92,11 @@ This can be toggled `on` or `off` via a checkbox. It is `on` by *default*.
 
 ![marking-04](./Screenshots/config-options-window/marking-06.png)
 
+![marker-tooltip-text](./Screenshots/bags-merchant/marker-tooltip-text.png)
+
 ### Selling 
+
+All of these settings are turned `on` by *default*. 
 
 ![marking-04](./Screenshots/config-options-window/selling-01.png)
 
@@ -107,11 +113,13 @@ After visiting a merchant, and selling your items, MIA will display a summary of
    - How many total items were sold 
    - A list of all items as `ItemLink`'s (to easily hover and see the in-game tooltip info) 
 
-This can be toggled `on` or `off` via a checkbox. It is `on` by *default*. 
+This can be toggled `on` or `off` via a checkbox.
 
 > NOTE: If "auto-sell" is disabled, the sale summary will not be printed out. 
 
 ![marking-04](./Screenshots/config-options-window/selling-02.png)
+
+![chat-sale-summary](./Screenshots/chat-output/chat-sale-summary.png)
 
 #### Sale Limit 
 
@@ -137,7 +145,7 @@ You can disable this if you still want to manually sell the items, but I'm not s
 
 ### Sorting 
 
-These options are pretty straight-forward. 
+These options are pretty straight-forward. They are all turned `off` by *default*. 
 
 If you **MARK** an item, and #1 is enabled, the bags get sorted. 
 
@@ -150,6 +158,8 @@ If you visit a merchant with #3 & "auto-sell" enabled, and at least 1 item is so
 ![sorting-01](./Screenshots/config-options-window/sorting-01.png)
 
 ![sorting-01](./Screenshots/config-options-window/sorting-02.png)
+
+![sorting-after-marking-01](./Screenshots/bags-merchant/sorting-after-marking-01.png) ![sorting-after-marking-02](./Screenshots/bags-merchant/sorting-after-marking-02.png)
 
 ![sorting-01](./Screenshots/config-options-window/sorting-03.png)
 
@@ -167,7 +177,45 @@ Some features may be useful to normal players, while others are more geared for 
 
 This checkbox will hide or display specific warnings for some add-ons that may cause conflicts. See [Working with Other Add-Ons](#working-with-other-add-ons) for more details. 
 
+This is `on` by *default*. 
+
 ![sorting-01](./Screenshots/config-options-window/chat-02.png)
+
+#### Show Startup Greeting 
+
+This is a simple user greeting that displays on startups and reloads. It let's the user know the basic MIA slash command (`/mia`) to use. 
+
+This is `on` by *default*. 
+
+![sorting-01](./Screenshots/config-options-window/chat-03.png)
+
+![chat-warning-baggins](./Screenshots/chat-output/chat-greeting-startup.png)
+
+#### Show MIA Command Output 
+
+The purpose of this checkbox is to show a little bit more additional info to the user. It will display chat output when slash commands are triggered, or when marking items. 
+
+If you're looking at MIA for add-on dev purposes, you can think of this like `INFO` level logging. 
+
+This is `off` by *default*. 
+
+![sorting-01](./Screenshots/config-options-window/chat-04.png)
+
+![chat-warning-baggins](./Screenshots/chat-output/chat-command-output-01.png)
+
+![chat-warning-baggins](./Screenshots/chat-output/chat-command-output-02.png)
+
+#### Enable MIA Debugging 
+
+This option is exactly what it says. This will enable `DEBUG` level logging when using the add-on. 
+
+This setting **IS NOT** for regular users. Turning this on will print **A LOT** of output to the chat window. 
+
+This setting is mostly for me to be able to see what the add-on is doing on a granular level, but I left it in just in case other add-on devs (generally those just starting out) wanted to get some insight into what's happening. 
+
+This is `off` by *default*. 
+
+![sorting-01](./Screenshots/config-options-window/chat-05.png)
 
 ## Working with Other Add-Ons 
 
@@ -181,13 +229,21 @@ If full support is added for Baggins, and it's discovered that there is no confl
 
 ![sorting-01](./Screenshots/config-options-window/sorting-05.png)
 
+![chat-warning-baggins](./Screenshots/chat-output/chat-warning-baggins.png)
+
 ### ItemLock 
 
 m 
 
+![item-lock-double-up](/Users/gabriel/Developer/repos-r2g2/2_NRL/games/wow/addons/mark-item-as/Screenshots/bags-merchant/item-lock-double-up.png)
+
+![chat-warning-baggins](./Screenshots/chat-output/chat-item-lock-double-up.png)
+
 ### Peddler 
 
 m 
+
+![chat-warning-baggins](./Screenshots/chat-output/chat-warning-peddler.png)
 
 ## Support 
 
