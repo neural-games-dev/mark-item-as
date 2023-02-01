@@ -143,7 +143,7 @@ If you **MARK** an item, and #1 is enabled, the bags get sorted.
 
 If you **UN-MARK** an item, and #2 is enabled, the bags get sorted. 
 
-If you visit a merchant with #3 & "auto-sell" enabled, and at least 1 item is sold, the bags get sorted. 
+If you visit a merchant with #3 & "auto-sell" enabled, and at least 1 item is sold, the bags get sorted after leaving the merchant. 
 
 > NOTE: If "auto-sell" is disabled, the bags will not be automatically sorted when manually selling marked items. 
 
@@ -157,13 +157,29 @@ If you visit a merchant with #3 & "auto-sell" enabled, and at least 1 item is so
 
 ### Chat 
 
-m  
+This group of options deals strictly with what you'll see in the chat pane output. 
+
+Some features may be useful to normal players, while others are more geared for other add-on devs who want to get an inside look at what MIA is actually doing.  
+
+![chat-01](./Screenshots/config-options-window/chat-01.png)
+
+#### Show Add-On Warnings 
+
+This checkbox will hide or display specific warnings for some add-ons that may cause conflicts. See [Working with Other Add-Ons](#Working with Other Add-Ons) for more details. 
+
+![sorting-01](./Screenshots/config-options-window/chat-02.png)
 
 ## Working with Other Add-Ons 
 
 ### Baggins 
 
-m 
+Future work may be done to fully support the Baggins add-on. But, right now, during this initial phase, MIA will detect if Baggins is loaded and disable its own auto-sorting features. 
+
+This is done out of pre-caution to prevent any possible conflicts or just weird behavior. 
+
+If full support is added for Baggins, and it's discovered that there is no conflict with having both auto-sort functionalities enabled, then this preventative measure may be removed. 
+
+![sorting-01](./Screenshots/config-options-window/sorting-05.png)
 
 ### ItemLock 
 
