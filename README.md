@@ -18,10 +18,10 @@ Another feature of MIA is that you can auto-sort your bags after marking, un-mar
 
 There are 4 main groups of options:
 
-1. [ `Marking`](#Marking) 
-2. [ `Selling`](#Selling) 
-3.  `Sorting` 
-4.  `Chat` 
+1. [ `Marking`](#marking) 
+2. [ `Selling`](#selling) 
+3. [ `Sorting`](#sorting) 
+4. [ `Chat`](#chat) 
 
 ### Marking 
 
