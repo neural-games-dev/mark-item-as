@@ -32,5 +32,9 @@ rm -rf mark-item-as-junk-icon.afphoto;
 rm -rf mark-item-as-logo.jpeg;
 
 echo "Removing the README & this script file...";
+rm -rf .DS_store;
 rm -rf README.md;
 rm -rf build.sh;
+
+echo "COMING SOON: Creating the 7zip archive file...";
+# TODO :: Figure out how to use the Keka CLI option to zip things up
