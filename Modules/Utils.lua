@@ -23,14 +23,6 @@ end
 --## ===============================================================================================
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
-function Utils:AddLeadingZero(number)
-   if (number < 10) then
-      return '0' .. tostring(number);
-   end
-
-   return number;
-end
-
 function Utils:Capitalize(str)
    local lower = string.lower(str);
    return (lower:gsub("^%l", string.upper));
@@ -218,6 +210,14 @@ function Utils:IsMiaKeyCombo(button)
    return button == db.userSelectedActivatorKey and modKeyIsPressed();
 end
 
+function Utils:PadNumber(number)
+   if (number < 10) then
+      return '0' .. tostring(number);
+   end
+
+   return number;
+end
+
 function Utils:PriceToGold(price)
    local gold = price / 10000;
    local silver = (price % 10000) / 100;
@@ -227,9 +227,9 @@ function Utils:PriceToGold(price)
    silver = math.floor(silver);
    copper = math.floor(copper);
 
-   local goldPadded = self:AddLeadingZero(gold);
-   local silverPadded = self:AddLeadingZero(silver);
-   local copperPadded = self:AddLeadingZero(copper);
+   local goldPadded = self:PadNumber(gold);
+   local silverPadded = self:PadNumber(silver);
+   local copperPadded = self:PadNumber(copper);
 
    return goldPadded ..
        '|cFFffcc33g|r ' .. silverPadded .. '|cFFc9c9c9s|r ' .. copperPadded .. '|cFFcc8890c|r';
