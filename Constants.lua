@@ -20,6 +20,7 @@ MIA_Constants = {
    },
    addOnName = chalk:ace('Mark Item As'),
    addOnNameQuoted = chalk:ace('"Mark Item As"'),
+   buybackLimit = 12,
    colorReset = { r = 0, g = 0, b = 0, a = 0 },
    iconListMap = {
       Coin = 'Coin',
@@ -65,6 +66,7 @@ MIA_Constants = {
    slashCommandQuoted = '|cFFbada55"/mia"|r',
    warnings = {
       bagginsLoaded = chalk:warn('(WARNING): Auto sorting is disabled. Baggins is loaded and provides its own auto sort functionality.'),
+      bagginsLoadedMultiline = chalk:warn('(WARNING): Auto sorting is disabled.\nBaggins is loaded and provides its own auto sort functionality.'),
       itemLockConflict = chalk:warn('"ItemLock" and "MarkItemAs" have the same key bind combo. Please change one of them or you can disable the "ItemLock" key binds. Ignoring marking.'),
       itemLockDoubledUp = chalk:warn('The item has already been marked as junk. Locking it on top causes issues. Reloads help but it is better to not double up.'),
       peddlerLoaded = chalk:warn('(WARNING): "Peddler" addon is also loaded. There may be conflicting behavior.'),

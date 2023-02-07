@@ -12,6 +12,11 @@ local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 --## ===============================================================================================
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
+function MarkItemAs:EnableVerboseLogging()
+   local currentValue = self.utils:GetDbValue('enableVerboseLogging');
+   self.utils:SetDbValue('enableVerboseLogging', not currentValue);
+end
+
 function MarkItemAs:SlashCommandFrameStack()
    LoadAddOn('Blizzard_DebugTools');
    FrameStackTooltip_Toggle();
@@ -29,7 +34,7 @@ function MarkItemAs:SlashCommandInfoConfig(command)
          self.chalk:badass('/mia options (o)') .. ' -- This is an alias for "config".\n' ..
          self.chalk:badass('/mia hidetext (ht)') .. ' -- ' .. self.chalk:red('DISABLES') .. ' text output when using a ' .. MIA_Constants.slashCommandQuoted .. ' command.\n' ..
          self.chalk:badass('/mia showtext (st)') .. ' -- ' .. self.chalk:green('ENABLES') .. ' text output when using a ' .. MIA_Constants.slashCommandQuoted .. ' command.\n' ..
-         self.chalk:badass('/mia debug (d)') .. ' -- This enables debug logging. Really only useful for add-on devs. ' .. self.chalk:warn('WARNING!!!:') .. ' This can get REALLY SPAMMY. Enable with caution.'
+         self.chalk:badass('/mia debug (d)') .. ' -- This enables debug logging. Really only useful for add-on devs. ' .. self.chalk:warn('WARNING!!!') .. ' This can get REALLY SPAMMY. Enable with caution.'
       );
 
       return ;
@@ -41,7 +46,7 @@ function MarkItemAs:SlashCommandInfoConfig(command)
       command == 'o';
 
    if (isConfigOptionsCommand) then
-      self.utils:handleConfigOptionsDisplay();
+      self.utils:HandleConfigOptionsDisplay();
       return ;
    end
 
@@ -65,7 +70,7 @@ function MarkItemAs:SlashCommandInfoConfig(command)
       end
 
       self.logger:Print('The slash command output text has been ' .. showOutputLogMessage .. '.');
-      self.utils:setDbValue('showCommandOutput', showOutputValue);
+      self.utils:SetDbValue('showCommandOutput', showOutputValue);
       return ;
    end
 
@@ -79,7 +84,7 @@ function MarkItemAs:SlashCommandInfoConfig(command)
          self.logger:Print('Setting the debug value to: ' .. self.chalk:debug(debugValueDisplay));
       end
 
-      self.utils:setDbValue('debugEnabled', debugValue);
+      self.utils:SetDbValue('debugEnabled', debugValue);
       return ;
    end
 
