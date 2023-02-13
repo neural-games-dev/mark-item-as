@@ -14,7 +14,7 @@ local MarkItemAs = LibStub('AceAddon-3.0'):NewAddon('MarkItemAs', 'AceConsole-3.
 MarkItemAs.version = GetAddOnMetadata('MarkItemAs', 'Version');
 
 function MarkItemAs:OnInitialize()
-   self.version = 'v1.0.0';
+   self.version = 'v1.0.1';
    self.db = LibStub('AceDB-3.0'):New('MarkItemAsDB', { profile = MIA_Defaults }, true);
 
    -- calling all modules! all modules to the front! (keep in this order)
@@ -37,6 +37,7 @@ function MarkItemAs:OnInitialize()
    -- This replaces the `PLAYER_LOGIN` using the `OpenBag` API logic
    if _G.ContainerFrame_OnShow then
       hooksecurefunc("ContainerFrame_OnShow", function()
+         self.logger:Debug('"ContainerFrame_OnShow" callback has been activated. Updating the bag markings...');
          self.utils:UpdateBagMarkings();
       end)
    end

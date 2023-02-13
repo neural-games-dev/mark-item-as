@@ -81,6 +81,11 @@ end
 function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
    -- "down" is a boolean that tells me that the current `button` is pressed?
    return function(frame, button, down)
+      if (not self:IsMiaKeyCombo(button)) then
+         mia.logger:Debug('Add-on key combo was not pressed. Ignoring click event listener.');
+         return ;
+      end
+
       local db = mia.db.profile;
       -- NOTE **[G]** :: CLEAN UP: Can this `slotFrame` below be replaced by the `frame` from the returned handler instead?
       local item = Item:CreateFromBagAndSlot(bagIndex, slotFrame:GetID());
@@ -107,13 +112,13 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
                mia.logger:Print(MIA_Constants.warnings.itemLockConflict);
             end
 
-            return;
+            return ;
          elseif (isItemLockKeyCombo and frame.markedJunkOverlay and frame.markedJunkOverlay:IsShown()) then
             if (db.showWarnings) then
                mia.logger:Print(MIA_Constants.warnings.itemLockDoubledUp);
             end
 
-            return;
+            return ;
          end
       end
 
@@ -125,75 +130,70 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
       --## ==========================================================================
       --## Handling "MarkItemAs" key bind actions
       --## ==========================================================================
-      if (self:IsMiaKeyCombo(button)) then
-         if (item:IsItemEmpty()) then
-            mia.logger:Debug('HandleOnClick: Processing item is empty scenario...');
+      if (item:IsItemEmpty()) then
+         mia.logger:Debug('HandleOnClick: Processing item is empty scenario...');
 
-            if (db.showCommandOutput and not db.debugEnabled) then
-               local suffix = 'from the Alliance.';
+         if (db.showCommandOutput and not db.debugEnabled) then
+            local suffix = 'from the Alliance.';
 
-               if (db.playerInfo.factionGroup == 'Alliance') then
-                  suffix = 'from the Horde.';
-               end
-
-               if (db.playerInfo.factionGroup == 'Neutral') then
-                  suffix = 'a Monk.';
-               end
-
-               mia.logger:Print("There's nothing to mark! You must be " .. suffix);
+            if (db.playerInfo.factionGroup == 'Alliance') then
+               suffix = 'from the Horde.';
             end
 
-            return;
-         elseif (self:GetDbValue('isLoaded.itemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
-            mia.logger:Debug('HandleOnClick: Processing item is locked scenario...');
-
-            if (db.showCommandOutput and not db.debugEnabled) then
-               mia.logger:Print('Item is locked. Ignoring marking.');
+            if (db.playerInfo.factionGroup == 'Neutral') then
+               suffix = 'a Monk.';
             end
 
-            return;
-         elseif (itemSellPrice == 0 or itemSellPrice == nil) then
-            mia.logger:Debug('HandleOnClick: Processing item is NOT sellable scenario...');
-
-            if (db.showCommandOutput and not db.debugEnabled) then
-               mia.logger:Print('Item is not sellable. Ignoring marking.');
-            end
-
-            return;
-         elseif (not frame.markedJunkOverlay) then
-            mia.logger:Debug('HandleOnClick: Processing `overlayStatus.MISSING` scenario...');
-            mia.utils:SetDbTableItem('junkItems', itemID, true);
-            self:UpdateBagMarkings(true); -- `true` = isClickEvent
-
-            if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
-               self:SortBags();
-            end
-
-            return;
-         elseif (not frame.markedJunkOverlay:IsShown()) then
-            mia.logger:Debug('HandleOnClick: Processing `overlayStatus.HIDDEN` scenario...');
-            mia.utils:SetDbTableItem('junkItems', itemID, true);
-            self:UpdateBagMarkings(true); -- `true` = isClickEvent
-
-            if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
-               self:SortBags();
-            end
-
-            return;
-         else
-            mia.logger:Debug('HandleOnClick: Processing `overlayStatus.SHOWING` scenario...');
-            mia.utils:SetDbTableItem('junkItems', itemID, false);
-            self:UpdateBagMarkings(true); -- `true` = isClickEvent
-
-            if (db.autoSortUnmarking and not self:GetDbValue('isLoaded.baggins')) then
-               self:SortBags();
-            end
-
-            return;
+            mia.logger:Print("There's nothing to mark! You must be " .. suffix);
          end
+
+         return ;
+      elseif (self:GetDbValue('isLoaded.itemLock') and frame.lockItemsAppearanceOverlay.texture:IsShown()) then
+         mia.logger:Debug('HandleOnClick: Processing item is locked scenario...');
+
+         if (db.showCommandOutput and not db.debugEnabled) then
+            mia.logger:Print('Item is locked. Ignoring marking.');
+         end
+
+         return ;
+      elseif (itemSellPrice == 0 or itemSellPrice == nil) then
+         mia.logger:Debug('HandleOnClick: Processing item is NOT sellable scenario...');
+
+         if (db.showCommandOutput and not db.debugEnabled) then
+            mia.logger:Print('Item is not sellable. Ignoring marking.');
+         end
+
+         return ;
+      elseif (not frame.markedJunkOverlay) then
+         mia.logger:Debug('HandleOnClick: Processing `overlayStatus.MISSING` scenario...');
+         mia.utils:SetDbTableItem('junkItems', itemID, true);
+         self:UpdateBagMarkings(true); -- `true` = isClickEvent
+
+         if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
+            self:SortBags();
+         end
+
+         return ;
+      elseif (not frame.markedJunkOverlay:IsShown()) then
+         mia.logger:Debug('HandleOnClick: Processing `overlayStatus.HIDDEN` scenario...');
+         mia.utils:SetDbTableItem('junkItems', itemID, true);
+         self:UpdateBagMarkings(true); -- `true` = isClickEvent
+
+         if (db.autoSortMarking and not self:GetDbValue('isLoaded.baggins')) then
+            self:SortBags();
+         end
+
+         return ;
       else
-         mia.logger:Debug('Add-on key combo was not pressed. Ignoring click event listener.');
-         return;
+         mia.logger:Debug('HandleOnClick: Processing `overlayStatus.SHOWING` scenario...');
+         mia.utils:SetDbTableItem('junkItems', itemID, false);
+         self:UpdateBagMarkings(true); -- `true` = isClickEvent
+
+         if (db.autoSortUnmarking and not self:GetDbValue('isLoaded.baggins')) then
+            self:SortBags();
+         end
+
+         return ;
       end
    end
 end
@@ -232,7 +232,7 @@ function Utils:PriceToGold(price)
    local copperPadded = self:PadNumber(copper);
 
    return goldPadded ..
-       '|cFFffcc33g|r ' .. silverPadded .. '|cFFc9c9c9s|r ' .. copperPadded .. '|cFFcc8890c|r';
+      '|cFFffcc33g|r ' .. silverPadded .. '|cFFc9c9c9s|r ' .. copperPadded .. '|cFFcc8890c|r';
 end
 
 function Utils:RegisterClickListeners()
@@ -259,11 +259,11 @@ end
 function Utils:SortBags()
    if (C_Container) then
       C_Container.SortBags();
-      return;
+      return ;
    else
       local sortButton = _G[BagItemAutoSortButton:GetName()];
       sortButton:Click();
-      return;
+      return ;
    end
 end
 
@@ -400,8 +400,8 @@ end
 
 function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID, shouldLogMarkingAction)
    local isMissingHiddenOrUpdate = status == MIA_Constants.overlayStatus.MISSING or
-       status == MIA_Constants.overlayStatus.HIDDEN or
-       status == MIA_Constants.overlayStatus.UPDATE;
+      status == MIA_Constants.overlayStatus.HIDDEN or
+      status == MIA_Constants.overlayStatus.UPDATE;
 
    if (isMissingHiddenOrUpdate) then
       if (db.showCommandOutput and not db.debugEnabled and shouldLogMarkingAction) then
@@ -438,7 +438,7 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
       frame.markedJunkOverlay:SetFrameLevel(17);
       frame.markedJunkOverlay:SetBackdropColor(color.r, color.g, color.b, color.a);
       local isHiddenOrUpdate = status == MIA_Constants.overlayStatus.HIDDEN or
-          status == MIA_Constants.overlayStatus.UPDATE;
+         status == MIA_Constants.overlayStatus.UPDATE;
 
       if (isHiddenOrUpdate) then
          mia.logger:Debug('Updating the frame overlay texture for "' .. tostring(itemName) .. '"...\n' ..
@@ -457,7 +457,7 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
       end
 
       db.junkItems[itemID] = true;
-      return;
+      return ;
    end
 
    if (status == MIA_Constants.overlayStatus.SHOWING) then
@@ -480,7 +480,7 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
          db.junkItems[itemID] = false;
       end
 
-      return;
+      return ;
    end
 end
 
