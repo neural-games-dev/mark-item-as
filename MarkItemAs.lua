@@ -111,7 +111,7 @@ end
 -- but it also handles when the game reloads
 function MarkItemAs:PlayerLoginCB()
    self.logger:Debug('PLAYER_LOGIN registered event callback has been triggered. Doing stuff...');
-   self.utils:UpdateBagMarkings();
+   --self.utils:UpdateBagMarkings();
 end
 
 function MarkItemAs:PlayerLogoutCB()

@@ -289,10 +289,10 @@ function Utils:UpdateBagMarkings(isClickEvent)
       -- The bags need to be open, or at least to have been opened, so that the `itemID`'s show up
       -- This mostly just covers when a reload or initial game login occurs
       -- and the location value has been changed before the bags have been opened
-      if (not isBagOpen) then
-         OpenBag(bagIndex);
-         wasBagOpened = true;
-      end
+      --if (not isBagOpen) then
+      --   OpenBag(bagIndex);
+      --   wasBagOpened = true;
+      --end
 
       for slotIndex = 1, numSlots, 1 do
          local slotIndexInverted = numSlots - slotIndex + 1; -- Blizz bag slot indexes are weird
@@ -375,9 +375,9 @@ function Utils:UpdateBagMarkings(isClickEvent)
       end
 
       -- Closing the bags opened by MIA and leaving the user opened bags alone
-      if (wasBagOpened) then
-         CloseBag(bagIndex);
-      end
+      --if (wasBagOpened) then
+      --   CloseBag(bagIndex);
+      --end
    end
 end
 
