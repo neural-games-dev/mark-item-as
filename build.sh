@@ -3,7 +3,13 @@ echo "================================================================";
 echo "Running the Curseforge upload/build script for 'mark-item-as'...";
 echo "================================================================";
 
-# ADDON_DIR='~/Desktop/mark-item-as';
+ADDON_DIR="${HOME}/Downloads/mark-item-as";
+JUGG_WD='jugg-wd'; # my gaming PC
+
+if [[ "$HOST" == *"$JUGG_WD"* ]]; then
+   echo "You're on WSL. Switching the build location to '/mnt/f'.";
+   ADDON_DIR="/mnt/f/Downloads/mark-item-as";
+fi
 
 # Check to see if the desktop folder exists
 # if [[ ! -d "$ADDON_DIR" ]]; then
@@ -11,12 +17,15 @@ echo "================================================================";
 #    mkdir -p $ADDON_DIR;
 # fi
 
-# Clone the addon into the Desktop folder
-echo "Cloning 'mark-item-as' into the desktop folder...";
-cp -r ./ ~/Desktop/mark-item-as;
+echo "The current addon dir location is...";
+echo $ADDON_DIR;
 
-echo "Switching into the 'mark-item-as' desktop folder...";
-cd ~/Desktop/mark-item-as;
+# Clone the addon into the Desktop folder
+echo "Cloning 'mark-item-as' into the Downloads folder...";
+cp -r ./ $ADDON_DIR;
+
+echo "Switching into the 'mark-item-as' Downloads folder...";
+cd $ADDON_DIR || exit;
 
 echo "Removing the Git & IDE settings dirs/files...";
 rm -rf .gitignore;
@@ -36,5 +45,5 @@ rm -rf .DS_store;
 rm -rf README.md;
 rm -rf build.sh;
 
-echo "COMING SOON: Creating the 7zip archive file...";
+echo "COMING SOON: Creating the zip archive file...";
 # TODO :: Figure out how to use the Keka CLI option to zip things up
