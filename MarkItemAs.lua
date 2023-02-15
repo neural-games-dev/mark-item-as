@@ -14,7 +14,7 @@ local MarkItemAs = LibStub('AceAddon-3.0'):NewAddon('MarkItemAs', 'AceConsole-3.
 MarkItemAs.version = GetAddOnMetadata('MarkItemAs', 'Version');
 
 function MarkItemAs:OnInitialize()
-   self.version = 'v1.0.0';
+   self.version = 'v1.0.1';
    self.db = LibStub('AceDB-3.0'):New('MarkItemAsDB', { profile = MIA_Defaults }, true);
 
    -- calling all modules! all modules to the front! (keep in this order)
@@ -33,6 +33,15 @@ function MarkItemAs:OnInitialize()
    --self.sorting:Init(self);
    self.tooltip:Init(self);
 
+   -- This adds a "listener" to update the markings when a player opens their bags
+   -- This replaces the `PLAYER_LOGIN` using the `OpenBag` API logic
+   if _G.ContainerFrame_OnShow then
+      hooksecurefunc("ContainerFrame_OnShow", function()
+         self.logger:Debug('"ContainerFrame_OnShow" callback has been activated. Updating the bag markings...');
+         self.utils:UpdateBagMarkings();
+      end)
+   end
+
    -- we're slashing prices so much it's like we're crazy!
    self:RegisterChatCommand('mia', 'SlashCommandInfoConfig');
    self:RegisterChatCommand('nrl', 'SlashCommandReload');
@@ -43,6 +52,7 @@ end
 function MarkItemAs:OnEnable()
    -- Third args can be passed to these callbacks
    -- these third args are extra values that you want the CBs to have
+   self:RegisterEvent('BAG_OPEN', 'BagOpenCB');
    self:RegisterEvent('BAG_UPDATE', 'BagUpdateCB');
    self:RegisterEvent('MERCHANT_CLOSED', 'MerchantClosedCB');
    self:RegisterEvent('MERCHANT_SHOW', 'MerchantShowCB');
@@ -82,6 +92,11 @@ end
 --## ===============================================================================================
 --## REGISTERED EVENT LISTENER CALLBACKS
 --## ===============================================================================================
+function MarkItemAs:BagOpenCB()
+   self.logger:Debug('BAG_OPEN registered event callback has been triggered. Doing stuff...');
+   --self.utils:UpdateBagMarkings();
+end
+
 function MarkItemAs:BagUpdateCB()
    self.logger:Debug('BAG_UPDATE registered event callback has been triggered. Doing stuff...');
    self.utils:UpdateBagMarkings();
@@ -111,7 +126,7 @@ end
 -- but it also handles when the game reloads
 function MarkItemAs:PlayerLoginCB()
    self.logger:Debug('PLAYER_LOGIN registered event callback has been triggered. Doing stuff...');
-   self.utils:UpdateBagMarkings();
+   --self.utils:UpdateBagMarkings();
 end
 
 function MarkItemAs:PlayerLogoutCB()
