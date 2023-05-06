@@ -11,9 +11,7 @@ local MarkItemAs = LibStub('AceAddon-3.0'):NewAddon('MarkItemAs', 'AceConsole-3.
 --## ===============================================================================================
 --## START UP & GREETING SCRIPTS
 --## ===============================================================================================
-MarkItemAs.version = GetAddOnMetadata('MarkItemAs', 'Version');
-
-function MarkItemAs:RegisterEventsListeners()
+function MarkItemAs:RegisterEventListeners()
    -- Third args can be passed to these callbacks
    -- these third args are extra values that you want the CBs to have
    self:RegisterEvent('BAG_OPEN', 'BagOpenCB');
@@ -54,7 +52,7 @@ function MarkItemAs:SetModules()
 end
 
 function MarkItemAs:OnInitialize()
-   self.version = 'v1.1.0';
+   self.version = C_AddOns.GetAddOnMetadata('mark-item-as', 'Version'); -- this pulls the version number from the TOC file
    self.db = LibStub('AceDB-3.0'):New('MarkItemAsDB', { profile = MIA_Defaults }, true);
 
    self:SetModules();
@@ -68,6 +66,7 @@ function MarkItemAs:OnInitialize()
 
    -- This adds a "listener" to update the markings when a player opens their bags
    -- This replaces the `PLAYER_LOGIN` using the `OpenBag` API logic
+   -- https://github.com/Stanzilla/WoWUIBugs/issues/310
    if _G.ContainerFrame_OnShow then
       hooksecurefunc("ContainerFrame_OnShow", function()
          self.logger:Debug('"ContainerFrame_OnShow" callback has been activated. Updating the bag markings...');
@@ -79,7 +78,7 @@ function MarkItemAs:OnInitialize()
 end
 
 function MarkItemAs:OnEnable()
-   self:RegisterEventsListeners();
+   self:RegisterEventListeners();
    self:SetIsLoaded();
 
    -- getting current player info

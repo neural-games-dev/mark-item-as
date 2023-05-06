@@ -10,7 +10,7 @@ JUGG_WD='jugg-wd' # my gaming PC
 
 if [[ "${HOST}" == *"$JUGG_WD"* ]]; then
    WSL_BASE='/mnt/f'
-   echo "You're on WSL. Switching the build location to '${WSL_BASE}'."
+   echo "You're on WSL. Switching the build location base to '${WSL_BASE}'."
    DIR_BASE="${WSL_BASE}"
    echo '——————————————————————————————————————————'
 fi
@@ -24,13 +24,25 @@ echo '————————————————————————�
 # Check to see if the downloads folder exists
 if [[ ! -d "$ADDON_DIR" ]]; then
    echo "MIA folder does not exist. Creating..."
-   mkdir --parents $ADDON_DIR
+
+   if [[ "${HOST}" == *"$JUGG_WD"* ]]; then
+      mkdir --parents $ADDON_DIR # this is for WSL
+   else
+      mkdir -p $ADDON_DIR
+   fi
+
    echo '——————————————————————————————————————————'
 fi
 
 # Clone the addon into the downloads folder
 echo "Cloning 'mark-item-as' into the Downloads folder..."
-cp --recursive ./ $ADDON_DIR
+
+if [[ "${HOST}" == *"$JUGG_WD"* ]]; then
+   cp --recursive ./ $ADDON_DIR # this is for WSL
+else
+   cp -R ./ $ADDON_DIR
+fi
+
 echo '——————————————————————————————————————————'
 
 echo "Switching into the 'mark-item-as' Downloads folder..."
