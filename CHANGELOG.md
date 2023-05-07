@@ -1,4 +1,11 @@
-## 1.0.2 (2023-05-05) 
+## 1.0.3 (2023-05-06) 
+
+## Bug Fix 
+
+- Fix GH Issue #11 - Lua Error 
+- Fixes an issue where setting the `GameTooltip` text for marked items would sometimes give an error about a bad arg 
+
+## 1.0.2 (2023-05-05)
 
 ## Patch Update 
 
