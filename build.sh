@@ -1,6 +1,5 @@
 # Build script to create a clean version of the folder for upload to Curseforge
 # NOTE :: Run this by using `zsh build.sh`; DON'T DO THIS `./build.sh`
-# Test this out on macOS, it works on WSL
 echo "================================================================"
 echo "Running the Curseforge upload/build script for 'mark-item-as'..."
 echo "================================================================"
@@ -9,12 +8,14 @@ DIR_BASE="${HOME}"
 JUGG_WD='jugg-wd' # my gaming PC
 
 if [[ "${HOST}" == *"$JUGG_WD"* ]]; then
+   # When running this on Windows, have to use WSL because `zsh` is not available on PowerShell
    WSL_BASE='/mnt/f'
    echo "You're on WSL. Switching the build location base to '${WSL_BASE}'."
    DIR_BASE="${WSL_BASE}"
    echo '——————————————————————————————————————————'
 fi
 
+# TODO :: Update this path to dynamically pull the version from the TOC
 ADDON_DIR="${DIR_BASE}/Downloads/mark-item-as"
 
 echo "The current addon dir location is..."

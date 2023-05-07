@@ -3,7 +3,7 @@
 ## DefaultState: enabled
 ## GitHub: https://github.com/gflujan/mark-item-as
 ## Interface: 100100
-## Last Updated: 05-May-2023
+## Last Updated: 06-May-2023
 ## Notes: |nUtility addon that lets you designate any item as junk that will be sold when visiting a merchant.|n|nVersion 1.1.0
 ## SavedVariables: MarkItemAsDB
 ## Title: |cFF00ffffMark Item As|r
