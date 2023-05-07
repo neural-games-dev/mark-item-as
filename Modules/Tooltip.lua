@@ -28,29 +28,35 @@ function Tooltip:Init(mia)
 end
 
 function Tooltip:SetGameTooltip(tooltip, context)
+   local enableVerboseLogging = self.mia.utils:GetDbValue('enableVerboseLogging');
    local junkItems = self.mia.utils:GetDbValue('junkItems');
    local showTooltipText = self.mia.utils:GetDbValue('showTooltipText');
 
-   if (self.mia.utils:GetDbValue('enableVerboseLogging')) then
+   if (enableVerboseLogging) then
       self.mia.logger:Debug(context .. ': SetGameTooltip has been called. Show text? -> ' .. tostring(showTooltipText));
    end
 
    if (not tooltip.GetItem) then
-      self.mia.logger:Debug(context .. ': No tooltip `GetItem` found. Returning...');
+      self.mia.logger:Debug(context .. ': SetGameTooltip -- No tooltip `GetItem` found. Returning...');
       return ;
    end
 
    if (showTooltipText) then
       local itemName, itemLink = tooltip:GetItem();
-      local itemID = tonumber(string.match(itemLink, 'item:(%d+):'));
-      local isItemMarkedJunk = junkItems[itemID];
 
-      if (isItemMarkedJunk) then
-         if (self.mia.utils:GetDbValue('enableVerboseLogging')) then
-            self.mia.logger:Debug(context .. ': Adding item tooltip text to "' .. tostring(itemName) .. '", with ID: ' .. tostring(itemID));
+      if (itemLink) then
+         local itemID = tonumber(string.match(itemLink, 'item:(%d+):'));
+         local isItemMarkedJunk = junkItems[itemID];
+
+         if (isItemMarkedJunk) then
+            if (enableVerboseLogging) then
+               self.mia.logger:Debug(context .. ': SetGameTooltip -- Adding item tooltip text to "' .. tostring(itemName) .. '", with ID: ' .. tostring(itemID));
+            end
+
+            tooltip:AddLine('Marked as Junk - To be sold');
          end
-
-         tooltip:AddLine('Marked as Junk - To be sold');
+      else
+         self.mia.logger:Debug(context .. ': SetGameTooltip -- No `itemLink` found to add tooltip text.');
       end
    end
 end
