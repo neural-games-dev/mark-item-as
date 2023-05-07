@@ -2,7 +2,7 @@
 ## Title: |cFF00ffffMark Item As|r
 ## Version: v1.0.3
 ## SavedVariables: MarkItemAsDB
-## Notes: Utility addon that lets you designate any item as junk that will be sold when visiting a merchant (v1.0.1).
+## Notes: Utility addon that lets you designate any item as junk that will be sold when visiting a merchant (v1.0.3).
 ## Author: Neural Games
 ## eMail: anewlevelmp@gmail.com
 ## URL: https://www.curseforge.com/wow/addons/mark-item-as
