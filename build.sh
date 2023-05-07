@@ -16,7 +16,7 @@ if [[ "${HOST}" == *"$JUGG_WD"* ]]; then
 fi
 
 # TODO :: Update this path to dynamically pull the version from the TOC
-ADDON_DIR="${DIR_BASE}/Downloads/mark-item-as_v1.0.3"
+ADDON_DIR="${DIR_BASE}/Downloads/mark-item-as"
 
 echo "The current addon dir location is..."
 echo $ADDON_DIR
