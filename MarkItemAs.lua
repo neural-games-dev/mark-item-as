@@ -11,10 +11,36 @@ local MarkItemAs = LibStub('AceAddon-3.0'):NewAddon('MarkItemAs', 'AceConsole-3.
 --## ===============================================================================================
 --## START UP & GREETING SCRIPTS
 --## ===============================================================================================
-function MarkItemAs:OnInitialize()
-   self.version = C_AddOns.GetAddOnMetadata('mark-item-as', 'Version'); -- this pulls the version number from the TOC file
-   self.db = LibStub('AceDB-3.0'):New('MarkItemAsDB', { profile = MIA_Defaults }, true);
+function MarkItemAs:RegisterEventListeners()
+   -- Third args can be passed to these callbacks
+   -- these third args are extra values that you want the CBs to have
+   self:RegisterEvent('BAG_OPEN', 'BagOpenCB');
+   self:RegisterEvent('BAG_UPDATE', 'BagUpdateCB');
+   self:RegisterEvent('MERCHANT_CLOSED', 'MerchantClosedCB');
+   self:RegisterEvent('MERCHANT_SHOW', 'MerchantShowCB');
+   self:RegisterEvent('PLAYER_LOGIN', 'PlayerLoginCB');
+   self:RegisterEvent('PLAYER_LOGOUT', 'PlayerLogoutCB');
+   self.utils:RegisterClickListeners();
+end
 
+function MarkItemAs:RegisterSlashies()
+   -- we're slashing prices so much it's like we're crazy!
+   self:RegisterChatCommand('mia', 'SlashCommandInfoConfig');
+   self:RegisterChatCommand('nrl', 'SlashCommandReload');
+   self:RegisterChatCommand('nfs', 'SlashCommandFrameStack');
+   self:RegisterChatCommand('nvdl', 'EnableVerboseLogging');
+end
+
+function MarkItemAs:SetIsLoaded()
+   -- checking for and storing loaded state of notable addons
+   self.utils:SetDbTableItem('isLoaded', 'baggins', IsAddOnLoaded('Baggins'));
+   self.utils:SetDbTableItem('isLoaded', 'bagnon', IsAddOnLoaded('Bagnon'));
+   self.utils:SetDbTableItem('isLoaded', 'itemLock', IsAddOnLoaded('ItemLock'));
+   self.utils:SetDbTableItem('isLoaded', 'peddler', IsAddOnLoaded('Peddler'));
+   self.utils:SetDbTableItem('isLoaded', 'prat', IsAddOnLoaded('Prat-3.0'));
+end
+
+function MarkItemAs:SetModules()
    -- calling all modules! all modules to the front! (keep in this order)
    self.chalk = self:GetModule('Chalk');
    self.utils = self:GetModule('Utils');
@@ -23,6 +49,13 @@ function MarkItemAs:OnInitialize()
    self.selling = self:GetModule('Selling');
    --self.sorting = self:GetModule('Sorting');
    self.tooltip = self:GetModule('Tooltip');
+end
+
+function MarkItemAs:OnInitialize()
+   self.version = C_AddOns.GetAddOnMetadata('mark-item-as', 'Version'); -- this pulls the version number from the TOC file
+   self.db = LibStub('AceDB-3.0'):New('MarkItemAsDB', { profile = MIA_Defaults }, true);
+
+   self:SetModules();
 
    -- do you init or not bro?!
    self.config:Init(self);
@@ -41,29 +74,12 @@ function MarkItemAs:OnInitialize()
       end)
    end
 
-   -- we're slashing prices so much it's like we're crazy!
-   self:RegisterChatCommand('mia', 'SlashCommandInfoConfig');
-   self:RegisterChatCommand('nrl', 'SlashCommandReload');
-   self:RegisterChatCommand('nfs', 'SlashCommandFrameStack');
-   self:RegisterChatCommand('nvdl', 'EnableVerboseLogging');
+   self:RegisterSlashies();
 end
 
 function MarkItemAs:OnEnable()
-   -- Third args can be passed to these callbacks
-   -- these third args are extra values that you want the CBs to have
-   self:RegisterEvent('BAG_OPEN', 'BagOpenCB');
-   self:RegisterEvent('BAG_UPDATE', 'BagUpdateCB');
-   self:RegisterEvent('MERCHANT_CLOSED', 'MerchantClosedCB');
-   self:RegisterEvent('MERCHANT_SHOW', 'MerchantShowCB');
-   self:RegisterEvent('PLAYER_LOGIN', 'PlayerLoginCB');
-   self:RegisterEvent('PLAYER_LOGOUT', 'PlayerLogoutCB');
-   self.utils:RegisterClickListeners();
-
-   -- checking for and storing loaded state of notable addons
-   self.utils:SetDbTableItem('isLoaded', 'baggins', IsAddOnLoaded('Baggins'));
-   self.utils:SetDbTableItem('isLoaded', 'itemLock', IsAddOnLoaded('ItemLock'));
-   self.utils:SetDbTableItem('isLoaded', 'peddler', IsAddOnLoaded('Peddler'));
-   self.utils:SetDbTableItem('isLoaded', 'prat', IsAddOnLoaded('Prat-3.0'));
+   self:RegisterEventListeners();
+   self:SetIsLoaded();
 
    -- getting current player info
    self.utils:SetDbTableItem('playerInfo', 'factionGroup', UnitFactionGroup('player'));

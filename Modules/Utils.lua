@@ -273,78 +273,107 @@ function Utils:UpdateBagMarkings(isClickEvent)
    local numMarkedActions = 0;
 
    for bagIndex = 0, MIA_Constants.numContainers, 1 do
+      -- NOTE :: This is what `ItemLock` is doing, they're abstracting out the logic of getting the `slotFrame` name/ID into the plugins
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
       local numSlots = C_Container.GetContainerNumSlots(bagIndex);
       local isBagOpen = IsBagOpen(bagIndex);
+      local isBagnonLoaded = self:GetDbValue('isLoaded.bagnon');
+
+      if (isBagnonLoaded) then
+         -- NOTE :: This comment came from `ItemLock`
+         -- [Bagnon's] container frames are split into fixed 36 slot chunks
+         -- rather than based on the actual container capacity
+         numSlots = 36;
+      end
 
       mia.logger:Debug('——————————————————————————————————————————');
       mia.logger:Debug('Processing Bag Number: ' .. tostring(bagIndex));
       mia.logger:Debug('——————————————————————————————————————————');
       mia.logger:Debug('bagName = ' .. tostring(bagName) .. '\n' ..
          'numSlots = ' .. tostring(numSlots) .. '\n' ..
+         'isBagnonLoaded = ' .. tostring(isBagnonLoaded) .. '\n' ..
          'isBagOpen = ' .. tostring(isBagOpen)
       );
 
       for slotIndex = 1, numSlots, 1 do
-         local slotIndexInverted = numSlots - slotIndex + 1; -- Blizz bag slot indexes are weird
-         local slotFrame = _G[bagName .. 'Item' .. slotIndexInverted];
-         local slotFrameID = slotFrame:GetID();
-         local item = Item:CreateFromBagAndSlot(bagIndex, slotFrameID);
-         local itemName = item:GetItemName();
-         local itemID = item:GetItemID();
-         local isItemEmpty = item:IsItemEmpty();
-         local shouldLogMarkingAction = isClickEvent and numMarkedActions == 1;
+         local finalSlotIndex = numSlots - slotIndex + 1; -- Blizz bag slot indexes are weird
 
-         if (itemID ~= nil) then
-            mia.logger:Debug('Processing Item & Slot Frame:\n' ..
-               'item = ' .. tostring(item) .. '\n' ..
-               'itemName = ' .. tostring(itemName) .. '\n' ..
-               'itemID = ' .. tostring(itemID) .. '\n' ..
-               'isItemEmpty = ' .. tostring(isItemEmpty) .. '\n' ..
-               'slotIndex = ' .. tostring(slotIndex) .. '\n' ..
-               'slotIndexInverted = ' .. tostring(slotIndexInverted) .. '\n' ..
-               'slotFrameID = ' .. tostring(slotFrameID)
-            );
+         if (isBagnonLoaded) then
+            -- Reverting back to the un-inverted `slotIndex` because Bagnon is also weird, ¯\_(ツ)_/¯
+            finalSlotIndex = slotIndex;
+         end
 
-            local isItemMarkedJunk = db.junkItems[itemID];
-            local overlayStatus = '';
+         local slotFrame = _G[bagName .. 'Item' .. finalSlotIndex];
 
-            if (isItemMarkedJunk) then
-               if (not slotFrame.markedJunkOverlay) then
-                  -- This should just be for when we login/reload and we need to re-apply the MIA overlays
-                  overlayStatus = MIA_Constants.overlayStatus.MISSING;
-               elseif (slotFrame.markedJunkOverlay:IsShown()) then
-                  -- OLD COMMENT:
-                  -- This should just be for when we need to update the overlays visually
-                  -- because the user has been been logged in/reloaded for a while
-                  -- and has interacted with the bags already
-                  -- NEW COMMENT:
-                  -- This status is for re-showing the overlay when the user moves a marked item
-                  overlayStatus = MIA_Constants.overlayStatus.UPDATE;
-               else
-                  -- This re-shows the overlay after moving an item back to a previous spot
-                  overlayStatus = MIA_Constants.overlayStatus.HIDDEN;
-               end
+         if (slotFrame) then
+            local slotFrameID = slotFrame:GetID();
+            local item = Item:CreateFromBagAndSlot(bagIndex, slotFrameID);
+            local itemName = item:GetItemName();
+            local itemID = item:GetItemID();
+            local isItemEmpty = item:IsItemEmpty();
+            local shouldLogMarkingAction = isClickEvent and numMarkedActions == 1;
 
-               numMarkedActions = numMarkedActions + 1;
-
-               mia.logger:Debug('Item is marked. Updating marking for:\n' ..
+            if (itemID ~= nil) then
+               mia.logger:Debug('Processing Item & Slot Frame:\n' ..
+                  'item = ' .. tostring(item) .. '\n' ..
                   'itemName = ' .. tostring(itemName) .. '\n' ..
                   'itemID = ' .. tostring(itemID) .. '\n' ..
-                  'markerIconLocation = ' .. tostring(db.markerIconLocationSelected) .. '\n' ..
-                  'numMarkedActions = ' .. tostring(numMarkedActions) .. '\n' ..
-                  'overlayStatus = ' .. tostring(overlayStatus)
+                  'isItemEmpty = ' .. tostring(isItemEmpty) .. '\n' ..
+                  'slotIndex = ' .. tostring(slotIndex) .. '\n' ..
+                  'finalSlotIndex = ' .. tostring(finalSlotIndex) .. '\n' ..
+                  'slotFrameID = ' .. tostring(slotFrameID)
                );
 
-               self:UpdateMarkedOverlay(
-                  overlayStatus, bagIndex, db.overlayColor, db,
-                  slotFrame, slotFrameID, itemName, itemID, shouldLogMarkingAction
-               );
+               local isItemMarkedJunk = db.junkItems[itemID];
+               local overlayStatus = '';
 
-               self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, db.borderThickness, db.borderColor);
+               if (isItemMarkedJunk) then
+                  if (not slotFrame.markedJunkOverlay) then
+                     -- This should just be for when we login/reload and we need to re-apply the MIA overlays
+                     overlayStatus = MIA_Constants.overlayStatus.MISSING;
+                  elseif (slotFrame.markedJunkOverlay:IsShown()) then
+                     -- OLD COMMENT:
+                     -- This should just be for when we need to update the overlays visually
+                     -- because the user has been been logged in/reloaded for a while
+                     -- and has interacted with the bags already
+                     -- NEW COMMENT:
+                     -- This status is for re-showing the overlay when the user moves a marked item
+                     overlayStatus = MIA_Constants.overlayStatus.UPDATE;
+                  else
+                     -- This re-shows the overlay after moving an item back to a previous spot
+                     overlayStatus = MIA_Constants.overlayStatus.HIDDEN;
+                  end
+
+                  numMarkedActions = numMarkedActions + 1;
+
+                  mia.logger:Debug('Item is marked. Updating marking for:\n' ..
+                     'itemName = ' .. tostring(itemName) .. '\n' ..
+                     'itemID = ' .. tostring(itemID) .. '\n' ..
+                     'markerIconLocation = ' .. tostring(db.markerIconLocationSelected) .. '\n' ..
+                     'numMarkedActions = ' .. tostring(numMarkedActions) .. '\n' ..
+                     'overlayStatus = ' .. tostring(overlayStatus)
+                  );
+
+                  self:UpdateMarkedOverlay(
+                     overlayStatus, bagIndex, db.overlayColor, db,
+                     slotFrame, slotFrameID, itemName, itemID, shouldLogMarkingAction
+                  );
+
+                  self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, db.borderThickness, db.borderColor);
+               elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
+                  numMarkedActions = numMarkedActions + 1;
+                  -- Clearing the still showing bag slot's overlay because it was moved,
+                  self:UpdateMarkedOverlay(
+                     MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
+                     slotFrame, slotFrameID, itemName, itemID, shouldLogMarkingAction
+                  );
+
+                  self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
+               end
             elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
                numMarkedActions = numMarkedActions + 1;
-               -- Clearing the still showing bag slot's overlay because it was moved,
+               -- Clearing the still showing bag slot's overlay because it is empty,
+               -- or it has been emptied by moving the item
                self:UpdateMarkedOverlay(
                   MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
                   slotFrame, slotFrameID, itemName, itemID, shouldLogMarkingAction
@@ -352,16 +381,6 @@ function Utils:UpdateBagMarkings(isClickEvent)
 
                self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
             end
-         elseif (slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
-            numMarkedActions = numMarkedActions + 1;
-            -- Clearing the still showing bag slot's overlay because it is empty,
-            -- or it has been emptied by moving the item
-            self:UpdateMarkedOverlay(
-               MIA_Constants.overlayStatus.SHOWING, bagIndex, MIA_Constants.colorReset, db,
-               slotFrame, slotFrameID, itemName, itemID, shouldLogMarkingAction
-            );
-
-            self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
          end
       end
    end
