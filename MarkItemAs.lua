@@ -60,10 +60,10 @@ function MarkItemAs:OnEnable()
    self.utils:RegisterClickListeners();
 
    -- checking for and storing loaded state of notable addons
-   self.utils:SetDbTableItem('isLoaded', 'baggins', IsAddOnLoaded('Baggins'));
-   self.utils:SetDbTableItem('isLoaded', 'itemLock', IsAddOnLoaded('ItemLock'));
-   self.utils:SetDbTableItem('isLoaded', 'peddler', IsAddOnLoaded('Peddler'));
-   self.utils:SetDbTableItem('isLoaded', 'prat', IsAddOnLoaded('Prat-3.0'));
+   self.utils:SetDbTableItem('isLoaded', 'baggins', C_AddOns.IsAddOnLoaded('Baggins'));
+   self.utils:SetDbTableItem('isLoaded', 'itemLock', C_AddOns.IsAddOnLoaded('ItemLock'));
+   self.utils:SetDbTableItem('isLoaded', 'peddler', C_AddOns.IsAddOnLoaded('Peddler'));
+   self.utils:SetDbTableItem('isLoaded', 'prat', C_AddOns.IsAddOnLoaded('Prat-3.0'));
 
    -- getting current player info
    self.utils:SetDbTableItem('playerInfo', 'factionGroup', UnitFactionGroup('player'));

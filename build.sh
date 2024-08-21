@@ -8,18 +8,26 @@ DIR_BASE="${HOME}"
 JUGG_WD='jugg-wd' # my gaming PC
 
 if [[ "${HOST}" == *"$JUGG_WD"* ]]; then
-   # When running this on Windows, have to use WSL because `zsh` is not available on PowerShell
-   WSL_BASE='/mnt/f'
-   echo "You're on WSL. Switching the build location base to '${WSL_BASE}'."
-   DIR_BASE="${WSL_BASE}"
-   echo '——————————————————————————————————————————'
+   if [[ "${SHELL}" == *"zsh"* ]]; then
+      # When running this on Windows, have to use WSL because `zsh` is not available on main side
+      WSL_BASE='/mnt/f';
+      echo "You're on WSL. Switching the build location base to '${WSL_BASE}'.";
+      DIR_BASE="${WSL_BASE}";
+      echo '——————————————————————————————————————————';
+   else
+      echo "You're not on WSL. Must use for 'zsh' to work. Exiting.";
+      exit 1;
+   fi
+else
+   echo "You're not on Windows. Do something else? Exiting.";
+   exit 1;
 fi
 
 # TODO :: Update this path to dynamically pull the version from the TOC
 ADDON_DIR="${DIR_BASE}/Downloads/mark-item-as"
 
 echo "The current addon dir location is..."
-echo $ADDON_DIR
+echo "$ADDON_DIR"
 echo '——————————————————————————————————————————'
 
 # Check to see if the downloads folder exists
@@ -27,9 +35,9 @@ if [[ ! -d "$ADDON_DIR" ]]; then
    echo "MIA folder does not exist. Creating..."
 
    if [[ "${HOST}" == *"$JUGG_WD"* ]]; then
-      mkdir --parents $ADDON_DIR # this is for WSL
+      mkdir --parents "$ADDON_DIR" # this is for WSL
    else
-      mkdir -p $ADDON_DIR
+      mkdir -p "$ADDON_DIR"
    fi
 
    echo '——————————————————————————————————————————'
@@ -39,15 +47,15 @@ fi
 echo "Cloning 'mark-item-as' into the Downloads folder..."
 
 if [[ "${HOST}" == *"$JUGG_WD"* ]]; then
-   cp --recursive ./ $ADDON_DIR # this is for WSL
+   cp --recursive ./ "$ADDON_DIR" # this is for WSL
 else
-   cp -R ./ $ADDON_DIR
+   cp -R ./ "$ADDON_DIR"
 fi
 
 echo '——————————————————————————————————————————'
 
 echo "Switching into the 'mark-item-as' Downloads folder..."
-cd $ADDON_DIR || exit
+cd "$ADDON_DIR" || exit
 echo '——————————————————————————————————————————'
 
 echo "Removing the Git & IDE settings dirs/files..."

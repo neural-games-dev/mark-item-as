@@ -18,7 +18,7 @@ function MarkItemAs:EnableVerboseLogging()
 end
 
 function MarkItemAs:SlashCommandFrameStack()
-   LoadAddOn('Blizzard_DebugTools');
+   C_AddOns.LoadAddOn('Blizzard_DebugTools');
    FrameStackTooltip_Toggle();
    return ;
 end

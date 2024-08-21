@@ -273,7 +273,7 @@ function Config:GetBlizzOptionsFrame(mia)
             args = {
                bagginsDisclaimer = {
                   fontSize = 'medium',
-                  hidden = not IsAddOnLoaded('Baggins'),
+                  hidden = not C_AddOns.IsAddOnLoaded('Baggins'),
                   image = 'Interface/Icons/INV_Misc_Questionmark',
                   name = MIA_Constants.warnings.bagginsLoadedMultiline,
                   order = 301,
@@ -281,7 +281,7 @@ function Config:GetBlizzOptionsFrame(mia)
                },
                sortAfterMarking = {
                   desc = 'After an item gets MARKED, this will sort your bags (i.e. "click" the broom icon) automatically.',
-                  disabled = IsAddOnLoaded('Baggins'),
+                  disabled = C_AddOns.IsAddOnLoaded('Baggins'),
                   get = function()
                      return mia.utils:GetDbValue('autoSortMarking');
                   end,
@@ -295,7 +295,7 @@ function Config:GetBlizzOptionsFrame(mia)
                },
                sortAfterUnmarking = {
                   desc = 'After an item gets UN-MARKED, this will sort your bags (i.e. "click" the broom icon) automatically.',
-                  disabled = IsAddOnLoaded('Baggins'),
+                  disabled = C_AddOns.IsAddOnLoaded('Baggins'),
                   get = function()
                      return mia.utils:GetDbValue('autoSortUnmarking');
                   end,
@@ -309,7 +309,7 @@ function Config:GetBlizzOptionsFrame(mia)
                },
                sortAfterSelling = {
                   desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.\n\nNote: This only happens if "auto-sell" is enabled, you sold at least 1 item, and after you close the merchant window.',
-                  disabled = IsAddOnLoaded('Baggins'),
+                  disabled = C_AddOns.IsAddOnLoaded('Baggins'),
                   get = function()
                      return mia.utils:GetDbValue('autoSortSelling');
                   end,

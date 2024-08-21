@@ -12,7 +12,7 @@ local Utils = mia:NewModule('Utils');
 local itemLock;
 local itemLockConfig;
 
-if (IsAddOnLoaded('ItemLock')) then
+if (C_AddOns.IsAddOnLoaded('ItemLock')) then
    itemLock = LibStub('AceAddon-3.0'):GetAddon('ItemLock');
 
    if (itemLock) then
@@ -286,8 +286,11 @@ function Utils:UpdateBagMarkings(isClickEvent)
       );
 
       for slotIndex = 1, numSlots, 1 do
+         mia.logger:Debug('Processing Slot Index: ' .. tostring(slotIndex));
          local slotIndexInverted = numSlots - slotIndex + 1; -- Blizz bag slot indexes are weird
+         mia.logger:Debug('Processing Inverted Slot Index: ' .. tostring(slotIndexInverted));
          local slotFrame = _G[bagName .. 'Item' .. slotIndexInverted];
+         mia.logger:Debug('slotFrame = ' .. tostring(slotFrame));
          local slotFrameID = slotFrame:GetID();
          local item = Item:CreateFromBagAndSlot(bagIndex, slotFrameID);
          local itemName = item:GetItemName();

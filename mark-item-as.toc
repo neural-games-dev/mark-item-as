@@ -1,6 +1,6 @@
-## Interface: 100100
+## Interface: 110002
 ## Title: |cFF00ffffMark Item As|r
-## Version: v1.0.3
+## Version: v1.1.0
 ## SavedVariables: MarkItemAsDB
 ## Notes: Utility addon that lets you designate any item as junk that will be sold when visiting a merchant (v1.0.3).
 ## Author: Neural Games
