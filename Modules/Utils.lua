@@ -289,6 +289,9 @@ function Utils:UpdateBagMarkings(isClickEvent)
          mia.logger:Debug('Processing Slot Index: ' .. tostring(slotIndex));
          local slotIndexInverted = numSlots - slotIndex + 1; -- Blizz bag slot indexes are weird
          mia.logger:Debug('Processing Inverted Slot Index: ' .. tostring(slotIndexInverted));
+         -- NOTE **[G]** :: instead of using `ContainerFrameXItemY` to access/manipulate the actual frame (i.e. add the overlay)
+         -- NOTE **[G]** :: it looks like I need to create my own new frame element and "place" it on top of the existing frame
+         -- NOTE **[G]** :: will/should prolly create a separate function for this
          local slotFrame = _G[bagName .. 'Item' .. slotIndexInverted];
          mia.logger:Debug('slotFrame = ' .. tostring(slotFrame));
          local slotFrameID = slotFrame:GetID();
