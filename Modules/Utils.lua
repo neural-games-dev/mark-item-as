@@ -272,6 +272,24 @@ function Utils:UpdateBagMarkings(isClickEvent)
    mia.logger:Debug('UPDATING BAG MARKINGS. Beginning iteration...');
    local numMarkedActions = 0;
 
+   -- TODO **[G]** :: DOING THIS MIGHT GET ME BACK TO HAVING SLOT FRAME IDs LIKE BEFORE?!?!?!
+   local btnCount = 0;
+   local children = { ContainerFrame1:GetChildren() };
+
+   for i, child in ipairs(children) do
+      local isButton = child:GetObjectType() == "Button";
+      -- instead of looking for `.2`, can I use a RegExp for any number instead?
+      local hasNumbers = child:GetDebugName():find(".2", 1, true);
+
+      if isButton and hasNumbers then
+         btnCount = btnCount + 1;
+         -- print(i, "--", child:GetObjectType(), "--", child:GetDebugName(), "--", child:GetID());
+         print(child:GetBoundsRect());
+      end
+   end
+
+   print("Num Buttons: " .. btnCount);
+
    for bagIndex = 0, MIA_Constants.numContainers, 1 do
       local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName();
       local numSlots = C_Container.GetContainerNumSlots(bagIndex);
