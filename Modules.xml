@@ -7,6 +7,8 @@
    <!-- MY MODULES - KEEP THESE IN ORDER -->
    <!-- ========================================================================== -->
    <Script file="Modules/Chalk.lua"/>
+   <Script file="Modules/Dump.lua"/>
+   <Script file="Modules/Inspecty.lua"/>
    <Script file="Modules/Utils.lua"/>
    <Script file="Modules/Config.lua"/>
    <Script file="Modules/Logger.lua"/>

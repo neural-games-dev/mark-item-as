@@ -1,3 +1,4 @@
+-- TODO **[G]** :: 🚀--BLLR?: BREAK THIS UP INTO SMALLER FILES!!!!!
 --## ===============================================================================================
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
@@ -288,19 +289,20 @@ function Utils:UpdateBagMarkings(isClickEvent)
       -- TODO **[G]** :: DOING THIS MIGHT GET ME BACK TO HAVING SLOT FRAME IDs LIKE BEFORE?!?!?!
       local btnCount = 0;
       local slotFrames = {};
-      local containerFrame = _G['ContainerFrame' .. bagIndex + 1];
+      local containerFrameName = 'ContainerFrame' .. bagIndex + 1;
+      local containerFrame = _G[containerFrameName];
 
       mia.logger:Debug('--BLLR?: -----[ children start ]-----');
-      for _, child in ipairs({ containerFrame:GetChildren() }) do
-         -- ^ `_` == `i`
+      for idx, child in ipairs({ containerFrame:GetChildren() }) do
+         local slotFrameName = child:GetDebugName();
+         -- NOTE :: This `.match` is checking a RegExp for a name similar to `ContainerFrameX.1sadfas1ac03`
+         local hasNumbers = string.match(slotFrameName, containerFrameName .. ".(%d+)");
          local isButton = child:GetObjectType() == "Button";
-         -- instead of looking for `.2`, can I use a RegExp for any number instead?
-         local hasNumbers = child:GetDebugName():find(".2", 1, true);
 
          if isButton and hasNumbers then
             btnCount = btnCount + 1;
-            print(i, "--", child:GetObjectType(), "--", child:GetDebugName(), "--", child:GetID());
-            print(child:GetBoundsRect());
+            mia.logger:Debug(child:GetID(), "--", child:GetDebugName()); --, "(idx: " .. idx .. ")");
+            -- mia.logger:Debug(child:GetBoundsRect());
             table.insert(slotFrames, { [child:GetID()] = child });
          end
       end
@@ -316,25 +318,17 @@ function Utils:UpdateBagMarkings(isClickEvent)
          mia.logger:Debug('Processing Slot Index: ' .. tostring(slotIndex));
          mia.logger:Debug('Processing Inverted Slot Index: ' .. tostring(slotIndexInverted));
 
-         -- NOTE **[G]** :: instead of using `ContainerFrameXItemY` to access/manipulate the actual frame (i.e. add the overlay)
-         -- NOTE **[G]** :: it looks like I need to create my own new frame element and "place" it on top of the existing frame
-         -- NOTE **[G]** :: will/should prolly create a separate function for this
-
-         local item = Item:CreateFromBagAndSlot(bagIndex, slotIndex);
-         -- local item = C_Container.GetContainerItemInfo(bagIndex, slotIndex);
          -- TODO **[G]** :: the `item` table that this stores/returns contains `hasNoValue` and `hyperlink`
          -- which will be valuable for other things; `iconFileId` might also be useful at some point
 
-         -- local slotFrame = _G[bagName .. 'Item' .. slotIndexInverted]; -- TODO :: update this to use the `children` iterator logic above
-         local slotFrame = slotFrames[slotIndexInverted];
-
-         mia.logger:Debug('slotFrame = ' .. tostring(slotFrame));
+         local slotFrame = slotFrames[slotIndex];
          -- local slotFrameID = slotFrame:GetID();
-         -- local item = Item:CreateFromBagAndSlot(bagIndex, slotFrameID); -- OLD?!?!?!
-
+         local item = Item:CreateFromBagAndSlot(bagIndex, slotIndex);
          local itemName = item:GetItemName();
          local itemID = item:GetItemID();
          local isItemEmpty = item:IsItemEmpty();
+         -- item:LockItem(); -- NOTE :: **[G]** :: keeping this as a backup, I don't like the idea of locking/unlocking items, but it could work
+         local isItemLocked = item:IsItemLocked();
          local shouldLogMarkingAction = isClickEvent and numMarkedActions == 1;
 
          if (itemID ~= nil) then
@@ -343,16 +337,17 @@ function Utils:UpdateBagMarkings(isClickEvent)
                'itemName = ' .. tostring(itemName) .. '\n' ..
                'itemID = ' .. tostring(itemID) .. '\n' ..
                'isItemEmpty = ' .. tostring(isItemEmpty) .. '\n' ..
+               'isItemLocked = ' .. tostring(isItemLocked) .. '\n' ..
                'slotIndex = ' .. tostring(slotIndex) .. '\n' ..
                'slotIndexInverted = ' .. tostring(slotIndexInverted) .. '\n' ..
                'slotFrameID = ' .. tostring(slotFrameID or "N/A") .. '\n' ..
-               'shouldLogMarkingAction = ' .. tostring(shouldLogMarkingAction or false)
+               'shouldLogMarkingAction = ' .. tostring(shouldLogMarkingAction or 'N/A') .. '\n'
             );
 
             local itemIdStoredInDB = db.junkItems[itemID];
             local overlayStatus = '';
 
-            if (itemIdStoredInDB) then
+            if (itemIdStoredInDB ~= nil) then
                mia.logger:Debug('Item ID "' .. itemID .. '" is stored in the DB, checking for overlay...');
 
                if (not slotFrame.markedJunkOverlay) then
@@ -383,7 +378,7 @@ function Utils:UpdateBagMarkings(isClickEvent)
 
                self:UpdateMarkedOverlay(
                   overlayStatus, bagIndex, db.overlayColor, db,
-                  slotFrame, slotFrameID, itemName, itemID, shouldLogMarkingAction
+                  slotFrame, itemName, itemID, shouldLogMarkingAction
                );
 
                self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, db.borderThickness, db.borderColor);
@@ -397,6 +392,8 @@ function Utils:UpdateBagMarkings(isClickEvent)
                );
 
                self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
+            else
+               mia.logger:Debug('BOO!!! nothing happened');
             end
          elseif (slotFrame and slotFrame.markedJunkOverlay and slotFrame.markedJunkOverlay:IsShown()) then
             mia.logger:Debug('Slot frame was empty but overlay still exists. Clearing...');
@@ -410,7 +407,7 @@ function Utils:UpdateBagMarkings(isClickEvent)
 
             self:UpdateMarkedBorder(slotFrame.markedJunkOverlay, 0, MIA_Constants.colorReset);
          else
-            mia.logger:Debug('No item ID found and slot frame was missing or did not contain an overlay, ignoring...');
+            -- mia.logger:Debug('No item ID found and slot frame was missing or did not contain an overlay, ignoring...');
          end
       end
 
@@ -449,7 +446,7 @@ function Utils:UpdateMarkedBorder(frame, thickness, color)
    end
 end
 
-function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, itemName, itemID, shouldLogMarkingAction)
+function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, itemName, itemID, shouldLogMarkingAction)
    local isMissingHiddenOrUpdate = status == MIA_Constants.overlayStatus.MISSING or
       status == MIA_Constants.overlayStatus.HIDDEN or
       status == MIA_Constants.overlayStatus.UPDATE;
@@ -518,7 +515,6 @@ function Utils:UpdateMarkedOverlay(status, bagIndex, color, db, frame, frameID, 
 
       mia.logger:Debug('Clearing the overlay:\n' ..
          'bag = ' .. tostring(bagIndex) .. '\n' ..
-         'frame = ' .. tostring(frameID) .. '\n' ..
          'status = ' .. tostring(status)
       );
 

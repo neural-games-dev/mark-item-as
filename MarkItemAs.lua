@@ -17,6 +17,8 @@ function MarkItemAs:OnInitialize()
 
    -- calling all modules! all modules to the front! (keep in this order)
    self.chalk = self:GetModule('Chalk');
+   self.dump = self:GetModule('Dump');
+   self.inspecty = self:GetModule('Inspecty');
    self.utils = self:GetModule('Utils');
    self.config = self:GetModule('Config');
    self.logger = self:GetModule('Logger');

@@ -521,7 +521,7 @@ end
 
 ChatThrottleLib:Init()
 
---[[ WoWBench debugging snippet
+--[[ WoWBench Inspecty.lua snippet
 if(WOWB_VER) then
 	local function SayTimer()
 		print("SAY: "..GetTime().." "..arg1)

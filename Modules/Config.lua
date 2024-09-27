@@ -371,12 +371,12 @@ function Config:GetBlizzOptionsFrame(mia)
                   width = 'full',
                },
                enableDebugging = {
-                  desc = 'This will enable/disable debugging for this add-on. It is really only useful for other add-on devs.\n\n'
+                  desc = 'This will enable/disable Inspecty.lua for this add-on. It is really only useful for other add-on devs.\n\n'
                       .. mia.chalk:warn('BE WARNED! It can get SPAMMY!'),
                   get = function()
                      return mia.utils:GetDbValue('debugEnabled');
                   end,
-                  name = 'Enable MIA debugging?',
+                  name = 'Enable MIA Inspecty.lua?',
                   order = 404,
                   set = function(info, value)
                      mia.utils:SetDbValue('debugEnabled', value);
