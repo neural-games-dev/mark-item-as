@@ -1,12 +1,12 @@
-# Mark Item As 
+# Mark Item As
 
 ## Overview 
 
-[Mark Item As](https://www.curseforge.com/wow/addons/mark-item-as) is a World of Warcraft (WoW) utility add-on that helps you mark & automatically sell items that you don't want to keep. 
+**Mark Item As** is a World of Warcraft (WoW) utility add-on that helps you mark & automatically sell items that you don't want to keep. 
 
 ## How It Works 
 
-MarkItemAs (a.k.a. MIA) is easy to use. Mark any items you don't want to keep with the pre-defined (or a custom) click combo and when you visit a merchant, those items will be automatically sold. 
+Mark Item As (a.k.a. MIA) is easy to use. Mark any items you don't want to keep with the pre-defined (or a custom) click combo and when you visit a merchant, those items will be automatically sold. 
 
 To use the click combo, just hover your mouse over the item you want to mark and activate the combo. 
 
