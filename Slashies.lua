@@ -7,8 +7,6 @@ local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
---local Slashies = MarkItemAs:NewModule('Utils');
-
 --## ===============================================================================================
 --## DEFINING ALL CUSTOM UTILS TO BE USED THROUGHOUT THE ADDON
 --## ===============================================================================================
@@ -28,7 +26,6 @@ function MarkItemAs:SlashCommandInfoConfig(command)
 
    -- Display the MarkItemAs commands and notes
    if (command == '') then
-      --print('🌟💰🌟 |cFF00ffff-- MARK AS JUNK COMMANDS --|r 🌟💰🌟');
       self.logger:Print(self.chalk:cyan('----- COMMANDS -----') .. '\n' ..
          self.chalk:badass('/mia config (c)') .. ' -- Shows the config window to customize this addon.\n' ..
          self.chalk:badass('/mia options (o)') .. ' -- This is an alias for "config".\n' ..
