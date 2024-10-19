@@ -5,11 +5,10 @@
 ## Notes: Utility addon that lets you designate any item as junk that will be sold when visiting a merchant (v1.0.3).
 ## Author: Neural Games
 ## eMail: anewlevelmp@gmail.com
-## URL: https://www.curseforge.com/wow/addons/mark-item-as
-## GitHub: https://github.com/gflujan/mark-item-as
+## GitHub: https://github.com/neural-games-dev/mark-item-as
 ## DefaultState: enabled
 ## Created: 07-Nov-2022
-## Last Updated: 06-May-2023
+## Last Updated: 19-Oct-2024
 
 # 3rd party libs
 Libs.xml
