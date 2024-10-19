@@ -16,6 +16,7 @@ coverage/**/*
 dist/
 dist_electron/
 logs/
+OLD_ace_3/
 
 # Environment Files
 .env
