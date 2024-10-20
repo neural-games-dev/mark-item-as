@@ -12,9 +12,9 @@ local Config = MarkItemAs:NewModule('Config');
 --## ==========================================================================
 --## DEFINING THE MAIN OPTIONS FRAME
 --## ==========================================================================
--- `addon` is a passed in reference of MarkItemAs's `self`
-function Config:Init(addon)
-   LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkItemAs', self:GetBlizzOptionsFrame(addon));
+-- `mia` is a passed in reference of MarkItemAs's `self`
+function Config:Init(mia)
+   LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkItemAs', self:GetBlizzOptionsFrame(mia));
    self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('MarkItemAs', 'Mark Item As');
 end
 

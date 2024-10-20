@@ -2,12 +2,12 @@
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
 -- Libs / Packages
-local mia = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
+local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
-local chalk = mia:GetModule('Chalk');
+local chalk = MarkItemAs:GetModule('Chalk');
 
 --## ==========================================================================
 --## DEFINING THE GLOBAL CONSTANTS TABLE TO BE USED THROUGHOUT THE ADDON

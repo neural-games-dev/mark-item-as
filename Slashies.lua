@@ -22,10 +22,10 @@ function MarkItemAs:SlashCommandFrameStack()
 end
 
 function MarkItemAs:SlashCommandInfoConfig(command)
-   command = command:trim();
+   local cmd = command:trim();
 
    -- Display the MarkItemAs commands and notes
-   if (command == '') then
+   if (cmd == '') then
       self.logger:Print(self.chalk:cyan('----- COMMANDS -----') .. '\n' ..
          self.chalk:badass('/mia config (c)') .. ' -- Shows the config window to customize this addon.\n' ..
          self.chalk:badass('/mia options (o)') .. ' -- This is an alias for "config".\n' ..
@@ -37,31 +37,31 @@ function MarkItemAs:SlashCommandInfoConfig(command)
       return ;
    end
 
-   local isConfigOptionsCommand = command == 'config' or
-      command == 'c' or
-      command == 'options' or
-      command == 'o';
+   local isConfigOptionsCommand = cmd == 'config' or
+      cmd == 'c' or
+      cmd == 'options' or
+      cmd == 'o';
 
    if (isConfigOptionsCommand) then
       self.utils:HandleConfigOptionsDisplay();
       return ;
    end
 
-   local isShowHideOutputCommand = command == 'hidetext' or
-      command == 'ht' or
-      command == 'showtext' or
-      command == 'st';
+   local isShowHideOutputCommand = cmd == 'hidetext' or
+      cmd == 'ht' or
+      cmd == 'showtext' or
+      cmd == 'st';
 
    if (isShowHideOutputCommand) then
       local showOutputLogMessage;
       local showOutputValue;
 
-      if (command == 'hidetext' or command == 'ht') then
+      if (cmd == 'hidetext' or cmd == 'ht') then
          showOutputLogMessage = self.chalk:red('DISABLED');
          showOutputValue = false;
       end
 
-      if (command == 'showtext' or command == 'st') then
+      if (cmd == 'showtext' or cmd == 'st') then
          showOutputLogMessage = self.chalk:green('ENABLED');
          showOutputValue = true;
       end
@@ -71,7 +71,7 @@ function MarkItemAs:SlashCommandInfoConfig(command)
       return ;
    end
 
-   local isDebugCommand = command == 'debug' or command == 'd';
+   local isDebugCommand = cmd == 'debug' or cmd == 'd';
 
    if (isDebugCommand) then
       local debugValue = not (self.db.profile.debugEnabled == true);
@@ -85,7 +85,7 @@ function MarkItemAs:SlashCommandInfoConfig(command)
       return ;
    end
 
-   self.logger:Print('"' .. command .. '" is an unknown command.');
+   self.logger:Print('"' .. cmd .. '" is an unknown command.');
    return ;
 end
 

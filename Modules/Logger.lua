@@ -18,7 +18,7 @@ function Logger:Init(mia)
 end
 
 function Logger:Debug(...)
-   if (MarkItemAs.db.profile.debugEnabled) then
+   if (self.mia.db.profile.debugEnabled) then
       local prefix;
 
       if (self.isPratLoaded) then
@@ -27,7 +27,7 @@ function Logger:Debug(...)
          prefix = self.mia.chalk:debug('[DEBUG] ') .. self.mia.chalk:ace('(' .. tostring(date()) .. ')');
       end
 
-      MarkItemAs:Print(prefix, ...);
+      self.mia:Print(prefix, ...);
    end
 end
 
@@ -57,7 +57,7 @@ function Logger:Print(...)
    if (self.mia.utils:GetDbValue('debugEnabled')) then
       self:Debug(...);
    else
-      MarkItemAs:Print(...);
+      self.mia:Print(...);
    end
 end
 
