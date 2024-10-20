@@ -43,7 +43,7 @@ MIA_Constants = {
       -- COIN ALTS: Interface/Icons/INV_Misc_Coin_17, Ability_dragonriding_glyph01
       Stack = 'Interface/Icons/INV_Misc_Coin_02',
       -- COIN ALTS: Interface/Icons/INV_Misc_Coin_01, INV_Misc_Coin_05
-      Trash = 'Interface/AddOns/mark-item-as/trash-sm',
+      Trash = 'Interface/AddOns/mark-item-as/media/trash-sm',
    },
    modFunctionsMap = {
       ['Alt'] = IsAltKeyDown,

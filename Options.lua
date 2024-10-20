@@ -1,5 +1,5 @@
 --## ==========================================================================
---## DEFINING THE DEFAULT OPTIONS TABLE
+--## DEFINING THE DEFAULT DB PROFILE OPTIONS TABLE
 --## ==========================================================================
 MIA_Defaults = {
    autoSellMerchant = true,
