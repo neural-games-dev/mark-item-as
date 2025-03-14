@@ -308,7 +308,7 @@ function Utils:UpdateBagMarkings(isClickEvent)
       local isBagOpen = IsBagOpen(bagIndex)
 
       mia.logger:Debug("--BLLR?: =====[ BAG START ]=====")
-      mia.logger:Debug("Processing Bag Number: " .. tostring(bagIndex))
+      mia.logger:Debug("Processing Bag Number: " .. tostring(bagIndex) + 1)
 
       mia.logger:Debug(
          "bagName = "
@@ -336,7 +336,7 @@ function Utils:UpdateBagMarkings(isClickEvent)
 
          if isButton and hasNumbers then
             btnCount = btnCount + 1
-            mia.logger:Debug(child:GetID(), "--", child:GetDebugName()) --, "(idx: " .. idx .. ")");
+            mia.logger:Debug(child:GetID(), "--", child:GetDebugName(), "(idx: " .. idx .. ")")
             -- mia.logger:Debug(child:GetBoundsRect());
             table.insert(slotFrames, { [child:GetID()] = child })
          end
@@ -499,7 +499,7 @@ function Utils:UpdateBagMarkings(isClickEvent)
                MIA_Constants.colorReset,
                db,
                slotFrame,
-               slotFrameID,
+               -- slotFrameID,
                itemName,
                itemID,
                shouldLogMarkingAction
@@ -568,8 +568,32 @@ function Utils:UpdateMarkedOverlay(
       local iconPath = MIA_Constants.iconPathMap[db.markerIconSelected]
       local position = MIA_Constants.iconLocationsMap[db.markerIconLocationSelected]
 
+      if not frame then
+         print("BLLR? -- FRAME DOES NOT EXIST")
+      else
+         print("BLLR? -- FRAME DOES EXIST")
+      end
+
+      if not frame.GetObjectType then
+         print("BLLR? -- FRAME DOES NOT HAVE A GetObjectType METHOD")
+      else
+         print("BLLR? -- FRAME HAS AN OBJECT TYPE: " .. frame:GetObjectType())
+      end
+
+      if not frame.GetTexture then
+         print("BLLR? -- FRAME DOES NOT HAVE A GetTexture METHOD")
+      else
+         print("BLLR? -- FRAME DOES HAVE A TEXTURE: " .. frame:GetTexture())
+      end
+
+      if not frame.GetID then
+         print("BLLR? -- FRAME DOES NOT HAVE A GetID METHOD")
+      else
+         print("BLLR? -- FRAME DOES HAVE AN ID: " .. frame:GetID())
+      end
+
       if status == MIA_Constants.overlayStatus.MISSING then
-         frame.markedJunkOverlay = CreateFrame("FRAME", nil, frame, "BackdropTemplate")
+         frame.markedJunkOverlay = CreateFrame("Button", nil, frame, "BackdropTemplate")
          frame.markedJunkOverlay:SetSize(frame:GetSize())
          frame.markedJunkOverlay:SetPoint("CENTER")
 
