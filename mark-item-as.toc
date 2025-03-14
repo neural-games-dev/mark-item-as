@@ -1,4 +1,4 @@
-## Interface: 110002
+## Interface: 110100
 ## Title: |cFF00ffffMark Item As|r
 ## IconTexture: media/trash-sm
 ## Version: v1.1.0

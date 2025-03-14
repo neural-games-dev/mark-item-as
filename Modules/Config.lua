@@ -2,75 +2,78 @@
 --## ALL REQUIRED IMPORTS
 --## ==========================================================================
 -- Libs / Packages
-local MarkItemAs = LibStub('AceAddon-3.0'):GetAddon('MarkItemAs');
+local MarkItemAs = LibStub("AceAddon-3.0"):GetAddon("MarkItemAs")
 
 --## ===============================================================================================
 --## INTERNAL VARS & SET UP
 --## ===============================================================================================
-local Config = MarkItemAs:NewModule('Config');
+local Config = MarkItemAs:NewModule("Config")
 
 --## ==========================================================================
 --## DEFINING THE MAIN OPTIONS FRAME
 --## ==========================================================================
 -- `mia` is a passed in reference of MarkItemAs's `self`
 function Config:Init(mia)
-   LibStub('AceConfig-3.0'):RegisterOptionsTable('MarkItemAs', self:GetBlizzOptionsFrame(mia));
-   self.optionsFrame = LibStub('AceConfigDialog-3.0'):AddToBlizOptions('MarkItemAs', 'Mark Item As');
+   LibStub("AceConfig-3.0"):RegisterOptionsTable("MarkItemAs", self:GetBlizzOptionsFrame(mia))
+   self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("MarkItemAs", "Mark Item As")
 end
 
 -- `mia` that's passed in is a reference to MarkItemAs's `self`
 function Config:GetBlizzOptionsFrame(mia)
-   local db = mia.db.profile;
+   local db = mia.db.profile
 
    return {
-      desc = 'Configure the ' .. mia.chalk:ace('MarkItemAs') .. ' options for your junk items.',
+      desc = "Configure the " .. mia.chalk:ace("MarkItemAs") .. " options for your junk items.",
       --handler = self, -- keeping this for reference
-      name = 'Mark Item As (' .. tostring(mia.version) .. ')',
-      type = 'group',
+      name = "Mark Item As (" .. tostring(mia.version) .. ")",
+      type = "group",
       args = {
          markingOptions = {
-            desc = '',
-            name = 'Marking',
+            desc = "",
+            name = "Marking",
             order = 100,
-            type = 'group',
+            type = "group",
             args = {
                keybindHeader = {
-                  name = 'Keybind',
+                  name = "Keybind",
                   order = 101,
-                  type = 'header',
-                  width = 'full',
+                  type = "header",
+                  width = "full",
                },
                modifierKey = {
-                  desc = 'This is the additional key to press, along with your activator, to mark your items.',
+                  desc = "This is the additional key to press, along with your activator, to mark your items.",
                   get = function()
-                     return mia.utils:GetDbValue('userSelectedModKey');
+                     return mia.utils:GetDbValue("userSelectedModKey")
                   end,
-                  name = 'Select your modifier key...',
+                  name = "Select your modifier key...",
                   order = 102,
                   set = function(info, value)
-                     mia.utils:SetDbValue('userSelectedModKey', MIA_Constants.modKeysMap[value]);
+                     mia.utils:SetDbValue("userSelectedModKey", MIA_Constants.modKeysMap[value])
                   end,
-                  type = 'select',
+                  type = "select",
                   values = MIA_Constants.modKeysMap,
                },
                activatorKey = {
-                  desc = 'This is the main mouse key to press, along with your modifier, to mark your items.',
+                  desc = "This is the main mouse key to press, along with your modifier, to mark your items.",
                   get = function()
-                     return mia.utils:GetDbValue('userSelectedActivatorKey');
+                     return mia.utils:GetDbValue("userSelectedActivatorKey")
                   end,
-                  name = 'Select your activator key...',
+                  name = "Select your activator key...",
                   order = 103,
                   set = function(info, value)
-                     mia.utils:SetDbValue('userSelectedActivatorKey', MIA_Constants.activatorKeysMap[value]);
+                     mia.utils:SetDbValue(
+                        "userSelectedActivatorKey",
+                        MIA_Constants.activatorKeysMap[value]
+                     )
                   end,
-                  type = 'select',
+                  type = "select",
                   values = MIA_Constants.activatorKeysMap,
                },
                itemMaskIconHeader = {
-                  name = 'Overlay & Border',
+                  name = "Overlay & Border",
                   order = 104,
-                  type = 'header',
-                  width = 'full',
+                  type = "header",
+                  width = "full",
                },
                -- NOTE :: `enableOverlay` and `enableBorder` will be added in another phase
                --enableOverlay = {
@@ -98,294 +101,305 @@ function Config:GetBlizzOptionsFrame(mia)
                --   type = 'toggle',
                --},
                overlayColorPicker = {
-                  desc = 'This overlay will be added on top of the items you mark to better visualize your junk.',
+                  desc = "This overlay will be added on top of the items you mark to better visualize your junk.",
                   --disabled = not mia.utils:GetDbValue('enableOverlay'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
-                     local color = mia.utils:GetDbValue('overlayColor');
-                     return color.r, color.g, color.b, color.a;
+                     local color = mia.utils:GetDbValue("overlayColor")
+                     return color.r, color.g, color.b, color.a
                   end,
-                  name = 'Overlay Color',
+                  name = "Overlay Color",
                   order = 107,
                   set = function(info, r, g, b, a)
-                     mia.utils:SetDbValue('overlayColor', { r = r, g = g, b = b, a = a });
-                     mia.utils:UpdateBagMarkings();
+                     mia.utils:SetDbValue("overlayColor", { r = r, g = g, b = b, a = a })
+                     mia.utils:UpdateBagMarkings()
                   end,
-                  type = 'color',
+                  type = "color",
                },
                borderColorPicker = {
-                  desc = 'This border will be added around the items you mark to better visualize your junk.',
+                  desc = "This border will be added around the items you mark to better visualize your junk.",
                   --disabled = not mia.utils:GetDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   hasAlpha = true,
                   get = function()
-                     local color = mia.utils:GetDbValue('borderColor');
-                     return color.r, color.g, color.b, color.a;
+                     local color = mia.utils:GetDbValue("borderColor")
+                     return color.r, color.g, color.b, color.a
                   end,
-                  name = 'Border Color',
+                  name = "Border Color",
                   order = 108,
                   set = function(info, r, g, b, a)
-                     mia.utils:SetDbValue('borderColor', { r = r, g = g, b = b, a = a });
-                     mia.utils:UpdateBagMarkings();
+                     mia.utils:SetDbValue("borderColor", { r = r, g = g, b = b, a = a })
+                     mia.utils:UpdateBagMarkings()
                   end,
-                  type = 'color',
+                  type = "color",
                },
                borderThicknessSlider = {
-                  desc = 'Select the size of the border that will wrap around your marked item.',
+                  desc = "Select the size of the border that will wrap around your marked item.",
                   --disabled = not mia.utils:GetDbValue('enableBorder'), -- TODO :: Make this dynamic so that it updates when I toggle the enable buttons
                   get = function()
-                     return mia.utils:GetDbValue('borderThickness');
+                     return mia.utils:GetDbValue("borderThickness")
                   end,
                   isPercent = false,
                   max = 5,
                   min = 0,
-                  name = 'Border Thickness',
+                  name = "Border Thickness",
                   order = 109,
                   set = function(info, value)
-                     mia.utils:SetDbValue('borderThickness', value);
-                     mia.utils:UpdateBagMarkings();
+                     mia.utils:SetDbValue("borderThickness", value)
+                     mia.utils:UpdateBagMarkings()
                   end,
                   step = 0.05,
-                  type = 'range',
+                  type = "range",
                },
                iconHeader = {
-                  name = 'Icon',
+                  name = "Icon",
                   order = 110,
-                  type = 'header',
-                  width = 'full',
+                  type = "header",
+                  width = "full",
                },
                markerIcon = {
-                  desc = 'Select the JUNK icon that you want to appear on the item.',
+                  desc = "Select the JUNK icon that you want to appear on the item.",
                   get = function()
-                     return mia.utils:GetDbValue('markerIconSelected');
+                     return mia.utils:GetDbValue("markerIconSelected")
                   end,
-                  name = 'Select your icon...',
+                  name = "Select your icon...",
                   order = 111,
                   set = function(info, value)
-                     local newValue = MIA_Constants.iconListMap[value];
-                     local oldValue = db.markerIconSelected;
+                     local newValue = MIA_Constants.iconListMap[value]
+                     local oldValue = db.markerIconSelected
 
-                     mia.logger:Debug('SELECTED ICON CHANGED. Updating bags...\n' ..
-                        'OLD VALUE = ' .. oldValue .. '\n' ..
-                        'NEW VALUE = ' .. newValue .. '\n'
-                     );
+                     mia.logger:Debug(
+                        "SELECTED ICON CHANGED. Updating bags...\n"
+                           .. "OLD VALUE = "
+                           .. oldValue
+                           .. "\n"
+                           .. "NEW VALUE = "
+                           .. newValue
+                           .. "\n"
+                     )
 
-                     mia.utils:SetDbValue('markerIconSelected', value);
-                     mia.utils:UpdateBagMarkings();
+                     mia.utils:SetDbValue("markerIconSelected", value)
+                     mia.utils:UpdateBagMarkings()
                   end,
-                  type = 'select',
+                  type = "select",
                   values = MIA_Constants.iconListMap,
                },
                markerIconLocation = {
-                  desc = 'Select the position on the item where you want the JUNK icon to appear.',
+                  desc = "Select the position on the item where you want the JUNK icon to appear.",
                   get = function()
-                     return mia.utils:GetDbValue('markerIconLocationSelected');
+                     return mia.utils:GetDbValue("markerIconLocationSelected")
                   end,
-                  name = 'Select your icon location...',
+                  name = "Select your icon location...",
                   order = 112,
                   set = function(info, value)
-                     local newValue = MIA_Constants.iconLocationsMap[value];
-                     local oldValue = db.markerIconLocationSelected;
+                     local newValue = MIA_Constants.iconLocationsMap[value]
+                     local oldValue = db.markerIconLocationSelected
 
-                     mia.logger:Debug('SELECTED ICON LOCATION CHANGED. Updating bags...\n' ..
-                        'OLD VALUE = ' .. oldValue .. '\n' ..
-                        'NEW VALUE = ' .. newValue .. '\n'
-                     );
+                     mia.logger:Debug(
+                        "SELECTED ICON LOCATION CHANGED. Updating bags...\n"
+                           .. "OLD VALUE = "
+                           .. oldValue
+                           .. "\n"
+                           .. "NEW VALUE = "
+                           .. newValue
+                           .. "\n"
+                     )
 
-                     mia.utils:SetDbValue('markerIconLocationSelected', newValue);
-                     mia.utils:UpdateBagMarkings();
+                     mia.utils:SetDbValue("markerIconLocationSelected", newValue)
+                     mia.utils:UpdateBagMarkings()
                   end,
-                  type = 'select',
+                  type = "select",
                   values = MIA_Constants.iconLocationsMap,
                },
                tooltipHeader = {
-                  name = 'Tooltip',
+                  name = "Tooltip",
                   order = 113,
-                  type = 'header',
-                  width = 'full',
+                  type = "header",
+                  width = "full",
                },
                showTooltipText = {
                   desc = "This will add a text note to a marked item's tooltip.",
                   get = function()
-                     return mia.utils:GetDbValue('showTooltipText');
+                     return mia.utils:GetDbValue("showTooltipText")
                   end,
-                  name = 'Show tooltip text?',
+                  name = "Show tooltip text?",
                   order = 114,
                   set = function(info, value)
-                     mia.utils:SetDbValue('showTooltipText', value);
+                     mia.utils:SetDbValue("showTooltipText", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
             },
          },
          sellingOptions = {
-            desc = '',
-            name = 'Selling',
+            desc = "",
+            name = "Selling",
             order = 200,
-            type = 'group',
+            type = "group",
             args = {
                saleSummary = {
                   desc = 'This will hide/show the gold & items summary in chat during & after selling to a merchant.\n\nThis setting is irrelevant/ignored if "auto-sell" is disabled.',
                   get = function()
-                     return mia.utils:GetDbValue('showSaleSummary');
+                     return mia.utils:GetDbValue("showSaleSummary")
                   end,
-                  name = 'Show selling info & summary?',
+                  name = "Show selling info & summary?",
                   order = 201,
                   set = function(info, value)
-                     mia.utils:SetDbValue('showSaleSummary', value);
+                     mia.utils:SetDbValue("showSaleSummary", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
                limitSales = {
-                  desc = 'This will prevent you from selling more than 12 items at a time, so you can do a full buyback if wanted.',
+                  desc = "This will prevent you from selling more than 12 items at a time, so you can do a full buyback if wanted.",
                   get = function()
-                     return mia.utils:GetDbValue('limitSaleItems');
+                     return mia.utils:GetDbValue("limitSaleItems")
                   end,
-                  name = 'Limit number of items sold?',
+                  name = "Limit number of items sold?",
                   order = 202,
                   set = function(info, value)
-                     mia.utils:SetDbValue('limitSaleItems', value);
+                     mia.utils:SetDbValue("limitSaleItems", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
                autoSell = {
                   desc = "You can disable auto-selling marked items when visiting a merchant. But I'm not sure why you'd want to. ;-)",
                   get = function()
-                     return mia.utils:GetDbValue('autoSellMerchant');
+                     return mia.utils:GetDbValue("autoSellMerchant")
                   end,
-                  name = 'Auto sell at merchant?',
+                  name = "Auto sell at merchant?",
                   order = 203,
                   set = function(info, value)
-                     mia.utils:SetDbValue('autoSellMerchant', value);
+                     mia.utils:SetDbValue("autoSellMerchant", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
             },
          },
          sortingOptions = {
-            desc = '',
-            name = 'Sorting',
+            desc = "",
+            name = "Sorting",
             order = 300,
-            type = 'group',
+            type = "group",
             args = {
                bagginsDisclaimer = {
-                  fontSize = 'medium',
-                  hidden = not C_AddOns.IsAddOnLoaded('Baggins'),
-                  image = 'Interface/Icons/INV_Misc_Questionmark',
+                  fontSize = "medium",
+                  hidden = not C_AddOns.IsAddOnLoaded("Baggins"),
+                  image = "Interface/Icons/INV_Misc_Questionmark",
                   name = MIA_Constants.warnings.bagginsLoadedMultiline,
                   order = 301,
-                  type = 'description',
+                  type = "description",
                },
                sortAfterMarking = {
                   desc = 'After an item gets MARKED, this will sort your bags (i.e. "click" the broom icon) automatically.',
-                  disabled = C_AddOns.IsAddOnLoaded('Baggins'),
+                  disabled = C_AddOns.IsAddOnLoaded("Baggins"),
                   get = function()
-                     return mia.utils:GetDbValue('autoSortMarking');
+                     return mia.utils:GetDbValue("autoSortMarking")
                   end,
-                  name = 'Auto sort bags after Marking?',
+                  name = "Auto sort bags after Marking?",
                   order = 302,
                   set = function(info, value)
-                     mia.utils:SetDbValue('autoSortMarking', value);
+                     mia.utils:SetDbValue("autoSortMarking", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
                sortAfterUnmarking = {
                   desc = 'After an item gets UN-MARKED, this will sort your bags (i.e. "click" the broom icon) automatically.',
-                  disabled = C_AddOns.IsAddOnLoaded('Baggins'),
+                  disabled = C_AddOns.IsAddOnLoaded("Baggins"),
                   get = function()
-                     return mia.utils:GetDbValue('autoSortUnmarking');
+                     return mia.utils:GetDbValue("autoSortUnmarking")
                   end,
-                  name = 'Auto sort bags after Un-marking?',
+                  name = "Auto sort bags after Un-marking?",
                   order = 303,
                   set = function(info, value)
-                     mia.utils:SetDbValue('autoSortUnmarking', value);
+                     mia.utils:SetDbValue("autoSortUnmarking", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
                sortAfterSelling = {
                   desc = 'When you sell your items at a merchant, this will sort your bags (i.e. "click" the broom icon) automatically.\n\nNote: This only happens if "auto-sell" is enabled, you sold at least 1 item, and after you close the merchant window.',
-                  disabled = C_AddOns.IsAddOnLoaded('Baggins'),
+                  disabled = C_AddOns.IsAddOnLoaded("Baggins"),
                   get = function()
-                     return mia.utils:GetDbValue('autoSortSelling');
+                     return mia.utils:GetDbValue("autoSortSelling")
                   end,
-                  name = 'Auto sort bags after Selling?',
+                  name = "Auto sort bags after Selling?",
                   order = 304,
                   set = function(info, value)
-                     mia.utils:SetDbValue('autoSortSelling', value);
+                     mia.utils:SetDbValue("autoSortSelling", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
             },
          },
          chatOptions = {
-            desc = '',
-            name = 'Chat',
+            desc = "",
+            name = "Chat",
             order = 400,
-            type = 'group',
+            type = "group",
             args = {
                showWarnings = {
-                  desc = 'This will hide/show the warnings in chat when another potentially conflicting addon is detected.',
+                  desc = "This will hide/show the warnings in chat when another potentially conflicting addon is detected.",
                   get = function()
-                     return mia.utils:GetDbValue('showWarnings');
+                     return mia.utils:GetDbValue("showWarnings")
                   end,
-                  name = 'Show addon warnings?',
+                  name = "Show addon warnings?",
                   order = 401,
                   set = function(info, value)
-                     mia.utils:SetDbValue('showWarnings', value);
+                     mia.utils:SetDbValue("showWarnings", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
                startupGreeting = {
-                  desc = 'This will hide/show the initial greeting in chat when the game starts or reloads.',
+                  desc = "This will hide/show the initial greeting in chat when the game starts or reloads.",
                   get = function()
-                     return mia.utils:GetDbValue('showGreeting');
+                     return mia.utils:GetDbValue("showGreeting")
                   end,
-                  name = 'Show startup greeting in chat?',
+                  name = "Show startup greeting in chat?",
                   order = 402,
                   set = function(info, value)
-                     mia.utils:SetDbValue('showGreeting', value);
+                     mia.utils:SetDbValue("showGreeting", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
                slashCommandOutput = {
-                  desc = 'This will hide/show the chat output after triggering certain ' ..
-                      mia.chalk:badass('MIA') ..
-                      ' commands or actions.\n\n' .. mia.chalk:blue('Think of this like INFO level logging.'),
+                  desc = "This will hide/show the chat output after triggering certain "
+                     .. mia.chalk:badass("MIA")
+                     .. " commands or actions.\n\n"
+                     .. mia.chalk:blue("Think of this like INFO level logging."),
                   get = function()
-                     return mia.utils:GetDbValue('showCommandOutput');
+                     return mia.utils:GetDbValue("showCommandOutput")
                   end,
-                  name = 'Show MIA command output?',
+                  name = "Show MIA command output?",
                   order = 403,
                   set = function(info, value)
-                     mia.utils:SetDbValue('showCommandOutput', value);
+                     mia.utils:SetDbValue("showCommandOutput", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
                enableDebugging = {
-                  desc = 'This will enable/disable Inspecty.lua for this add-on. It is really only useful for other add-on devs.\n\n'
-                      .. mia.chalk:warn('BE WARNED! It can get SPAMMY!'),
+                  desc = "This will enable/disable Inspecty.lua for this add-on. It is really only useful for other add-on devs.\n\n"
+                     .. mia.chalk:warn("BE WARNED! It can get SPAMMY!"),
                   get = function()
-                     return mia.utils:GetDbValue('debugEnabled');
+                     return mia.utils:GetDbValue("debugEnabled")
                   end,
-                  name = 'Enable MIA Inspecty.lua?',
+                  name = "Enable MIA Inspecty.lua?",
                   order = 404,
                   set = function(info, value)
-                     mia.utils:SetDbValue('debugEnabled', value);
+                     mia.utils:SetDbValue("debugEnabled", value)
                   end,
-                  type = 'toggle',
-                  width = 'full',
+                  type = "toggle",
+                  width = "full",
                },
             },
          },
       },
-   };
+   }
 end

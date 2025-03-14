@@ -2,7 +2,7 @@
 --## ALL REQUIRED IMPORTS
 --## ===============================================================================================
 -- Libs / Packages
-local MarkItemAs = LibStub('AceAddon-3.0'):NewAddon('MarkItemAs', 'AceConsole-3.0', 'AceEvent-3.0');
+local MarkItemAs = LibStub("AceAddon-3.0"):NewAddon("MarkItemAs", "AceConsole-3.0", "AceEvent-3.0")
 
 -- TODO :: Add local vars (?) for AdiBags, ArkInventory, and OneBag3 or will the Plugin modules take care of this?
 --local Baggins = Baggins; -- this will be so I can target Baggins to do stuff later
@@ -12,80 +12,87 @@ local MarkItemAs = LibStub('AceAddon-3.0'):NewAddon('MarkItemAs', 'AceConsole-3.
 --## START UP & GREETING SCRIPTS
 --## ===============================================================================================
 function MarkItemAs:OnInitialize()
-   self.version = C_AddOns.GetAddOnMetadata('mark-item-as', 'Version'); -- this pulls the version number from the TOC file
-   self.db = LibStub('AceDB-3.0'):New('MarkItemAsDB', { profile = MIA_Defaults }, true);
+   self.version = C_AddOns.GetAddOnMetadata("mark-item-as", "Version") -- this pulls the version number from the TOC file
+   self.db = LibStub("AceDB-3.0"):New("MarkItemAsDB", { profile = MIA_Defaults }, true)
 
    -- calling all modules! all modules to the front! (keep in this order)
-   self.chalk = self:GetModule('Chalk');
-   self.dump = self:GetModule('Dump');
-   self.inspecty = self:GetModule('Inspecty');
-   self.utils = self:GetModule('Utils');
-   self.config = self:GetModule('Config');
-   self.logger = self:GetModule('Logger');
-   self.selling = self:GetModule('Selling');
+   self.chalk = self:GetModule("Chalk")
+   self.dump = self:GetModule("Dump")
+   self.inspecty = self:GetModule("Inspecty")
+   self.utils = self:GetModule("Utils")
+   self.config = self:GetModule("Config")
+   self.logger = self:GetModule("Logger")
+   self.selling = self:GetModule("Selling")
    --self.sorting = self:GetModule('Sorting');
-   self.tooltip = self:GetModule('Tooltip');
+   self.tooltip = self:GetModule("Tooltip")
 
    -- do you init or not bro?!
-   self.config:Init(self);
-   self.logger:Init(self);
-   self.selling:Init(self);
+   self.config:Init(self)
+   self.logger:Init(self)
+   self.selling:Init(self)
    --self.sorting:Init(self);
-   self.tooltip:Init(self);
+   self.tooltip:Init(self)
 
    -- This adds a "listener" to update the markings when a player opens their bags
    -- This replaces the `PLAYER_LOGIN` using the `OpenBag` API logic
    -- https://github.com/Stanzilla/WoWUIBugs/issues/310
    if _G.ContainerFrame_OnShow then
       hooksecurefunc("ContainerFrame_OnShow", function()
-         self.logger:Debug('"ContainerFrame_OnShow" callback has been activated. Updating the bag markings...');
-         self.utils:UpdateBagMarkings();
+         self.logger:Debug(
+            '"ContainerFrame_OnShow" callback has been activated. Updating the bag markings...'
+         )
+         self.utils:UpdateBagMarkings()
       end)
    end
 
    -- we're slashing prices so much it's like we're crazy!
-   self:RegisterChatCommand('mia', 'SlashCommandInfoConfig');
-   self:RegisterChatCommand('nrl', 'SlashCommandReload');
-   self:RegisterChatCommand('nfs', 'SlashCommandFrameStack');
-   self:RegisterChatCommand('nvdl', 'EnableVerboseLogging');
+   self:RegisterChatCommand("mia", "SlashCommandInfoConfig")
+   self:RegisterChatCommand("nrl", "SlashCommandReload")
+   self:RegisterChatCommand("nfs", "SlashCommandFrameStack")
+   self:RegisterChatCommand("nvdl", "EnableVerboseLogging")
 end
 
 function MarkItemAs:OnEnable()
    -- Third args can be passed to these callbacks
    -- these third args are extra values that you want the CBs to have
-   self:RegisterEvent('BAG_OPEN', 'BagOpenCB');
-   self:RegisterEvent('BAG_UPDATE', 'BagUpdateCB');
-   self:RegisterEvent('MERCHANT_CLOSED', 'MerchantClosedCB');
-   self:RegisterEvent('MERCHANT_SHOW', 'MerchantShowCB');
-   self:RegisterEvent('PLAYER_LOGIN', 'PlayerLoginCB');
-   self:RegisterEvent('PLAYER_LOGOUT', 'PlayerLogoutCB');
-   self.utils:RegisterClickListeners();
+   self:RegisterEvent("BAG_OPEN", "BagOpenCB")
+   self:RegisterEvent("BAG_UPDATE", "BagUpdateCB")
+   self:RegisterEvent("MERCHANT_CLOSED", "MerchantClosedCB")
+   self:RegisterEvent("MERCHANT_SHOW", "MerchantShowCB")
+   self:RegisterEvent("PLAYER_LOGIN", "PlayerLoginCB")
+   self:RegisterEvent("PLAYER_LOGOUT", "PlayerLogoutCB")
+   self.utils:RegisterClickListeners()
 
    -- checking for and storing loaded state of notable addons
-   self.utils:SetDbTableItem('isLoaded', 'baggins', C_AddOns.IsAddOnLoaded('Baggins'));
-   self.utils:SetDbTableItem('isLoaded', 'itemLock', C_AddOns.IsAddOnLoaded('ItemLock'));
-   self.utils:SetDbTableItem('isLoaded', 'peddler', C_AddOns.IsAddOnLoaded('Peddler'));
-   self.utils:SetDbTableItem('isLoaded', 'prat', C_AddOns.IsAddOnLoaded('Prat-3.0'));
+   self.utils:SetDbTableItem("isLoaded", "baggins", C_AddOns.IsAddOnLoaded("Baggins"))
+   self.utils:SetDbTableItem("isLoaded", "itemLock", C_AddOns.IsAddOnLoaded("ItemLock"))
+   self.utils:SetDbTableItem("isLoaded", "peddler", C_AddOns.IsAddOnLoaded("Peddler"))
+   self.utils:SetDbTableItem("isLoaded", "prat", C_AddOns.IsAddOnLoaded("Prat-3.0"))
 
    -- getting current player info
-   self.utils:SetDbTableItem('playerInfo', 'factionGroup', UnitFactionGroup('player'));
-   local playerName = UnitName('player');
-   self.utils:SetDbTableItem('playerInfo', 'name', playerName);
+   self.utils:SetDbTableItem("playerInfo", "factionGroup", UnitFactionGroup("player"))
+   local playerName = UnitName("player")
+   self.utils:SetDbTableItem("playerInfo", "name", playerName)
 
-   if (self.utils:GetDbValue('showGreeting')) then
-      self.logger:Print('Hi, ' .. playerName ..
-         '! Thanks for using ' .. MIA_Constants.addOnNameQuoted .. '! Type ' ..
-         MIA_Constants.slashCommandQuoted .. ' to get more info.'
-      );
+   if self.utils:GetDbValue("showGreeting") then
+      self.logger:Print(
+         "Hi, "
+            .. playerName
+            .. "! Thanks for using "
+            .. MIA_Constants.addOnNameQuoted
+            .. "! Type "
+            .. MIA_Constants.slashCommandQuoted
+            .. " to get more info."
+      )
    end
 
-   if (self.utils:GetDbValue('showWarnings')) then
-      if (self.utils:GetDbValue('isLoaded.baggins')) then
-         self.logger:Print(MIA_Constants.warnings.bagginsLoaded);
+   if self.utils:GetDbValue("showWarnings") then
+      if self.utils:GetDbValue("isLoaded.baggins") then
+         self.logger:Print(MIA_Constants.warnings.bagginsLoaded)
       end
 
-      if (self.utils:GetDbValue('isLoaded.peddler')) then
-         self.logger:Print(MIA_Constants.warnings.peddlerLoaded);
+      if self.utils:GetDbValue("isLoaded.peddler") then
+         self.logger:Print(MIA_Constants.warnings.peddlerLoaded)
       end
    end
 end
@@ -94,42 +101,42 @@ end
 --## REGISTERED EVENT LISTENER CALLBACKS
 --## ===============================================================================================
 function MarkItemAs:BagOpenCB()
-   self.logger:Debug('BAG_OPEN registered event callback has been triggered. Doing stuff...');
+   self.logger:Debug("BAG_OPEN registered event callback has been triggered. Doing stuff...")
    --self.utils:UpdateBagMarkings();
 end
 
 function MarkItemAs:BagUpdateCB()
-   self.logger:Debug('BAG_UPDATE registered event callback has been triggered. Doing stuff...');
-   self.utils:UpdateBagMarkings();
+   self.logger:Debug("BAG_UPDATE registered event callback has been triggered. Doing stuff...")
+   self.utils:UpdateBagMarkings()
 end
 
 function MarkItemAs:MerchantClosedCB()
-   self.logger:Debug('MERCHANT_CLOSED registered event callback has been triggered. Doing stuff...');
-   local autoSortSelling = self.utils:GetDbValue('autoSortSelling');
-   local soldItemsAtMerchant = self.utils:GetDbValue('soldItemsAtMerchant');
+   self.logger:Debug("MERCHANT_CLOSED registered event callback has been triggered. Doing stuff...")
+   local autoSortSelling = self.utils:GetDbValue("autoSortSelling")
+   local soldItemsAtMerchant = self.utils:GetDbValue("soldItemsAtMerchant")
 
-   if (autoSortSelling and soldItemsAtMerchant) then
-      self.logger:Debug('MerchantClosedCB: Auto sorting the bags after closing/selling.');
-      self.utils:SortBags();
-      self.utils:SetDbValue('soldItemsAtMerchant', false);
+   if autoSortSelling and soldItemsAtMerchant then
+      self.logger:Debug("MerchantClosedCB: Auto sorting the bags after closing/selling.")
+      self.utils:SortBags()
+      self.utils:SetDbValue("soldItemsAtMerchant", false)
    end
 end
 
 function MarkItemAs:MerchantShowCB()
-   self.logger:Debug('MERCHANT_SHOW registered event callback has been triggered. Doing stuff...');
+   self.logger:Debug("MERCHANT_SHOW registered event callback has been triggered. Doing stuff...")
 
-   if (self.utils:GetDbValue('autoSellMerchant')) then
-      self.selling:SellItems();
+   if self.utils:GetDbValue("autoSellMerchant") then
+      self.selling:SellItems()
    end
 end
 
 -- This handles both when the player logs in (as is obvious by the name)
 -- but it also handles when the game reloads
 function MarkItemAs:PlayerLoginCB()
-   self.logger:Debug('PLAYER_LOGIN registered event callback has been triggered. Doing stuff...');
+   self.logger:Debug("PLAYER_LOGIN registered event callback has been triggered. Doing stuff...")
    --self.utils:UpdateBagMarkings();
 end
 
 function MarkItemAs:PlayerLogoutCB()
-   self.utils:SetDbValue('soldItemsAtMerchant', false);
+   self.utils:SetDbValue("soldItemsAtMerchant", false)
 end

@@ -1,0 +1,31 @@
+## =================================================================================================
+## LAST UPDATED: 15-May-2022 @ 14:10 on "r2g2-md"
+## =================================================================================================
+## LINKS
+## https://editorconfig.org/
+## https://github.com/ec4j/editorconfig-gradle-plugin
+## https://plugins.gradle.org/plugin/org.ec4j.editorconfig
+## =================================================================================================
+
+# Setting this file as the top most Editor Config file
+root = true
+
+# Default settings for every file
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 3
+indent_style = space
+# indent_style = tab
+insert_final_newline = true
+max_line_length = 100
+tab_width = 3
+trim_trailing_whitespace = true
+
+[*.md]
+# insert_final_newline = false
+max_line_length = off
+trim_trailing_whitespace = false
+
+[*.yml]
+indent_style = space
