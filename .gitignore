@@ -43,7 +43,6 @@ yarn-error.log*
 # Project Files
 **/.factorypath
 *.code-workspace
-!mark-item-as.code-workspace
 .java-version
 # .node-version
 *.sublime-project
