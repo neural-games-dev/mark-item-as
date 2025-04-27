@@ -303,12 +303,13 @@ function Utils:UpdateBagMarkings(isClickEvent)
    mia.logger:Debug("UPDATING BAG MARKINGS. Beginning iteration...")
 
    for bagIndex = 0, MIA_Constants.numContainers, 1 do
-      local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName()
+      local bagIndexProper = bagIndex + 1
+      local bagName = _G["ContainerFrame" .. bagIndexProper]:GetName()
       local numSlots = C_Container.GetContainerNumSlots(bagIndex)
       local isBagOpen = IsBagOpen(bagIndex)
 
       mia.logger:Debug("--BLLR?: =====[ BAG START ]=====")
-      mia.logger:Debug("Processing Bag Number: " .. tostring(bagIndex) + 1)
+      mia.logger:Debug("Processing Bag Number: " .. tostring(bagIndexProper))
 
       mia.logger:Debug(
          "bagName = "
@@ -324,7 +325,7 @@ function Utils:UpdateBagMarkings(isClickEvent)
       -- TODO **[G]** :: DOING THIS MIGHT GET ME BACK TO HAVING SLOT FRAME IDs LIKE BEFORE?!?!?!
       local btnCount = 0
       local slotFrames = {}
-      local containerFrameName = "ContainerFrame" .. bagIndex + 1
+      local containerFrameName = "ContainerFrame" .. bagIndexProper
       local containerFrame = _G[containerFrameName]
 
       mia.logger:Debug("--BLLR?: -----[ children start ]-----")
@@ -336,45 +337,45 @@ function Utils:UpdateBagMarkings(isClickEvent)
 
          if isButton and hasNumbers then
             btnCount = btnCount + 1
-            mia.logger:Debug(child:GetID(), "--", child:GetDebugName(), "(idx: " .. idx .. ")")
+            mia.logger:Debug(child:GetID(), "--", slotFrameName, "(idx: " .. idx .. ")")
             -- mia.logger:Debug(child:GetBoundsRect());
             local item = Item:CreateFromBagAndSlot(bagIndex, idx + 1)
-            local itemName = item:GetItemName()
-            local itemID = item:GetItemID()
+            local itemName = item.itemName;
+            local itemID = item.itemID;
             local isItemEmpty = item:IsItemEmpty()
             local isItemLocked = item:IsItemLocked()
-            local slotFrameID = child:GetID();
+            local slotFrameID = child:GetID()
             local slotIndexInverted = numSlots - idx + 1 -- Blizz bag slot indexes are weird
 
-            if itemID ~= nil then
-               mia.logger:Debug(
-                  "Processing Child Button:\n"
-                     .. "item = "
-                     .. tostring(item)
-                     .. "\n"
-                     .. "itemName = "
-                     .. tostring(itemName)
-                     .. "\n"
-                     .. "itemID = "
-                     .. tostring(itemID)
-                     .. "\n"
-                     .. "isItemEmpty = "
-                     .. tostring(isItemEmpty)
-                     .. "\n"
-                     .. "isItemLocked = "
-                     .. tostring(isItemLocked)
-                     .. "\n"
-                     .. "slotIndex = "
-                     .. tostring(idx)
-                     .. "\n"
-                     .. "slotIndexInverted = "
-                     .. tostring(slotIndexInverted)
-                     .. "\n"
-                     .. "slotFrameID = "
-                     .. tostring(slotFrameID or "N/A")
-                     .. "\n"
-               )
-            end
+            -- if itemID ~= nil then
+            mia.logger:Debug(
+               "Processing Child Button:\n"
+                  .. "item = "
+                  .. tostring(item)
+                  .. "\n"
+                  .. "itemName = "
+                  .. tostring(itemName)
+                  .. "\n"
+                  .. "itemID = "
+                  .. tostring(itemID)
+                  .. "\n"
+                  .. "isItemEmpty = "
+                  .. tostring(isItemEmpty)
+                  .. "\n"
+                  .. "isItemLocked = "
+                  .. tostring(isItemLocked)
+                  .. "\n"
+                  .. "slotIndex = "
+                  .. tostring(idx)
+                  .. "\n"
+                  .. "slotIndexInverted = "
+                  .. tostring(slotIndexInverted)
+                  .. "\n"
+                  .. "slotFrameID = "
+                  .. tostring(slotFrameID or "N/A")
+                  .. "\n"
+            )
+            -- end
             table.insert(slotFrames, { [child:GetID()] = child })
          end
       end

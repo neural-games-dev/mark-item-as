@@ -55,7 +55,7 @@ MIA_Constants = {
       ["Ctrl"] = "Ctrl",
       ["Shift"] = "Shift",
    },
-   numContainers = 4,
+   numContainers = 7,
    overlayStatus = {
       HIDDEN = "overlayHidden",
       MISSING = "overlayMissing",
