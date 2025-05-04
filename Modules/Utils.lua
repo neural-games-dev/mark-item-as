@@ -121,8 +121,8 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
             return
          elseif
             isItemLockKeyCombo
-            and frame.markedJunkOverlay
-            and frame.markedJunkOverlay:IsShown()
+            and frame.marked_junk_overlay
+            and frame.marked_junk_overlay:IsShown()
          then
             if db.showWarnings then
                mia.logger:Print(MIA_Constants.warnings.itemLockDoubledUp)
@@ -185,7 +185,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
          end
 
          return
-      elseif not frame.markedJunkOverlay then
+      elseif not frame.marked_junk_overlay then
          mia.logger:Debug("HandleOnClick: Processing `overlayStatus.MISSING` scenario...")
          mia.utils:SetDbTableItem("junkItems", itemID, true)
          self:UpdateBagMarkings(true) -- `true` = isClickEvent
@@ -195,7 +195,7 @@ function Utils:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
          end
 
          return
-      elseif not frame.markedJunkOverlay:IsShown() then
+      elseif not frame.marked_junk_overlay:IsShown() then
          mia.logger:Debug("HandleOnClick: Processing `overlayStatus.HIDDEN` scenario...")
          mia.utils:SetDbTableItem("junkItems", itemID, true)
          self:UpdateBagMarkings(true) -- `true` = isClickEvent
@@ -361,10 +361,10 @@ function Utils:UpdateBagMarkings(is_click_event)
                      .. '" is stored in the db, checking for overlay...'
                )
 
-               if not slotframe.markedjunkoverlay then
+               if not slotframe.marked_junk_overlay then
                   -- this should just be for when we login/reload and we need to re-apply the mia overlays
                   overlay_status = MIA_Constants.overlayStatus.MISSING
-               elseif slotframe.markedjunkoverlay:isshown() then
+               elseif slotframe.marked_junk_overlay:isshown() then
                   -- old comment:
                   -- this should just be for when we need to update the overlays visually
                   -- because the user has been been logged in/reloaded for a while
@@ -409,14 +409,14 @@ function Utils:UpdateBagMarkings(is_click_event)
                )
 
                self:updatemarkedborder(
-                  slotframe.markedjunkoverlay,
+                  slotframe.marked_junk_overlay,
                   db.borderthickness,
                   db.bordercolor
                )
             elseif
                slotframe
-               and slotframe.markedjunkoverlay
-               and slotframe.markedjunkoverlay:isshown()
+               and slotframe.marked_junk_overlay
+               and slotframe.marked_junk_overlay:isshown()
             then
                mia.logger:Debug(
                   'item id "' .. item_info.itemID .. '" is not stored in the db, adding overlay...'
@@ -436,14 +436,14 @@ function Utils:UpdateBagMarkings(is_click_event)
                   should_log_marking_action
                )
 
-               self:updatemarkedborder(slotframe.markedjunkoverlay, 0, MIA_Constants.colorreset)
+               self:updatemarkedborder(slotframe.marked_junk_overlay, 0, MIA_Constants.colorreset)
             else
                mia.logger:Debug("boo!!! nothing happened")
             end
          elseif
             slotframe
-            and slotframe.markedjunkoverlay
-            and slotframe.markedjunkoverlay:isshown()
+            and slotframe.marked_junk_overlay
+            and slotframe.marked_junk_overlay:isshown()
          then
             mia.logger:Debug("item NOT found, slot frame was empty but overlay still exists. clearing...")
             num_marked_actions = num_marked_actions + 1
@@ -460,7 +460,7 @@ function Utils:UpdateBagMarkings(is_click_event)
                should_log_marking_action
             )
 
-            self:UpdateMarkedBorder(slotframe.markedjunkoverlay, 0, MIA_Constants.colorReset)
+            self:UpdateMarkedBorder(slotframe.marked_junk_overlay, 0, MIA_Constants.colorReset)
          else
             mia.logger:Debug(
                "no item id found and slot frame was missing or did not contain an overlay, ignoring..."
@@ -556,15 +556,15 @@ function Utils:UpdateMarkedOverlay(
       -- end
 
       if status == MIA_Constants.overlayStatus.MISSING then
-         frame.markedJunkOverlay = CreateFrame("Button", nil, frame, "BackdropTemplate")
-         frame.markedJunkOverlay:SetSize(frame:GetSize())
-         frame.markedJunkOverlay:SetPoint("CENTER")
+         frame.marked_junk_overlay = CreateFrame("Button", nil, frame, "BackdropTemplate")
+         frame.marked_junk_overlay:SetSize(frame:GetSize())
+         frame.marked_junk_overlay:SetPoint("CENTER")
 
-         frame.markedJunkOverlay:SetBackdrop({
+         frame.marked_junk_overlay:SetBackdrop({
             bgFile = "Interface/Tooltips/UI-Tooltip-Background",
          })
 
-         if not frame.markedJunkOverlay.texture then
+         if not frame.marked_junk_overlay.texture then
             mia.logger:Debug(
                'Adding a frame overlay texture to "'
                   .. tostring(itemName)
@@ -579,16 +579,16 @@ function Utils:UpdateMarkedOverlay(
                   .. tostring(status)
             )
 
-            frame.markedJunkOverlay.texture = frame.markedJunkOverlay:CreateTexture(nil, "OVERLAY")
-            frame.markedJunkOverlay.texture:ClearAllPoints()
-            frame.markedJunkOverlay.texture:SetTexture(iconPath)
-            frame.markedJunkOverlay.texture:SetPoint(position)
-            frame.markedJunkOverlay.texture:SetSize(20, 20)
+            frame.marked_junk_overlay.texture = frame.marked_junk_overlay:CreateTexture(nil, "OVERLAY")
+            frame.marked_junk_overlay.texture:ClearAllPoints()
+            frame.marked_junk_overlay.texture:SetTexture(iconPath)
+            frame.marked_junk_overlay.texture:SetPoint(position)
+            frame.marked_junk_overlay.texture:SetSize(20, 20)
          end
       end
 
-      frame.markedJunkOverlay:SetFrameLevel(17)
-      frame.markedJunkOverlay:SetBackdropColor(color.r, color.g, color.b, color.a)
+      frame.marked_junk_overlay:SetFrameLevel(17)
+      frame.marked_junk_overlay:SetBackdropColor(color.r, color.g, color.b, color.a)
       local isHiddenOrUpdate = status == MIA_Constants.overlayStatus.HIDDEN
          or status == MIA_Constants.overlayStatus.UPDATE
 
@@ -609,11 +609,11 @@ function Utils:UpdateMarkedOverlay(
 
          -- `ClearAllPoints` will clear the previous location before setting a/the new one
          -- Not using `ClearAllPoints` will make the icon image stretch all over the place
-         frame.markedJunkOverlay.texture:ClearAllPoints()
-         frame.markedJunkOverlay.texture:SetTexture(iconPath)
-         frame.markedJunkOverlay.texture:SetPoint(position)
-         frame.markedJunkOverlay:Show()
-         frame.markedJunkOverlay.texture:Show()
+         frame.marked_junk_overlay.texture:ClearAllPoints()
+         frame.marked_junk_overlay.texture:SetTexture(iconPath)
+         frame.marked_junk_overlay.texture:SetPoint(position)
+         frame.marked_junk_overlay:Show()
+         frame.marked_junk_overlay.texture:Show()
       end
 
       db.junkItems[itemID] = true
@@ -634,10 +634,10 @@ function Utils:UpdateMarkedOverlay(
             .. tostring(status)
       )
 
-      frame.markedJunkOverlay:SetFrameLevel(0)
-      frame.markedJunkOverlay:SetBackdropColor(0, 0, 0, 0)
-      frame.markedJunkOverlay:Hide()
-      frame.markedJunkOverlay.texture:Hide()
+      frame.marked_junk_overlay:SetFrameLevel(0)
+      frame.marked_junk_overlay:SetBackdropColor(0, 0, 0, 0)
+      frame.marked_junk_overlay:Hide()
+      frame.marked_junk_overlay.texture:Hide()
 
       if itemID then
          db.junkItems[itemID] = false
