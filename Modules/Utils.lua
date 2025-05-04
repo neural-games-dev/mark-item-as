@@ -303,9 +303,10 @@ function Utils:UpdateBagMarkings(is_click_event)
    local num_marked_actions = 0
    mia.logger:Debug("UPDATING BAG MARKINGS. Beginning iteration...")
 
-   for bag_idx = 0, MIA_Constants.numContainers, 1 do
+   for bag_idx = 0, NUM_CONTAINER_FRAMES, 1 do
       local bag_idx_proper = bag_idx + 1
-      local bag_name = _G["ContainerFrame" .. bag_idx_proper]:GetName()
+      local bag = _G["ContainerFrame" .. bag_idx_proper]
+      local bag_name = bag:GetName()
       local is_bag_open = IsBagOpen(bag_idx)
       local num_slots = C_Container.GetContainerNumSlots(bag_idx)
 
@@ -340,6 +341,9 @@ function Utils:UpdateBagMarkings(is_click_event)
                   .. "item_id = "
                   .. tostring(item_info.itemID)
                   .. "\n"
+                  .. "bag_idx_proper = "
+                  .. tostring(bag_idx_proper)
+                  .. "\n"
                   .. "slot_idx = "
                   .. tostring(slot_idx)
                   .. "\n"
@@ -347,9 +351,34 @@ function Utils:UpdateBagMarkings(is_click_event)
                   .. tostring(slot_frame_id or "n/a")
                   .. "\n"
                   .. "should_log_marking_action = "
-                  .. tostring(should_log_marking_action or "n/a")
+                  .. tostring(should_log_marking_action)
                   .. "\n"
             )
+
+            -- NOTE :: look at the `children` lua scratch file in game for reference about the logic to use
+            -- after identifying that an item should be marked or not
+            -- i want to iterate through all of the children buttons and find the "match" by sending in the ID
+            -- then this new util will create a custom frame and attach it to the `child` using it's bounds values
+            -- TODO :: I need to figure out the steps/logic of when an item becomes unmarked
+            local children = { bag:GetChildren() }
+            local curr_child = children[slot_idx]
+
+            if children then
+               mia.logger:Debug("we have children...")
+            else
+               mia.logger:Debug("we have NO children...")
+            end
+
+            if curr_child then
+               mia.logger:Debug("we have a curr_child...")
+               mia.logger:Debug(curr_child.TopLeftCorner)
+               mia.logger:Debug(curr_child.TopRightCorner)
+               mia.logger:Debug(curr_child.BottomRightCorner)
+               mia.logger:Debug(curr_child.BottomLeftCorner)
+               -- mia.dump:print(curr_child)
+            else
+               mia.logger:Debug("we have NO curr_child...")
+            end
 
             local item_id_stored_in_db = db.junkItems[item_info.itemID]
             local overlay_status = ""
@@ -401,7 +430,7 @@ function Utils:UpdateBagMarkings(is_click_event)
                   overlay_status,
                   bag_idx,
                   db.overlaycolor,
-                  db,
+                  db.markericonlocationselected,
                   slotframe,
                   item_info.itemName,
                   item_info.itemID,
@@ -445,7 +474,9 @@ function Utils:UpdateBagMarkings(is_click_event)
             and slotframe.marked_junk_overlay
             and slotframe.marked_junk_overlay:isshown()
          then
-            mia.logger:Debug("item NOT found, slot frame was empty but overlay still exists. clearing...")
+            mia.logger:Debug(
+               "item NOT found, slot frame was empty but overlay still exists. clearing..."
+            )
             num_marked_actions = num_marked_actions + 1
             -- clearing the still showing bag slot's overlay because it is empty,
             -- or it has been emptied by moving the item
@@ -579,7 +610,8 @@ function Utils:UpdateMarkedOverlay(
                   .. tostring(status)
             )
 
-            frame.marked_junk_overlay.texture = frame.marked_junk_overlay:CreateTexture(nil, "OVERLAY")
+            frame.marked_junk_overlay.texture =
+               frame.marked_junk_overlay:CreateTexture(nil, "OVERLAY")
             frame.marked_junk_overlay.texture:ClearAllPoints()
             frame.marked_junk_overlay.texture:SetTexture(iconPath)
             frame.marked_junk_overlay.texture:SetPoint(position)

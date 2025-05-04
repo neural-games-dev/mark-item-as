@@ -55,7 +55,7 @@ MIA_Constants = {
       ["Ctrl"] = "Ctrl",
       ["Shift"] = "Shift",
    },
-   numContainers = 7,
+   numContainers = 13, -- saving for ref, but there is a global constant of `NUM_CONTAINER_FRAMES` already available
    overlayStatus = {
       HIDDEN = "overlayHidden",
       MISSING = "overlayMissing",

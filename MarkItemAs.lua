@@ -43,6 +43,8 @@ function MarkItemAs:OnInitialize()
          )
          self.utils:UpdateBagMarkings()
       end)
+   else
+      self.logger:Debug("ContainerFrame_OnShow not found. Skipping hooksecurefunc.")
    end
 
    -- we're slashing prices so much it's like we're crazy!
