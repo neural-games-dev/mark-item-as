@@ -66,6 +66,38 @@ function Utils:GetNumSellableItems(table)
    return length
 end
 
+function Utils:GetSlotFrame(children, slot_idx)
+   for _, child in ipairs(children) do
+      if child:GetID() == slot_idx then
+         mia.logger:Debug(
+            "GetSlotFrame: Child slot frame has been found.\n"
+               .. "Count: "
+               .. tostring(child.count or "n/a")
+               .. "\n"
+               .. "ID: "
+               .. tostring(child:GetID())
+               .. "\n"
+               .. "Left: "
+               .. tostring(child:GetLeft() or "n/a")
+               .. "\n"
+               .. "Bottom: "
+               .. tostring(child:GetBottom() or "n/a")
+               .. "\n"
+               .. "Width: "
+               .. tostring(child:GetWidth() or "n/a")
+               .. "\n"
+               .. "Height: "
+               .. tostring(child:GetHeight() or "n/a")
+         )
+
+         return child
+      end
+   end
+
+   mia.logger:Debug("GetSlotFrame: Child slot frame was NOT found. Returning nil.")
+   return nil
+end
+
 function Utils:HandleConfigOptionsDisplay()
    local db = mia.db.profile
 
@@ -309,6 +341,7 @@ function Utils:UpdateBagMarkings(is_click_event)
       local bag_name = bag:GetName()
       local is_bag_open = IsBagOpen(bag_idx)
       local num_slots = C_Container.GetContainerNumSlots(bag_idx)
+      local slot_frame = {} -- temp placeholder for the slot frame
 
       mia.logger:Debug("Processing Bag Number: " .. tostring(bag_idx_proper))
 
@@ -361,39 +394,22 @@ function Utils:UpdateBagMarkings(is_click_event)
             -- then this new util will create a custom frame and attach it to the `child` using it's bounds values
             -- TODO :: I need to figure out the steps/logic of when an item becomes unmarked
             local children = { bag:GetChildren() }
-            local curr_child = children[slot_idx]
+            slot_frame = self:GetSlotFrame(children, slot_idx)
 
-            if children then
-               mia.logger:Debug("we have children...")
-            else
-               mia.logger:Debug("we have NO children...")
-            end
-
-            if curr_child then
-               mia.logger:Debug("we have a curr_child...")
-               mia.logger:Debug(curr_child.TopLeftCorner)
-               mia.logger:Debug(curr_child.TopRightCorner)
-               mia.logger:Debug(curr_child.BottomRightCorner)
-               mia.logger:Debug(curr_child.BottomLeftCorner)
-               -- mia.dump:print(curr_child)
-            else
-               mia.logger:Debug("we have NO curr_child...")
-            end
-
-            local item_id_stored_in_db = db.junkItems[item_info.itemID]
+            local is_item_id_stored_in_db = db.junkItems[item_info.itemID]
             local overlay_status = ""
 
-            if not (item_id_stored_in_db == nil) then
+            if not (is_item_id_stored_in_db == nil) then
                mia.logger:Debug(
                   'item id "'
                      .. item_info.itemID
                      .. '" is stored in the db, checking for overlay...'
                )
 
-               if not slotframe.marked_junk_overlay then
+               if not slot_frame.marked_junk_overlay then
                   -- this should just be for when we login/reload and we need to re-apply the mia overlays
                   overlay_status = MIA_Constants.overlayStatus.MISSING
-               elseif slotframe.marked_junk_overlay:isshown() then
+               elseif slot_frame.marked_junk_overlay:IsShown() then
                   -- old comment:
                   -- this should just be for when we need to update the overlays visually
                   -- because the user has been been logged in/reloaded for a while
@@ -416,8 +432,8 @@ function Utils:UpdateBagMarkings(is_click_event)
                      .. "item_id = "
                      .. tostring(item_info.itemID)
                      .. "\n"
-                     .. "markericonlocation = "
-                     .. tostring(db.markericonlocationselected)
+                     .. "marker_icon_location = "
+                     .. tostring(db.markerIconLocationSelected)
                      .. "\n"
                      .. "num_marked_actions = "
                      .. tostring(num_marked_actions)
@@ -426,26 +442,26 @@ function Utils:UpdateBagMarkings(is_click_event)
                      .. tostring(overlay_status)
                )
 
-               self:updatemarkedoverlay(
+               self:UpdateMarkedOverlay(
                   overlay_status,
                   bag_idx,
-                  db.overlaycolor,
-                  db.markericonlocationselected,
-                  slotframe,
+                  db.overlayColor,
+                  db,
+                  slot_frame,
                   item_info.itemName,
                   item_info.itemID,
                   should_log_marking_action
                )
 
-               self:updatemarkedborder(
-                  slotframe.marked_junk_overlay,
-                  db.borderthickness,
-                  db.bordercolor
+               self:UpdateMarkedBorder(
+                  slot_frame.marked_junk_overlay,
+                  db.borderThickness,
+                  db.borderColor
                )
             elseif
-               slotframe
-               and slotframe.marked_junk_overlay
-               and slotframe.marked_junk_overlay:isshown()
+               slot_frame
+               and slot_frame.marked_junk_overlay
+               and slot_frame.marked_junk_overlay:IsShown()
             then
                mia.logger:Debug(
                   'item id "' .. item_info.itemID .. '" is not stored in the db, adding overlay...'
@@ -454,47 +470,48 @@ function Utils:UpdateBagMarkings(is_click_event)
                num_marked_actions = num_marked_actions + 1
 
                -- clearing the still showing bag slot's overlay because it was moved,
-               self:updatemarkedoverlay(
+               self:UpdateMarkedOverlay(
                   MIA_Constants.overlayStatus.SHOWING,
                   bag_idx,
-                  MIA_Constants.colorreset,
+                  MIA_Constants.colorReset,
                   db,
-                  slotframe,
+                  slot_frame,
                   item_info.itemName,
                   item_info.itemID,
                   should_log_marking_action
                )
 
-               self:updatemarkedborder(slotframe.marked_junk_overlay, 0, MIA_Constants.colorreset)
+               self:UpdateMarkedBorder(slot_frame.marked_junk_overlay, 0, MIA_Constants.colorReset)
             else
                mia.logger:Debug("boo!!! nothing happened")
             end
          elseif
-            slotframe
-            and slotframe.marked_junk_overlay
-            and slotframe.marked_junk_overlay:isshown()
+            slot_frame
+            and slot_frame.marked_junk_overlay
+            and slot_frame.marked_junk_overlay:IsShown()
          then
             mia.logger:Debug(
-               "item NOT found, slot frame was empty but overlay still exists. clearing..."
+               "An item was NOT found & the slot frame was empty but the overlay still exists. clearing..."
             )
+
             num_marked_actions = num_marked_actions + 1
             -- clearing the still showing bag slot's overlay because it is empty,
             -- or it has been emptied by moving the item
-            self:updatemarkedoverlay(
+            self:UpdateMarkedOverlay(
                MIA_Constants.overlayStatus.SHOWING,
                bag_idx,
                MIA_Constants.colorReset,
                db,
-               slotframe,
+               slot_frame,
                item_info.itemName,
                item_info.itemID,
                should_log_marking_action
             )
 
-            self:UpdateMarkedBorder(slotframe.marked_junk_overlay, 0, MIA_Constants.colorReset)
+            self:UpdateMarkedBorder(slot_frame.marked_junk_overlay, 0, MIA_Constants.colorReset)
          else
             mia.logger:Debug(
-               "no item id found and slot frame was missing or did not contain an overlay, ignoring..."
+               "An item was NOT found and/or the slot frame was missing or did not contain an overlay, ignoring..."
             )
          end
       end
@@ -542,11 +559,11 @@ function Utils:UpdateMarkedOverlay(
    itemID,
    shouldLogMarkingAction
 )
-   local isMissingHiddenOrUpdate = status == MIA_Constants.overlayStatus.MISSING
+   local is_missing_hidden_or_update = status == MIA_Constants.overlayStatus.MISSING
       or status == MIA_Constants.overlayStatus.HIDDEN
       or status == MIA_Constants.overlayStatus.UPDATE
 
-   if isMissingHiddenOrUpdate then
+   if is_missing_hidden_or_update then
       if db.showCommandOutput and not db.debugEnabled and shouldLogMarkingAction then
          mia.logger:Print('Marking "' .. tostring(itemName) .. '" as junk.')
       end
@@ -559,32 +576,8 @@ function Utils:UpdateMarkedOverlay(
       else
          print("BLLR? -- FRAME DOES EXIST")
          -- mia.dump:print(frame);
-         print(mia.inspecty:dump(frame:GetParent()))
+         -- print(mia.inspecty:dump(frame:GetParent()))
       end
-
-      -- if not frame.GetObjectType then
-      --    print("BLLR? -- FRAME DOES NOT HAVE A GetObjectType METHOD")
-      -- else
-      --    print("BLLR? -- FRAME HAS AN OBJECT TYPE: " .. frame:GetObjectType())
-      -- end
-
-      -- if not frame.GetTexture then
-      --    print("BLLR? -- FRAME DOES NOT HAVE A GetTexture METHOD")
-      -- else
-      --    print("BLLR? -- FRAME DOES HAVE A TEXTURE: " .. frame:GetTexture())
-      -- end
-
-      -- if not frame.GetID then
-      --    print("BLLR? -- FRAME DOES NOT HAVE A GetID METHOD")
-      -- else
-      --    print("BLLR? -- FRAME DOES HAVE AN ID: " .. frame:GetID())
-      -- end
-
-      -- if not frame.GetSize then
-      --    print("BLLR? -- FRAME DOES NOT HAVE A GetSize METHOD")
-      -- else
-      --    print("BLLR? -- FRAME DOES HAVE AN ID: " .. frame:GetSize())
-      -- end
 
       if status == MIA_Constants.overlayStatus.MISSING then
          frame.marked_junk_overlay = CreateFrame("Button", nil, frame, "BackdropTemplate")
@@ -621,10 +614,11 @@ function Utils:UpdateMarkedOverlay(
 
       frame.marked_junk_overlay:SetFrameLevel(17)
       frame.marked_junk_overlay:SetBackdropColor(color.r, color.g, color.b, color.a)
-      local isHiddenOrUpdate = status == MIA_Constants.overlayStatus.HIDDEN
+
+      local is_hidden_or_update = status == MIA_Constants.overlayStatus.HIDDEN
          or status == MIA_Constants.overlayStatus.UPDATE
 
-      if isHiddenOrUpdate then
+      if is_hidden_or_update then
          mia.logger:Debug(
             'Updating the frame overlay texture for "'
                .. tostring(itemName)
