@@ -11,6 +11,7 @@ local MarkItemAs = LibStub("AceAddon-3.0"):NewAddon("MarkItemAs", "AceConsole-3.
 --## ===============================================================================================
 --## START UP & GREETING SCRIPTS
 --## ===============================================================================================
+-- NOTE :: this runs 1st
 function MarkItemAs:OnInitialize()
    self.version = C_AddOns.GetAddOnMetadata("mark-item-as", "Version") -- this pulls the version number from the TOC file
    self.db = LibStub("AceDB-3.0"):New("MarkItemAsDB", { profile = MIA_Defaults }, true)
@@ -33,6 +34,15 @@ function MarkItemAs:OnInitialize()
    --self.sorting:Init(self);
    self.tooltip:Init(self)
 
+   -- Third args can be passed to these callbacks
+   -- these third args are extra values that you want the CBs to have
+   self:RegisterEvent("BAG_OPEN", "BagOpenCB")
+   self:RegisterEvent("BAG_UPDATE", "BagUpdateCB")
+   self:RegisterEvent("MERCHANT_CLOSED", "MerchantClosedCB")
+   self:RegisterEvent("MERCHANT_SHOW", "MerchantShowCB")
+   self:RegisterEvent("PLAYER_LOGIN", "PlayerLoginCB")
+   self:RegisterEvent("PLAYER_LOGOUT", "PlayerLogoutCB")
+
    -- This adds a "listener" to update the markings when a player opens their bags
    -- This replaces the `PLAYER_LOGIN` using the `OpenBag` API logic
    -- https://github.com/Stanzilla/WoWUIBugs/issues/310
@@ -41,6 +51,7 @@ function MarkItemAs:OnInitialize()
          self.logger:Debug(
             '"ContainerFrame_OnShow" callback has been activated. Updating the bag markings...'
          )
+
          self.utils:UpdateBagMarkings()
       end)
    else
@@ -54,15 +65,8 @@ function MarkItemAs:OnInitialize()
    self:RegisterChatCommand("nvdl", "EnableVerboseLogging")
 end
 
+-- NOTE :: this runs 2nd
 function MarkItemAs:OnEnable()
-   -- Third args can be passed to these callbacks
-   -- these third args are extra values that you want the CBs to have
-   self:RegisterEvent("BAG_OPEN", "BagOpenCB")
-   self:RegisterEvent("BAG_UPDATE", "BagUpdateCB")
-   self:RegisterEvent("MERCHANT_CLOSED", "MerchantClosedCB")
-   self:RegisterEvent("MERCHANT_SHOW", "MerchantShowCB")
-   self:RegisterEvent("PLAYER_LOGIN", "PlayerLoginCB")
-   self:RegisterEvent("PLAYER_LOGOUT", "PlayerLogoutCB")
    self.utils:RegisterClickListeners()
 
    -- checking for and storing loaded state of notable addons
@@ -97,6 +101,10 @@ function MarkItemAs:OnEnable()
          self.logger:Print(MIA_Constants.warnings.peddlerLoaded)
       end
    end
+
+   -- `toggling` all bags to trigger events before the user interacts with the bags
+   OpenAllBags();
+   CloseAllBags();
 end
 
 --## ===============================================================================================

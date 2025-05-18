@@ -66,11 +66,15 @@ function Utils:GetNumSellableItems(table)
    return length
 end
 
-function Utils:GetSlotFrame(children, slot_idx)
+function Utils:GetSlotFrame(children, bag_idx, slot_idx)
    for _, child in ipairs(children) do
       if child:GetID() == slot_idx then
          mia.logger:Debug(
-            "GetSlotFrame: Child slot frame has been found.\n"
+            "GetSlotFrame: Bag "
+               .. bag_idx
+               .. ", Child slot frame "
+               .. slot_idx
+               .. " has been found.\n"
                .. "Count: "
                .. tostring(child.count or "n/a")
                .. "\n"
@@ -94,7 +98,16 @@ function Utils:GetSlotFrame(children, slot_idx)
       end
    end
 
-   mia.logger:Debug("GetSlotFrame: Child slot frame was NOT found. Returning nil.")
+   if mia.db.profile.enableVerboseLogging then
+      mia.logger:Debug(
+         "GetSlotFrame: Bag "
+            .. bag_idx
+            .. ", Child slot frame "
+            .. slot_idx
+            .. " was NOT found. Returning nil."
+      )
+   end
+
    return nil
 end
 
@@ -293,23 +306,50 @@ function Utils:PriceToGold(price)
 end
 
 function Utils:RegisterClickListeners()
-   for bagIndex = 0, MIA_Constants.numContainers, 1 do
-      local bagName = _G["ContainerFrame" .. bagIndex + 1]:GetName()
-      local numSlots = C_Container.GetContainerNumSlots(bagIndex)
+   for bag_idx = 1, NUM_CONTAINER_FRAMES, 1 do
+      mia.logger:Debug("RegisterListeners: Processing Bag " .. tostring(bag_idx))
+      local bag = _G["ContainerFrame" .. bag_idx]
+      local bag_name = bag:GetName()
+      local children = { bag:GetChildren() }
+      local num_slots = C_Container.GetContainerNumSlots(bag_idx)
 
-      if numSlots > 0 then
-         for slotIndex = 1, numSlots, 1 do
-            local slotIndexInverted = numSlots - slotIndex + 1 -- Blizz bag slot indexes are weird
-            local slotFrame = _G[bagName .. "Item" .. slotIndexInverted]
-            slotFrame:HookScript(
-               "OnClick",
-               self:HandleOnClick(bagIndex, bagName, slotFrame, numSlots)
-            )
+      if num_slots > 0 then
+         for slot_idx = 1, num_slots, 1 do
+            local slot_frame = self:GetSlotFrame(children, bag_idx, slot_idx)
+
+            if slot_frame then
+               mia.logger:Debug(
+                  'RegisterListeners: FOUND! Slot frame at bag index "'
+                     .. tostring(bag_idx)
+                     .. '" and slot index "'
+                     .. tostring(slot_idx)
+                     .. '". Adding click listener...'
+               )
+
+               slot_frame:HookScript(
+                  "OnClick",
+                  self:HandleOnClick(bag_idx, bag_name, slot_frame, num_slots)
+               )
+            else
+               if mia.db.profile.enableVerboseLogging then
+                  mia.logger:Debug(
+                     'RegisterListeners: Slot frame at bag index "'
+                        .. tostring(bag_idx)
+                        .. '" and slot index "'
+                        .. tostring(slot_idx)
+                        .. '" appears to be empty. Skipping.'
+                  )
+               end
+            end
          end
       else
-         mia.logger:Debug(
-            'Container at bag index "' .. tostring(bagIndex) .. '" appears to be empty. Skipping.'
-         )
+         if mia.db.profile.enableVerboseLogging then
+            mia.logger:Debug(
+               'RegisterListeners: Container at bag index "'
+                  .. tostring(bag_idx)
+                  .. '" appears to be empty. Skipping.'
+            )
+         end
       end
    end
 end
@@ -343,10 +383,11 @@ function Utils:UpdateBagMarkings(is_click_event)
       local num_slots = C_Container.GetContainerNumSlots(bag_idx)
       local slot_frame = {} -- temp placeholder for the slot frame
 
-      mia.logger:Debug("Processing Bag Number: " .. tostring(bag_idx_proper))
-
       mia.logger:Debug(
-         "bag_name = "
+         "Processing Bag: "
+            .. tostring(bag_idx_proper)
+            .. "\n"
+            .. "bag_name = "
             .. tostring(bag_name)
             .. "\n"
             .. "is_bag_open = "
@@ -360,14 +401,14 @@ function Utils:UpdateBagMarkings(is_click_event)
       -- ContainerFrame1.NineSlice:SetBorderColor(0,1,1,1)
 
       for slot_idx = 1, num_slots, 1 do
-         mia.logger:Debug("processing slot index: " .. tostring(slot_idx))
+         mia.logger:Debug("Processing Slot: " .. tostring(slot_idx))
 
          local item_info = C_Container.GetContainerItemInfo(bag_idx, slot_idx)
          local should_log_marking_action = is_click_event and num_marked_actions == 1
 
          if item_info and not (item_info.itemID == nil) then
             mia.logger:Debug(
-               "item found, processing:\n"
+               "UpdateBagMarkings: item found, processing:\n"
                   .. "item_name = "
                   .. tostring(item_info.itemName)
                   .. "\n"
@@ -394,14 +435,14 @@ function Utils:UpdateBagMarkings(is_click_event)
             -- then this new util will create a custom frame and attach it to the `child` using it's bounds values
             -- TODO :: I need to figure out the steps/logic of when an item becomes unmarked
             local children = { bag:GetChildren() }
-            slot_frame = self:GetSlotFrame(children, slot_idx)
+            slot_frame = self:GetSlotFrame(children, bag_idx, slot_idx)
 
             local is_item_id_stored_in_db = db.junkItems[item_info.itemID]
             local overlay_status = ""
 
             if not (is_item_id_stored_in_db == nil) then
                mia.logger:Debug(
-                  'item id "'
+                  'UpdateBagMarkings: item id "'
                      .. item_info.itemID
                      .. '" is stored in the db, checking for overlay...'
                )
@@ -425,7 +466,7 @@ function Utils:UpdateBagMarkings(is_click_event)
                num_marked_actions = num_marked_actions + 1
 
                mia.logger:Debug(
-                  "item is marked. updating marking for:\n"
+                  "UpdateBagMarkings: item is marked. updating marking for:\n"
                      .. "item_name = "
                      .. tostring(item_info.itemName)
                      .. "\n"
@@ -464,7 +505,9 @@ function Utils:UpdateBagMarkings(is_click_event)
                and slot_frame.marked_junk_overlay:IsShown()
             then
                mia.logger:Debug(
-                  'item id "' .. item_info.itemID .. '" is not stored in the db, adding overlay...'
+                  'UpdateBagMarkings: item id "'
+                     .. item_info.itemID
+                     .. '" is not stored in the db, adding overlay...'
                )
 
                num_marked_actions = num_marked_actions + 1
@@ -483,7 +526,7 @@ function Utils:UpdateBagMarkings(is_click_event)
 
                self:UpdateMarkedBorder(slot_frame.marked_junk_overlay, 0, MIA_Constants.colorReset)
             else
-               mia.logger:Debug("boo!!! nothing happened")
+               mia.logger:Debug("UpdateBagMarkings: boo!!! nothing happened")
             end
          elseif
             slot_frame
@@ -491,7 +534,7 @@ function Utils:UpdateBagMarkings(is_click_event)
             and slot_frame.marked_junk_overlay:IsShown()
          then
             mia.logger:Debug(
-               "An item was NOT found & the slot frame was empty but the overlay still exists. clearing..."
+               "UpdateBagMarkings: An item was NOT found & the slot frame was empty but the overlay still exists. clearing..."
             )
 
             num_marked_actions = num_marked_actions + 1
@@ -510,9 +553,11 @@ function Utils:UpdateBagMarkings(is_click_event)
 
             self:UpdateMarkedBorder(slot_frame.marked_junk_overlay, 0, MIA_Constants.colorReset)
          else
-            mia.logger:Debug(
-               "An item was NOT found and/or the slot frame was missing or did not contain an overlay, ignoring..."
-            )
+            if db.enableVerboseLogging then
+               mia.logger:Debug(
+                  "UpdateBagMarkings: An item was NOT found and/or the slot frame was missing or did not contain an overlay, ignoring..."
+               )
+            end
          end
       end
    end
@@ -727,12 +772,22 @@ end
 
 function Utils:VerifyDbTable(table_name, key_name)
    if not mia.db.profile[table_name] then
-      mia.logger:Debug("VerifyDbTable: Table missing, creating an empty one...")
+      if mia.db.profile.enableVerboseLogging then
+         mia.logger:Debug("VerifyDbTable: Table missing, creating an empty one...")
+      end
+
       mia.db.profile[table_name] = {}
    end
 
    if not mia.db.profile[table_name][key_name] then
-      mia.logger:Debug("VerifyDbTable: Key missing, setting a starting nil value...")
-      mia.db.profile[table_name][key_name] = {}
+      if mia.db.profile.enableVerboseLogging then
+         mia.logger:Debug(
+            'VerifyDbTable: Key "'
+               .. tostring(key_name)
+               .. '" missing, setting a starting `false` value...'
+         )
+      end
+
+      mia.db.profile[table_name][key_name] = false
    end
 end
